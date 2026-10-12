@@ -21,7 +21,6 @@
   "hero_naslov": "You film <em>the trip.</em><br>We handle the edit.",
   "hero_uvod": "Drop in your raw clips. Claude edits — you decide.",
   "gumb_prenos": "Download for macOS",
-  "gumb_film": "Watch the film",
   "aplikacija_oznaka": "How Wayfare Studio works",
   "okno_oznaka": "The Wayfare Studio editor, assembling piece by piece",
   "k0_naslov": "Fifty-five clips. <em>One day.</em>",
@@ -91,7 +90,11 @@
   "napaka_opis": "This page doesn’t exist.",
   "napaka_naslov": "Off the <em>map.</em>",
   "napaka_besedilo": "The page you’re looking for doesn’t exist or has moved.",
-  "napaka_gumb": "Back to the start"
+  "napaka_gumb": "Back to the start",
+  "gumb_vlogi": "Watch the vlogs",
+  "dom_vlogi_naslov": "Films from <em>the road.</em>",
+  "dom_vlogi_uvod": "Real trips, cut by Claude in Wayfare Studio from the maker’s own phone clips.",
+  "dom_vlogi_vsi": "All the films"
  },
  "sl": {
   "lang": "sl",
@@ -115,7 +118,6 @@
   "hero_naslov": "Ti posnameš <em>pot.</em><br>Mi jo zmontiramo.",
   "hero_uvod": "Naloži surove posnetke. Claude montira, ti odločaš.",
   "gumb_prenos": "Prenesi za macOS",
-  "gumb_film": "Poglej film",
   "aplikacija_oznaka": "Kako deluje Wayfare Studio",
   "okno_oznaka": "Urejevalnik Wayfare Studio, ki se sestavlja kos za kosom",
   "k0_naslov": "Petinpetdeset posnetkov. <em>En dan.</em>",
@@ -185,6 +187,10 @@
   "napaka_opis": "Te strani ni.",
   "napaka_naslov": "Zunaj <em>zemljevida.</em>",
   "napaka_besedilo": "Strani, ki jo iščeš, ni ali pa se je preselila.",
-  "napaka_gumb": "Nazaj na začetek"
+  "napaka_gumb": "Nazaj na začetek",
+  "gumb_vlogi": "Poglej vloge",
+  "dom_vlogi_naslov": "Filmi <em>s poti.</em>",
+  "dom_vlogi_uvod": "Prava potovanja, ki jih je Claude zmontiral v Wayfare Studiu iz avtorjevih posnetkov s telefona.",
+  "dom_vlogi_vsi": "Vsi filmi"
  }
 }

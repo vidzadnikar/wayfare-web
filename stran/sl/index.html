@@ -38,7 +38,7 @@
     <ul>
       <li><a href="#aplikacija">Aplikacija</a></li>
       <li><a href="#film">Film</a></li>
-      <li><a href="vlogi/">Vlogi</a></li>
+      <li data-nav="vlogi"><a href="vlogi/">Vlogi</a></li>
       <li><a href="#claude">Claude</a></li>
     </ul>
   </nav>
@@ -66,7 +66,7 @@
       <p class="uvodnik" data-uvod>Naloži surove posnetke. Claude montira, ti odločaš.</p>
       <div class="akcije" data-uvod>
         <a class="gumb" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos>Prenesi za macOS</a>
-        <a class="gumb gumb-tihi" href="#film" data-poglej-film>Poglej film <span class="mono">01:02</span></a>
+        <a class="gumb gumb-tihi" href="vlogi/">Poglej vloge</a>
       </div>
     </div>
   </section>
@@ -75,6 +75,17 @@
     <div class="mesta-vrsta" data-smer="1"><div class="mesta-tir"><span class="mesto">Lisboa</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Paris</span><span class="mesto-pika"></span><span class="mesto">Praha</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Venezia</span><span class="mesto-pika"></span><span class="mesto">Ljubljana</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Amsterdam</span><span class="mesto-pika"></span><span class="mesto">Roma</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Barcelona</span><span class="mesto-pika"></span><span class="mesto">Wien</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Madrid</span><span class="mesto-pika"></span><span class="mesto">Milano</span><span class="mesto-pika"></span><span class="mesto">Lisboa</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Paris</span><span class="mesto-pika"></span><span class="mesto">Praha</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Venezia</span><span class="mesto-pika"></span><span class="mesto">Ljubljana</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Amsterdam</span><span class="mesto-pika"></span><span class="mesto">Roma</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Barcelona</span><span class="mesto-pika"></span><span class="mesto">Wien</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Madrid</span><span class="mesto-pika"></span><span class="mesto">Milano</span><span class="mesto-pika"></span></div></div>
     <div class="mesta-vrsta" data-smer="-1"><div class="mesta-tir"><span class="mesto">Madrid</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Wien</span><span class="mesto-pika"></span><span class="mesto">Barcelona</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Roma</span><span class="mesto-pika"></span><span class="mesto">Amsterdam</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Ljubljana</span><span class="mesto-pika"></span><span class="mesto">Venezia</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Praha</span><span class="mesto-pika"></span><span class="mesto">Paris</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Lisboa</span><span class="mesto-pika"></span><span class="mesto">Milano</span><span class="mesto-pika"></span><span class="mesto">Madrid</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Wien</span><span class="mesto-pika"></span><span class="mesto">Barcelona</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Roma</span><span class="mesto-pika"></span><span class="mesto">Amsterdam</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Ljubljana</span><span class="mesto-pika"></span><span class="mesto">Venezia</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Praha</span><span class="mesto-pika"></span><span class="mesto">Paris</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Lisboa</span><span class="mesto-pika"></span><span class="mesto">Milano</span><span class="mesto-pika"></span></div></div>
   </div>
+
+  <section class="dom-vlogi" id="vlogi" aria-labelledby="dom-vlogi-naslov">
+    <div class="dom-vlogi-notri">
+      <div class="dom-vlogi-glava">
+        <h2 id="dom-vlogi-naslov" class="serif" data-naslov>Filmi <em>s poti.</em></h2>
+        <p class="uvodnik">Prava potovanja, ki jih je Claude zmontiral v Wayfare Studiu iz avtorjevih posnetkov s telefona.</p>
+      </div>
+      <ul class="kartice"><li class="kartica" data-vlog="milano-3"><a class="kartica-povezava" href="vlogi/#milano-3" aria-label="Milano — 3. dan, 12:55"><span class="kartica-slika"><img src="../media/vlogi/milano-3.jpg" alt="" width="1920" height="1080" loading="lazy" decoding="async"><video class="kartica-zanka" muted playsinline loop preload="none" tabindex="-1" aria-hidden="true" data-zanka-src="../media/vlogi/milano-3-zanka.mp4"></video><span class="kartica-cas">12:55</span></span><span class="kartica-naslov serif">Milano — 3. dan</span></a></li><li class="kartica" data-vlog="milano-2"><a class="kartica-povezava" href="vlogi/#milano-2" aria-label="Milano — 2. dan, 10:15"><span class="kartica-slika"><img src="../media/vlogi/milano-2.jpg" alt="" width="1920" height="1080" loading="lazy" decoding="async"><video class="kartica-zanka" muted playsinline loop preload="none" tabindex="-1" aria-hidden="true" data-zanka-src="../media/vlogi/milano-2-zanka.mp4"></video><span class="kartica-cas">10:15</span></span><span class="kartica-naslov serif">Milano — 2. dan</span></a></li><li class="kartica" data-vlog="milano-1"><a class="kartica-povezava" href="vlogi/#milano-1" aria-label="Milano — 1. dan, 7:33"><span class="kartica-slika"><img src="../media/vlogi/milano-1.jpg" alt="" width="1920" height="1080" loading="lazy" decoding="async"><video class="kartica-zanka" muted playsinline loop preload="none" tabindex="-1" aria-hidden="true" data-zanka-src="../media/vlogi/milano-1-zanka.mp4"></video><span class="kartica-cas">7:33</span></span><span class="kartica-naslov serif">Milano — 1. dan</span></a></li></ul>
+      <div class="dom-vlogi-vsi"><a class="gumb gumb-tihi" href="vlogi/">Vsi filmi</a></div>
+    </div>
+  </section>
 
   <section class="film-app" id="aplikacija" aria-label="Kako deluje Wayfare Studio" data-sestavljanje>
     <svg class="pot-crta" aria-hidden="true" data-pot><path class="pot-sled" d=""></path><path class="pot-pot" d=""></path></svg>

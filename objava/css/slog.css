@@ -117,8 +117,9 @@ p { text-wrap: pretty; }
 .znamka { display: inline-flex; align-items: center; gap: var(--s2); text-decoration: none; color: var(--muted); font-size: 16px; }
 .znamka b { color: var(--fg); font-weight: 600; }
 .znamka span { white-space: nowrap; }
-/* najožji telefoni: znamka le z znakom (ime ostane v aria-label povezave) */
-@media (max-width: 360px) { .glava .znamka span { display: none; } }
+/* telefoni: znamka le z znakom (ime ostane v aria-label povezave in v nogi),
+   da ob njej ostanejo Vlogi, jezik in Prenos */
+@media (max-width: 480px) { .glava .znamka span { display: none; } }
 @media (max-width: 420px) {
   .glava { gap: var(--s3); }
   .znamka { font-size: 15px; }
@@ -131,7 +132,8 @@ p { text-wrap: pretty; }
 .glava ul { display: flex; gap: var(--s5); list-style: none; margin: 0; padding: 0; }
 .glava ul a { display: inline-flex; align-items: center; height: 40px; font-size: 14px; color: var(--muted); text-decoration: none; transition: color 160ms ease; }
 .glava ul a:hover { color: var(--fg); }
-@media (max-width: 640px) { .glava-nav { display: none; } .jezik { margin-left: auto; } }
+/* na telefonu ostane v glavi le povezava Vlogi; drugo je v nogi */
+@media (max-width: 640px) { .glava-nav li:not([data-nav="vlogi"]) { display: none; } .glava ul { gap: 0; } }
 .jezik { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid rgba(239, 233, 223, 0.2); border-radius: var(--radius-pill); }
 .jezik a {
   display: inline-flex; align-items: center; height: 30px; padding: 0 var(--s3);
@@ -537,3 +539,53 @@ p { text-wrap: pretty; }
 .napaka h1 { font-size: clamp(48px, 7.6vw, 120px); max-width: 12ch; }
 .napaka .uvodnik { max-width: 44ch; }
 .napaka .gumb { margin-top: var(--s3); }
+
+/* -------------------------------------------------- kartice filmov (domača stran in zavihek Vlogi) */
+.kartice { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s7) var(--s5); grid-template-columns: 1fr; }
+@media (min-width: 640px) { .kartice { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .kartice { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.kartica-povezava { display: grid; gap: var(--s4); color: inherit; text-decoration: none; }
+.kartica-slika {
+  position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; isolation: isolate;
+  border-radius: var(--radius-lg); background: var(--surface); border: 1px solid rgba(239, 233, 223, 0.08);
+  transition: border-color 200ms ease, transform 500ms var(--ease-out), box-shadow 200ms ease;
+}
+/* pokončen film: zamegljena naslovnica za njim (kot <img>, ne prek url() v
+   spremenljivki — to Chrome razreši glede na slogovno datoteko), film cel v okvirju */
+.kartica-ozadje {
+  position: absolute; inset: -12%; width: 124%; height: 124%; object-fit: cover; z-index: 0;
+  filter: blur(24px) brightness(0.5);
+}
+.kartica-slika img:not(.kartica-ozadje), .kartica-zanka { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.kartica-pokoncna .kartica-slika img:not(.kartica-ozadje), .kartica-pokoncna .kartica-zanka { object-fit: contain; }
+.kartica-zanka { z-index: 2; opacity: 0; transition: opacity 320ms ease; pointer-events: none; }
+.kartica-zanka[data-tece] { opacity: 1; }
+.kartica-cas {
+  position: absolute; right: var(--s3); bottom: var(--s3); z-index: 3;
+  padding: 6px 10px; border-radius: var(--radius-pill);
+  background: rgba(11, 16, 32, 0.62); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  color: var(--fg); font: 500 13px/1 var(--sans); font-variant-numeric: tabular-nums;
+}
+.kartica-naslov { font-size: clamp(24px, 2.2vw, 30px); line-height: 1.05; }
+@media (hover: hover) and (pointer: fine) {
+  .kartica-povezava:hover .kartica-slika { border-color: var(--border-strong); transform: translateY(-3px); }
+}
+.kartica-povezava:focus-visible { outline: none; }
+.kartica-povezava:focus-visible .kartica-slika { outline: 2px solid var(--accent); outline-offset: 3px; }
+.kartica-povezava:active .kartica-slika { transform: scale(0.99); }
+/* film, ki je zdaj v predvajalniku */
+.kartica[aria-current="true"] .kartica-slika { border-color: rgba(100, 226, 214, 0.6); box-shadow: 0 0 0 4px var(--accent-dim); }
+/* gibanje: kartice pridejo ob drsenju (kartice.js); varovalka jih pokaže,
+   če skript ne steče */
+.gibanje .kartica { opacity: 0; transform: translateY(24px); animation: varovalka-kartic 0s 3s forwards; }
+@keyframes varovalka-kartic { to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .gibanje .kartica { opacity: 1; transform: none; animation: none; } }
+
+/* -------------------------------------------------- filmi s poti (domača stran) */
+.dom-vlogi { padding: 0 var(--rob) var(--s10); }
+.dom-vlogi-notri { max-width: 1240px; margin-inline: auto; display: grid; gap: var(--s7); }
+.dom-vlogi-glava { display: grid; gap: var(--s4); }
+.dom-vlogi h2 { font-size: clamp(44px, 6vw, 96px); }
+.dom-vlogi .uvodnik { max-width: 48ch; }
+.dom-vlogi-vsi { display: flex; justify-content: center; margin-top: var(--s3); }

@@ -13,6 +13,7 @@
 // teh datotek ni, zato napaka pri nalaganju pomeni, da film še ni na spletu.
 import { zazeniDrsenje, prikaziNaslove, besede, mirno, svet } from "./gibanje.js";
 import { prenos } from "./prenos.js";
+import { zankeKartic, prihodKartic } from "./kartice.js";
 
 const { gsap, ScrollTrigger, lenis } = zazeniDrsenje();
 if (!mirno) document.documentElement.classList.add("gibanje");
@@ -203,26 +204,14 @@ viri[720].addEventListener("error", () => setTimeout(() => {
   if (video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) napaka();
 }, 0));
 
-// kartice: klik naloži film; miška ali fokus zažene nem predogled
-const zMisko = matchMedia("(hover: hover) and (pointer: fine)").matches;
+// kartice: klik naloži film; miška ali fokus zažene nem predogled (kartice.js)
 for (const k of kartice) {
-  const povezava = k.querySelector("[data-izberi]");
-  povezava.addEventListener("click", (e) => {
+  k.querySelector("[data-izberi]").addEventListener("click", (e) => {
     e.preventDefault();
     izberi(k.dataset.vlog, { predvajajTakoj: true, drsi: true });
   });
-  const zanka = k.querySelector("[data-zanka-src]");
-  if (!zanka || mirno || !zMisko) continue;
-  const zacni = () => {
-    if (!zanka.getAttribute("src")) zanka.src = zanka.dataset.zankaSrc;
-    zanka.play().then(() => { zanka.dataset.tece = ""; }).catch(() => {});
-  };
-  const ustavi = () => { zanka.pause(); delete zanka.dataset.tece; try { zanka.currentTime = 0; } catch (e) {} };
-  povezava.addEventListener("pointerenter", zacni);
-  povezava.addEventListener("pointerleave", ustavi);
-  povezava.addEventListener("focus", zacni);
-  povezava.addEventListener("blur", ustavi);
 }
+zankeKartic(kartice);
 
 // povezava s #oznako odpre ta film (brez predvajanja; zvok potrebuje klik);
 // naslovna vrstica se spremeni šele ob izbiri, ne ob nalaganju
@@ -242,10 +231,7 @@ if (!mirno) {
     .from(deli, { yPercent: 110, duration: 1.1, stagger: 0.05 }, 0.1)
     .fromTo("[data-uvod]", { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 1.0, stagger: 0.09 }, 0.3);
 
-  ScrollTrigger.batch(".skupina h3, .kartica", {
-    start: "top 92%",
-    onEnter: (skupina) => gsap.to(skupina, { autoAlpha: 1, y: 0, duration: 0.9, ease: "expo.out", stagger: 0.08, overwrite: true }),
-  });
+  prihodKartic(".skupina h3, .kartica", { gsap, ScrollTrigger });
   svet({ gsap });
 }
 prikaziNaslove("[data-naslov]", { gsap });

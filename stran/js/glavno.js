@@ -1,6 +1,7 @@
 import { zazeniDrsenje, prikaziNaslove, promoPredvajalnik, znak, besede, mirno, svet } from "./gibanje.js";
 import { sestavljanje } from "./sestavljanje.js";
 import { prenos } from "./prenos.js";
+import { zankeKartic, prihodKartic } from "./kartice.js";
 
 const { gsap, ScrollTrigger, lenis } = zazeniDrsenje();
 if (!mirno) document.documentElement.classList.add("gibanje");
@@ -108,6 +109,10 @@ function trakMest() {
 prikaziNaslove("[data-naslov]", { gsap });
 promoPredvajalnik(document.querySelector("[data-promo]"));
 
+// filmi s poti: najnovejše kartice z zavihka Vlogi
+zankeKartic(document.querySelectorAll("[data-vlog]"));
+prihodKartic(".kartica", { gsap, ScrollTrigger });
+
 // Claude: zavihka namestitve (vtičnik je privzet, ker ne rabi Node.js).
 // Brez JS sta vidni obe poti; tu se skrije neizbrana.
 const terminal = document.querySelector("[data-terminal]");
@@ -176,16 +181,3 @@ for (const a of document.querySelectorAll("[data-jezik]")) {
 }
 
 prenos();
-
-// »Poglej film«: film se začne že ob kliku (brskalnik zvok dovoli le ob dotiku
-// ali kliku), stran pa se medtem odpelje do kina; ko pride tja, gre film na začetek.
-document.querySelector("[data-poglej-film]")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation(); // sicer bi drsenje do sidra sprožil še splošni poslušalec
-  const video = document.querySelector("[data-promo] video");
-  document.querySelector("[data-predvajaj]").click();
-  const naZacetek = () => { video.currentTime = 0; };
-  if (lenis) { lenis.resize(); lenis.scrollTo("#film", { onComplete: naZacetek }); }
-  else { document.getElementById("film").scrollIntoView(); naZacetek(); }
-  history.replaceState(null, "", "#film");
-});

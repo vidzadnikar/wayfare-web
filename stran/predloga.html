@@ -48,7 +48,7 @@
       <p class="uvodnik" data-uvod>{{hero_uvod}}</p>
       <div class="akcije" data-uvod>
         <a class="gumb" href="{{prenos_href}}" download data-prenos>{{gumb_prenos}}</a>
-        <a class="gumb gumb-tihi" href="#film" data-poglej-film>{{gumb_film}} <span class="mono">01:02</span></a>
+        <a class="gumb gumb-tihi" href="{{pot_vlogi}}">{{gumb_vlogi}}</a>
       </div>
     </div>
   </section>
@@ -57,6 +57,17 @@
     <div class="mesta-vrsta" data-smer="1"><div class="mesta-tir">{{mesta}}</div></div>
     <div class="mesta-vrsta" data-smer="-1"><div class="mesta-tir">{{mesta_obrnjeno}}</div></div>
   </div>
+
+  <section class="dom-vlogi" id="vlogi" aria-labelledby="dom-vlogi-naslov">
+    <div class="dom-vlogi-notri">
+      <div class="dom-vlogi-glava">
+        <h2 id="dom-vlogi-naslov" class="serif" data-naslov>{{dom_vlogi_naslov}}</h2>
+        <p class="uvodnik">{{dom_vlogi_uvod}}</p>
+      </div>
+      <ul class="kartice">{{dom_kartice}}</ul>
+      <div class="dom-vlogi-vsi"><a class="gumb gumb-tihi" href="{{pot_vlogi}}">{{dom_vlogi_vsi}}</a></div>
+    </div>
+  </section>
 
   <section class="film-app" id="aplikacija" aria-label="{{aplikacija_oznaka}}" data-sestavljanje>
     <svg class="pot-crta" aria-hidden="true" data-pot><path class="pot-sled" d=""></path><path class="pot-pot" d=""></path></svg>

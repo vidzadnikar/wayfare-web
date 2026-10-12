@@ -253,26 +253,52 @@ def poglavja_html(poglavja):
     )
 
 
+def opis_vloga(v, jezik, media):
+    """Vrednosti enega vloga za kartico, predvajalnik in skript strani."""
+    yt = v.get("youtube") or ""
+    return dict(
+        oznaka=v["oznaka"], naslov=v["naslov"][jezik], kraj=v["kraj"][jezik],
+        trajanje=cas(v["trajanje"]),
+        slika=f"{media}{v['oznaka']}.jpg", v1080=f"{media}{v['oznaka']}-1080.mp4",
+        v720=f"{media}{v['oznaka']}-720.mp4", zanka=f"{media}{v['oznaka']}-zanka.mp4",
+        youtube=yt, okvir=youtube_okvir(yt) if yt else "",
+        # povezava kartice brez JS: film na YouTubu ali spletna datoteka
+        povezava=f"https://www.youtube.com/watch?v={yt}" if yt else f"{media}{v['oznaka']}-1080.mp4",
+        pokoncno=v["visina"] > v["sirina"], poglavja=v["poglavja"],
+    )
+
+
+def kartica_html(v, o, href, izberi=True):
+    """Kartica filma: naslovnica, nem predogled za kazalec, trajanje, naslov.
+    Z `izberi` klik na zavihku Vlogi film naloži v predvajalnik (vlogi.js);
+    na domači strani povezava pelje na zavihek."""
+    return (
+        f'<li class="kartica{" kartica-pokoncna" if o["pokoncno"] else ""}" data-vlog="{o["oznaka"]}">'
+        f'<a class="kartica-povezava" href="{href}"{" data-izberi" if izberi else ""} aria-label="{html.escape(o["naslov"])}, {o["trajanje"]}">'
+        f'<span class="kartica-slika">'
+        + (f'<img class="kartica-ozadje" src="{o["slika"]}" alt="" aria-hidden="true" loading="lazy" decoding="async">' if o["pokoncno"] else "") +
+        f'<img src="{o["slika"]}" alt="" width="{v["sirina"]}" height="{v["visina"]}" loading="lazy" decoding="async">'
+        f'<video class="kartica-zanka" muted playsinline loop preload="none" tabindex="-1" aria-hidden="true" data-zanka-src="{o["zanka"]}"></video>'
+        f'<span class="kartica-cas">{o["trajanje"]}</span></span>'
+        f'<span class="kartica-naslov serif">{html.escape(o["naslov"])}</span></a></li>'
+    )
+
+
+def vlogi_dom(jezik, p, koliko=3):
+    """Domača stran: najnovejši filmi s povezavo na zavihek Vlogi."""
+    vlogi = vlogi_podatki()
+    media = p["koren"] + "media/vlogi/"
+    kartice = [kartica_html(v, opis_vloga(v, jezik, media), f'{p["pot_vlogi"]}#{v["oznaka"]}', izberi=False)
+               for v in vlogi[:koliko]]
+    return {"dom_kartice": "".join(kartice), "st_filmov": mnozina(len(vlogi), jezik, "film")}
+
+
 def vlogi_stran(jezik, b, p):
     """Vrednosti za predlogo zavihka Vlogi: prvi film v predvajalniku, skupine po
     krajih, podatki za skript in številke v uvodu."""
     vlogi = vlogi_podatki()
     media = p["koren"] + "media/vlogi/"
-
-    def opis(v):
-        yt = v.get("youtube") or ""
-        return dict(
-            oznaka=v["oznaka"], naslov=v["naslov"][jezik], kraj=v["kraj"][jezik],
-            trajanje=cas(v["trajanje"]),
-            slika=f"{media}{v['oznaka']}.jpg", v1080=f"{media}{v['oznaka']}-1080.mp4",
-            v720=f"{media}{v['oznaka']}-720.mp4", zanka=f"{media}{v['oznaka']}-zanka.mp4",
-            youtube=yt, okvir=youtube_okvir(yt) if yt else "",
-            # povezava kartice brez JS: film na YouTubu ali spletna datoteka
-            povezava=f"https://www.youtube.com/watch?v={yt}" if yt else f"{media}{v['oznaka']}-1080.mp4",
-            pokoncno=v["visina"] > v["sirina"], poglavja=v["poglavja"],
-        )
-
-    opisi = [opis(v) for v in vlogi]
+    opisi = [opis_vloga(v, jezik, media) for v in vlogi]
 
     # skupine po kraju, v vrstnem redu prvega pojava (najnovejše potovanje prvo)
     skupine = {}
@@ -280,18 +306,7 @@ def vlogi_stran(jezik, b, p):
         skupine.setdefault(o["kraj"], []).append((v, o))
     deli = []
     for i, (kraj, filmi) in enumerate(skupine.items(), 1):
-        kartice = []
-        for v, o in filmi:
-            kartice.append(
-                f'<li class="kartica{" kartica-pokoncna" if o["pokoncno"] else ""}" data-vlog="{o["oznaka"]}">'
-                f'<a class="kartica-povezava" href="{o["povezava"]}" data-izberi aria-label="{html.escape(o["naslov"])}, {o["trajanje"]}">'
-                f'<span class="kartica-slika">'
-                + (f'<img class="kartica-ozadje" src="{o["slika"]}" alt="" aria-hidden="true" loading="lazy" decoding="async">' if o["pokoncno"] else "") +
-                f'<img src="{o["slika"]}" alt="" width="{v["sirina"]}" height="{v["visina"]}" loading="lazy" decoding="async">'
-                f'<video class="kartica-zanka" muted playsinline loop preload="none" tabindex="-1" aria-hidden="true" data-zanka-src="{o["zanka"]}"></video>'
-                f'<span class="kartica-cas">{o["trajanje"]}</span></span>'
-                f'<span class="kartica-naslov serif">{html.escape(o["naslov"])}</span></a></li>'
-            )
+        kartice = [kartica_html(v, o, o["povezava"]) for v, o in filmi]
         deli.append(
             f'<section class="skupina" aria-labelledby="skupina-{i}">'
             f'<h3 id="skupina-{i}" class="serif">{html.escape(kraj.split(",")[0])}</h3>'
@@ -404,6 +419,8 @@ def main():
             b = {**besedila[jezik], **{k: v for k, v in p.items() if not k.startswith("_")}}
             if stran == "vlogi":
                 b.update(vlogi_stran(jezik, b, p))
+            elif stran == "dom":
+                b.update(vlogi_dom(jezik, p))
             html_ = predloga
             for ime, vsebina in deli.items():
                 html_ = html_.replace("{{" + ime + "}}", vsebina)
