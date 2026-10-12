@@ -1,6 +1,79 @@
 {
  "vlogi": [
   {
+   "oznaka": "milano-3",
+   "naslov": {
+    "en": "Milan — Day 3",
+    "sl": "Milano — 3. dan"
+   },
+   "kraj": {
+    "en": "Milan, Italy",
+    "sl": "Milano, Italija"
+   },
+   "datum": "2026-10-11",
+   "datum_do": null,
+   "trajanje": 775.088,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": 53,
+   "poglavja": [
+    [
+     0.0,
+     "Uvod"
+    ],
+    [
+     14.4,
+     "Day 3 Milano"
+    ],
+    [
+     87.8,
+     "Ofelé"
+    ],
+    [
+     124.7,
+     "Piazza Gae Aulenti"
+    ],
+    [
+     173.0,
+     "Bosco Verticale"
+    ],
+    [
+     193.7,
+     "Isola"
+    ],
+    [
+     279.6,
+     "Galleria Vittorio Emanuele II"
+    ],
+    [
+     288.6,
+     "Aperitivo"
+    ],
+    [
+     354.4,
+     "Nakupi"
+    ],
+    [
+     388.7,
+     "Ogled nakupov"
+    ],
+    [
+     495.3,
+     "Okušanje"
+    ],
+    [
+     732.7,
+     "Lahko noč"
+    ],
+    [
+     761.2,
+     "Pozna večerja"
+    ]
+   ],
+   "jezik": "sl",
+   "youtube": "WkgzNkAhiWg"
+  },
+  {
    "oznaka": "milano-2",
    "naslov": {
     "en": "Milan — Day 2",

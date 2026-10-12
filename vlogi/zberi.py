@@ -3,6 +3,7 @@
     python3 zberi.py            # vse: spletni video, zanke, naslovnice, vlogi.json
     python3 zberi.py --video    # samo spletni različici videa in zanke (dolgo)
     python3 zberi.py --slike    # samo naslovnice in vlogi.json (hitro)
+    python3 zberi.py --samo <oznaka>   # video in zanka le za ta vlog, slike in vlogi.json za vse
 
 Izhod v ../stran/media/vlogi/: <oznaka>-1080.mp4 in <oznaka>-720.mp4 (spletni
 različici, x264 kot pri heroju), <oznaka>-zanka.mp4 (6 s nemega predogleda za
@@ -41,6 +42,10 @@ JSON = TU.parent / "stran" / "vlogi.json"
 # youtube (po želji): oznaka videa na YouTubu, kamor gre izvorni izvoz iz ~/Video
 # (lahko kot Neobjavljen). Oznaka, ki je že v vlogi.json, se ohrani.
 VLOGI = [
+    dict(oznaka="milano-3", izvor="Milano vlog day 3.mp4", projekt="Milano day 3",
+         naslov=dict(en="Milan — Day 3", sl="Milano — 3. dan"),
+         kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
+         datum=("2026-10-11", None), naslovna=1, youtube="WkgzNkAhiWg"),
     dict(oznaka="milano-2", izvor="Milano vlog day 2.mp4", projekt="Milano day 2",
          naslov=dict(en="Milan — Day 2", sl="Milano — 2. dan"),
          kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
@@ -182,6 +187,7 @@ def naslovnica(v, izvor, youtube):
 def main(argv):
     samo_video = "--video" in argv
     samo_slike = "--slike" in argv
+    samo = argv[argv.index("--samo") + 1] if "--samo" in argv else None  # video le za ta vlog
     CILJ.mkdir(parents=True, exist_ok=True)
     prej = {}  # oznake youtube iz prejšnjega vlogi.json ostanejo, če jih v VLOGI ni
     if JSON.is_file():
@@ -195,7 +201,7 @@ def main(argv):
         info = probe(izvor)
         print(f"{v['oznaka']}: {info['sirina']}×{info['visina']} {info['fps']} fps, {info['trajanje']:.0f} s"
               + (f", YouTube {youtube}" if youtube else ""))
-        if not samo_slike:
+        if not samo_slike and samo in (None, v["oznaka"]):
             video(v, izvor, info, splet=not youtube)
         if not samo_video:
             naslovnica(v, izvor, youtube)
