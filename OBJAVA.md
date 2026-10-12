@@ -1,6 +1,7 @@
 # Objava spletne strani
 
-Stran gostuje na Cloudflare Pages (zastonj, brez omejitve prometa). Objavi se
+Stran gostuje na Cloudflare Pages, https://wayfarestudio.pages.dev (zastonj,
+brez omejitve prometa). Objavi se
 mapa `objava`, ki jo naredi `stran/zgradi.py`. Vlogi igrajo z YouTuba, paket
 za prenos je na GitHub Releases: oboje je za Pages preveliko (meja je 25 MB na
 datoteko), `zgradi.py` zato teh datotek v objavo ne da in prevelike datoteke
@@ -19,10 +20,11 @@ odkloni.
        git remote add origin https://github.com/vidzadnikar/wayfare-web.git
        git push -u origin main
 
-3. Cloudflare: Workers & Pages → Create → Pages → Connect to Git → `wayfare-web`.
-   Framework preset: None. Build command: prazno. Build output directory:
-   `objava`. Stran dobi naslov `<ime projekta>.pages.dev`; lastna domena se
-   doda pod Custom domains.
+3. Cloudflare (narejeno 12. 10. 2026): projekt Pages `wayfarestudio`,
+   povezan z GitHub repozitorijem `wayfare-web`, veja `main`. Framework
+   preset: None. Build command: prazno. Build output directory: `objava`.
+   Stran je na https://wayfarestudio.pages.dev; lastna domena se doda v
+   nadzorni plošči pod Custom domains (Workers & Pages → wayfarestudio).
 
 4. Paket: GitHub → Releases → Draft a new release → oznaka `v0.1.0`, priloži
    `stran/prenos/Wayfare-Studio-0.1.0.dmg`, Publish. Gumb Prenos na strani
