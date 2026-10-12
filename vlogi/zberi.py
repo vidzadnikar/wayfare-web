@@ -61,7 +61,7 @@ VLOGI = [
     dict(oznaka="madrid-4", izvor="Madrid vlog day 4.mp4", projekt="Madrid day 4",
          naslov=dict(en="Madrid — Day 4", sl="Madrid — 4. dan"),
          kraj=dict(en="Madrid, Spain", sl="Madrid, Španija"),
-         datum=("2026-09-28", None), naslovna=5),
+         datum=("2026-09-28", None), naslovna=5, youtube="JprZupLajmo"),
     dict(oznaka="madrid-3", izvor="Madrid vlog day 3.mp4", projekt="Madrid day 3",
          naslov=dict(en="Madrid — Day 3", sl="Madrid — 3. dan"),
          kraj=dict(en="Madrid, Spain", sl="Madrid, Španija"),
