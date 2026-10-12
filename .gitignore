@@ -1,0 +1,20 @@
+# Spletna stran Wayfare Studio. Objavi se mapa objava (Cloudflare Pages: izhodna
+# mapa `objava`, brez ukaza za gradnjo). V repozitorij ne gredo izdelki in
+# veliki izvori: Cloudflare Pages vzame največ 25 MB na datoteko, vlogi igrajo
+# z YouTuba, paket za prenos je na GitHub Releases.
+.DS_Store
+__pycache__/
+
+# izvorni posnetki za video heroja (278 MB) in zgrajena aplikacija (758 MB)
+hero-mesta/izvor/
+paket/gradnja/
+
+# paket za prenos (.dmg, 434 MB): priloga izdaje na GitHub Releases
+stran/prenos/
+objava/prenos/
+
+# spletni različici vlogov (do 383 MB): film je na YouTubu
+stran/media/vlogi/*-1080.mp4
+stran/media/vlogi/*-720.mp4
+objava/media/vlogi/*-1080.mp4
+objava/media/vlogi/*-720.mp4

@@ -1,0 +1,429 @@
+{
+ "vlogi": [
+  {
+   "oznaka": "milano-2",
+   "naslov": {
+    "en": "Milan — Day 2",
+    "sl": "Milano — 2. dan"
+   },
+   "kraj": {
+    "en": "Milan, Italy",
+    "sl": "Milano, Italija"
+   },
+   "datum": "2026-10-10",
+   "datum_do": null,
+   "trajanje": 614.92,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": 73,
+   "poglavja": [
+    [
+     0.0,
+     "Uvod"
+    ],
+    [
+     13.1,
+     "Day 2 Milano"
+    ],
+    [
+     82.6,
+     "Dopoldne"
+    ],
+    [
+     107.0,
+     "Santa Maria delle Grazie"
+    ],
+    [
+     152.5,
+     "Castello Sforzesco"
+    ],
+    [
+     204.0,
+     "Arco della Pace"
+    ],
+    [
+     251.6,
+     "Popoldne"
+    ],
+    [
+     290.3,
+     "Piazza del Duomo"
+    ],
+    [
+     306.4,
+     "Spùn"
+    ],
+    [
+     318.4,
+     "Test tiramisuja"
+    ],
+    [
+     375.3,
+     "Ogled nakupov"
+    ],
+    [
+     516.4,
+     "Večer"
+    ],
+    [
+     542.2,
+     "Navigli"
+    ]
+   ],
+   "jezik": "sl"
+  },
+  {
+   "oznaka": "milano-1",
+   "naslov": {
+    "en": "Milan — Day 1",
+    "sl": "Milano — 1. dan"
+   },
+   "kraj": {
+    "en": "Milan, Italy",
+    "sl": "Milano, Italija"
+   },
+   "datum": "2026-10-09",
+   "datum_do": null,
+   "trajanje": 452.767,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": 68,
+   "poglavja": [
+    [
+     0.0,
+     "Uvod"
+    ],
+    [
+     12.4,
+     "Day 1 Milano"
+    ],
+    [
+     81.6,
+     "Dopoldne"
+    ],
+    [
+     102.5,
+     "Milano"
+    ],
+    [
+     141.5,
+     "Duomo di Milano"
+    ],
+    [
+     177.3,
+     "Strehe Duoma"
+    ],
+    [
+     273.9,
+     "Galleria Vittorio Emanuele II"
+    ],
+    [
+     311.8,
+     "Večer"
+    ]
+   ],
+   "jezik": "sl"
+  },
+  {
+   "oznaka": "madrid-recap",
+   "naslov": {
+    "en": "Madrid — Recap",
+    "sl": "Madrid — povzetek"
+   },
+   "kraj": {
+    "en": "Madrid, Spain",
+    "sl": "Madrid, Španija"
+   },
+   "datum": "2026-09-25",
+   "datum_do": "2026-09-28",
+   "trajanje": 252.933,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": 164,
+   "poglavja": [],
+   "jezik": "sl"
+  },
+  {
+   "oznaka": "madrid-4",
+   "naslov": {
+    "en": "Madrid — Day 4",
+    "sl": "Madrid — 4. dan"
+   },
+   "kraj": {
+    "en": "Madrid, Spain",
+    "sl": "Madrid, Španija"
+   },
+   "datum": "2026-09-28",
+   "datum_do": null,
+   "trajanje": 236.488,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": 29,
+   "poglavja": [
+    [
+     0.0,
+     "Uvod"
+    ],
+    [
+     13.8,
+     "Day 4"
+    ],
+    [
+     62.7,
+     "Plaza de Cibeles"
+    ],
+    [
+     86.2,
+     "Edificio Metrópolis"
+    ],
+    [
+     109.6,
+     "Puerta del Sol"
+    ],
+    [
+     119.8,
+     "Še zadnji nakupi"
+    ],
+    [
+     146.3,
+     "Kosilo"
+    ],
+    [
+     160.2,
+     "Letališče Madrid"
+    ],
+    [
+     184.2,
+     "Let domov"
+    ],
+    [
+     203.2,
+     "Pristanek"
+    ],
+    [
+     213.6,
+     "Večerja"
+    ]
+   ],
+   "jezik": "sl"
+  },
+  {
+   "oznaka": "madrid-3",
+   "naslov": {
+    "en": "Madrid — Day 3",
+    "sl": "Madrid — 3. dan"
+   },
+   "kraj": {
+    "en": "Madrid, Spain",
+    "sl": "Madrid, Španija"
+   },
+   "datum": "2026-09-27",
+   "datum_do": null,
+   "trajanje": 250.467,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": 52,
+   "poglavja": [
+    [
+     0.0,
+     "Uvod"
+    ],
+    [
+     13.2,
+     "Day 3"
+    ],
+    [
+     42.7,
+     "Las Ventas"
+    ],
+    [
+     69.4,
+     "Ogled arene"
+    ],
+    [
+     88.1,
+     "Ob robu arene"
+    ],
+    [
+     98.5,
+     "Kosilo"
+    ],
+    [
+     114.4,
+     "Santiago Bernabéu"
+    ],
+    [
+     157.5,
+     "Slačilnica"
+    ],
+    [
+     167.5,
+     "Las Ventas"
+    ],
+    [
+     209.8,
+     "Večerja"
+    ]
+   ],
+   "jezik": "sl"
+  },
+  {
+   "oznaka": "madrid-2",
+   "naslov": {
+    "en": "Madrid — Day 2",
+    "sl": "Madrid — 2. dan"
+   },
+   "kraj": {
+    "en": "Madrid, Spain",
+    "sl": "Madrid, Španija"
+   },
+   "datum": "2026-09-26",
+   "datum_do": null,
+   "trajanje": 219.35,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": 72,
+   "poglavja": [
+    [
+     0.0,
+     "Uvod"
+    ],
+    [
+     15.2,
+     "Day 2"
+    ],
+    [
+     40.8,
+     "Teatro Real"
+    ],
+    [
+     56.2,
+     "Zaodrje"
+    ],
+    [
+     66.3,
+     "Nad odrom"
+    ],
+    [
+     105.4,
+     "Trgovina Atlético Madrid"
+    ],
+    [
+     121.4,
+     "Mercado de San Miguel"
+    ],
+    [
+     137.3,
+     "Španski parlament"
+    ],
+    [
+     150.8,
+     "Muzej Prado"
+    ],
+    [
+     160.8,
+     "Tablao La Quimera"
+    ],
+    [
+     200.0,
+     "Plaza Mayor"
+    ]
+   ],
+   "jezik": "sl"
+  },
+  {
+   "oznaka": "madrid-1",
+   "naslov": {
+    "en": "Madrid — Day 1",
+    "sl": "Madrid — 1. dan"
+   },
+   "kraj": {
+    "en": "Madrid, Spain",
+    "sl": "Madrid, Španija"
+   },
+   "datum": "2026-09-25",
+   "datum_do": null,
+   "trajanje": 198.3,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": 55,
+   "poglavja": [
+    [
+     0.0,
+     "Uvod"
+    ],
+    [
+     11.7,
+     "Day 1 Madrid"
+    ],
+    [
+     24.2,
+     "Dopoldne"
+    ],
+    [
+     48.5,
+     "Las Ventas"
+    ],
+    [
+     91.4,
+     "Plaza de España"
+    ],
+    [
+     113.0,
+     "Palacio Real"
+    ],
+    [
+     126.0,
+     "Catedral de la Almudena"
+    ],
+    [
+     161.8,
+     "Plaza Mayor"
+    ],
+    [
+     185.9,
+     "Noč"
+    ]
+   ],
+   "jezik": "sl"
+  },
+  {
+   "oznaka": "rifnik",
+   "naslov": {
+    "en": "Rifnik",
+    "sl": "Rifnik"
+   },
+   "kraj": {
+    "en": "Rifnik, Slovenia",
+    "sl": "Rifnik, Slovenija"
+   },
+   "datum": "2026-09-05",
+   "datum_do": null,
+   "trajanje": 127.6,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": null,
+   "poglavja": [],
+   "jezik": "sl"
+  },
+  {
+   "oznaka": "budimpesta",
+   "naslov": {
+    "en": "Budapest",
+    "sl": "Budimpešta"
+   },
+   "kraj": {
+    "en": "Budapest, Hungary",
+    "sl": "Budimpešta, Madžarska"
+   },
+   "datum": "2025-12-26",
+   "datum_do": null,
+   "trajanje": 132.6,
+   "sirina": 1080,
+   "visina": 1920,
+   "posnetkov": 30,
+   "poglavja": [],
+   "jezik": "sl"
+  }
+ ]
+}

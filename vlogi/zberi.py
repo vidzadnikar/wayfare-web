@@ -1,0 +1,191 @@
+"""Zbere vloge, zmontirane v Wayfare Studiu, za zavihek Vlogi na spletni strani.
+
+    python3 zberi.py            # vse: spletni video, zanke, naslovnice, vlogi.json
+    python3 zberi.py --video    # samo spletni različici videa in zanke (dolgo)
+    python3 zberi.py --slike    # samo naslovnice in vlogi.json (hitro)
+
+Izhod v ../stran/media/vlogi/: <oznaka>-1080.mp4 in <oznaka>-720.mp4 (spletni
+različici, x264 kot pri heroju), <oznaka>-zanka.mp4 (6 s nemega predogleda za
+kazalec nad kartico) in <oznaka>.jpg (naslovnica). Opis vseh vlogov je v
+../stran/vlogi.json; iz njega zgradi.py sestavi stran vlogi/.
+
+Izvor je končni izvoz vsakega vloga v ~/Video. Poglavja in naslovnice pridejo
+iz paketa za objavo (_izris/objava), kjer obstaja; sicer naslovnico vzamemo
+iz filma ob navedenem času. Vrstni red v seznamu je vrstni red na strani:
+najnovejši prvi.
+
+Vlog z oznako youtube (v VLOGI ali že v vlogi.json) na strani igra z YouTuba:
+zanj nastaneta le zanka in naslovnica, spletni različici ne.
+"""
+
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+TU = Path(__file__).resolve().parent
+FF = Path("~/Claude/claude/Wayfare/vendor/ffmpeg/bin/ffmpeg").expanduser()
+FP = FF.with_name("ffprobe")
+VIDEO = Path("~/Video").expanduser()
+CILJ = TU.parent / "stran" / "media" / "vlogi"
+JSON = TU.parent / "stran" / "vlogi.json"
+
+# oznaka, izvor (pod ~/Video), projekt (mapa s katalogom in paketom za objavo),
+# naslov in kraj v obeh jezikih, dan snemanja (od, do), naslovnica: številka
+# slike iz paketa za objavo (1–6) ali čas v filmu (sekunde) za vloge brez paketa.
+# youtube (po želji): oznaka videa na YouTubu, kamor gre izvorni izvoz iz ~/Video
+# (lahko kot Neobjavljen). Oznaka, ki je že v vlogi.json, se ohrani.
+VLOGI = [
+    dict(oznaka="milano-2", izvor="Milano vlog day 2.mp4", projekt="Milano day 2",
+         naslov=dict(en="Milan — Day 2", sl="Milano — 2. dan"),
+         kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
+         datum=("2026-10-10", None), naslovna=1),
+    dict(oznaka="milano-1", izvor="Milano vlog day 1.mp4", projekt="Milano day 1",
+         naslov=dict(en="Milan — Day 1", sl="Milano — 1. dan"),
+         kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
+         datum=("2026-10-09", None), naslovna=5),
+    dict(oznaka="madrid-recap", izvor="Madrid vlog recap.mp4", projekt="Madrid recap",
+         naslov=dict(en="Madrid — Recap", sl="Madrid — povzetek"),
+         kraj=dict(en="Madrid, Spain", sl="Madrid, Španija"),
+         datum=("2026-09-25", "2026-09-28"), naslovna=68.3),
+    dict(oznaka="madrid-4", izvor="Madrid vlog day 4.mp4", projekt="Madrid day 4",
+         naslov=dict(en="Madrid — Day 4", sl="Madrid — 4. dan"),
+         kraj=dict(en="Madrid, Spain", sl="Madrid, Španija"),
+         datum=("2026-09-28", None), naslovna=5),
+    dict(oznaka="madrid-3", izvor="Madrid vlog day 3.mp4", projekt="Madrid day 3",
+         naslov=dict(en="Madrid — Day 3", sl="Madrid — 3. dan"),
+         kraj=dict(en="Madrid, Spain", sl="Madrid, Španija"),
+         datum=("2026-09-27", None), naslovna=2),
+    dict(oznaka="madrid-2", izvor="Madrid vlog day 2.mp4", projekt="Madrid day 2",
+         naslov=dict(en="Madrid — Day 2", sl="Madrid — 2. dan"),
+         kraj=dict(en="Madrid, Spain", sl="Madrid, Španija"),
+         datum=("2026-09-26", None), naslovna=1),
+    dict(oznaka="madrid-1", izvor="Madrid vlog day 1.mp4", projekt="Madrid day 1",
+         naslov=dict(en="Madrid — Day 1", sl="Madrid — 1. dan"),
+         kraj=dict(en="Madrid, Spain", sl="Madrid, Španija"),
+         datum=("2026-09-25", None), naslovna=1),
+    dict(oznaka="rifnik", izvor="Rifnik 3.mp4", projekt=None,
+         naslov=dict(en="Rifnik", sl="Rifnik"),
+         kraj=dict(en="Rifnik, Slovenia", sl="Rifnik, Slovenija"),
+         datum=("2026-09-05", None), naslovna=72.7),
+    dict(oznaka="budimpesta", izvor="Budimpešta/_izris/Budimpešta.mp4", projekt="Budimpešta",
+         naslov=dict(en="Budapest", sl="Budimpešta"),
+         kraj=dict(en="Budapest, Hungary", sl="Budimpešta, Madžarska"),
+         datum=("2025-12-26", None), naslovna=35.8),
+]
+
+# x264 kot pri zanki heroja; vlogi so 60 sličic/s, zato je zgornja meja višja
+X264 = ["-c:v", "libx264", "-preset", "fast", "-profile:v", "high", "-pix_fmt", "yuv420p",
+        "-movflags", "+faststart", "-map_metadata", "-1", "-map_chapters", "-1",
+        "-metadata:s:v", "handler_name=", "-metadata:s:a", "handler_name=", "-fflags", "+bitexact"]
+ZVOK = ["-c:a", "aac", "-b:a", "128k", "-ac", "2", "-ar", "48000"]
+
+
+def probe(pot):
+    out = subprocess.run([FP, "-v", "error", "-select_streams", "v:0",
+                          "-show_entries", "stream=width,height,r_frame_rate:format=duration",
+                          "-of", "json", str(pot)], capture_output=True, text=True, check=True).stdout
+    d = json.loads(out)
+    s = d["streams"][0]
+    a, b = s["r_frame_rate"].split("/")
+    return dict(sirina=s["width"], visina=s["height"], fps=round(int(a) / int(b)),
+                trajanje=round(float(d["format"]["duration"]), 3))
+
+
+def poglavja(v):
+    if not v["projekt"]:
+        return []
+    p = VIDEO / v["projekt"] / "_izris" / "objava" / "objava.json"
+    if not p.is_file():
+        return []
+    return [[round(float(t), 1), ime] for t, ime in json.load(open(p, encoding="utf-8"))["poglavja"]]
+
+
+def posnetkov(v):
+    if not v["projekt"]:
+        return None
+    p = VIDEO / v["projekt"] / "_vlog" / "katalog.json"
+    return json.load(open(p, encoding="utf-8")).get("clip_count") if p.is_file() else None
+
+
+def casi_zanke(v, info):
+    """Trije dvosekundni odseki za predogled: ob poglavjih, kjer so, sicer po deležih."""
+    pog = [t for t, _ in poglavja(v) if t > 20]
+    if len(pog) >= 3:
+        return [pog[0] + 1.0, pog[len(pog) // 2] + 1.0, pog[-1] + 1.0]
+    d = info["trajanje"]
+    return [d * 0.22, d * 0.5, d * 0.78]
+
+
+def video(v, izvor, info, splet=True):
+    """Spletni različici (1080 in 720 v eni obdelavi; vlog z YouTuba ju ne rabi) in zanka za kazalec."""
+    gop = str(info["fps"] * 2)
+    if splet:
+        skala = "scale=w={w}:h={h}:force_original_aspect_ratio=decrease:force_divisible_by=2"
+        graf = (f"[0:v]{skala.format(w=1920, h=1080)},setsar=1,format=yuv420p,split=2[a][b];"
+                f"[b]{skala.format(w=1280, h=720)}:flags=lanczos[m]")
+        subprocess.run([
+            FF, "-v", "error", "-stats", "-y", "-i", str(izvor), "-filter_complex", graf,
+            "-map", "[a]", "-map", "0:a:0", *X264, "-crf", "24", "-maxrate", "5M", "-bufsize", "10M", "-g", gop, *ZVOK,
+            str(CILJ / f"{v['oznaka']}-1080.mp4"),
+            "-map", "[m]", "-map", "0:a:0", *X264, "-crf", "25", "-maxrate", "2.2M", "-bufsize", "4.4M", "-g", gop, *ZVOK,
+            str(CILJ / f"{v['oznaka']}-720.mp4"),
+        ], check=True)
+
+    odsek = "fps=30,scale=w=854:h=480:force_original_aspect_ratio=decrease:force_divisible_by=2,setsar=1"
+    vhodi, veriga = [], ""
+    for i, t in enumerate(casi_zanke(v, info)):
+        vhodi += ["-ss", f"{t:.2f}", "-t", "2", "-i", str(izvor)]
+        veriga += f"[{i}:v]{odsek}[v{i}];"
+    veriga += "[v0][v1][v2]concat=n=3:v=1:a=0,format=yuv420p[v]"
+    subprocess.run([FF, "-v", "error", "-y", *vhodi, "-filter_complex", veriga, "-map", "[v]", "-an",
+                    *X264, "-crf", "28", "-g", "60", str(CILJ / f"{v['oznaka']}-zanka.mp4")], check=True)
+
+
+def naslovnica(v, izvor):
+    """Naslovnica 1600 px brez metapodatkov: iz paketa za objavo ali iz filma."""
+    cilj = CILJ / f"{v['oznaka']}.jpg"
+    if isinstance(v["naslovna"], int):
+        vir = VIDEO / v["projekt"] / "_izris" / "objava" / f"naslovna-{v['naslovna']}.jpg"
+        ukaz = [FF, "-v", "error", "-y", "-i", str(vir)]
+    else:
+        ukaz = [FF, "-v", "error", "-y", "-ss", f"{v['naslovna']:.2f}", "-i", str(izvor), "-frames:v", "1"]
+    subprocess.run([*ukaz, "-vf", "scale=w=1600:h=1600:force_original_aspect_ratio=decrease",
+                    "-q:v", "3", "-map_metadata", "-1", str(cilj)], check=True)
+
+
+def main(argv):
+    samo_video = "--video" in argv
+    samo_slike = "--slike" in argv
+    CILJ.mkdir(parents=True, exist_ok=True)
+    prej = {}  # oznake youtube iz prejšnjega vlogi.json ostanejo, če jih v VLOGI ni
+    if JSON.is_file():
+        prej = {z["oznaka"]: z.get("youtube") for z in json.load(open(JSON, encoding="utf-8"))["vlogi"]}
+    zapis = []
+    for v in VLOGI:
+        izvor = VIDEO / v["izvor"]
+        if not izvor.is_file():
+            raise SystemExit(f"Ni izvora: {izvor}")
+        youtube = v.get("youtube") or prej.get(v["oznaka"])
+        info = probe(izvor)
+        print(f"{v['oznaka']}: {info['sirina']}×{info['visina']} {info['fps']} fps, {info['trajanje']:.0f} s"
+              + (f", YouTube {youtube}" if youtube else ""))
+        if not samo_slike:
+            video(v, izvor, info, splet=not youtube)
+        if not samo_video:
+            naslovnica(v, izvor)
+        zapis.append(dict(
+            oznaka=v["oznaka"], naslov=v["naslov"], kraj=v["kraj"],
+            datum=v["datum"][0], datum_do=v["datum"][1],
+            trajanje=info["trajanje"], sirina=info["sirina"], visina=info["visina"],
+            posnetkov=posnetkov(v), poglavja=poglavja(v), jezik="sl", youtube=youtube,
+        ))
+    if not samo_video:
+        JSON.write_text(json.dumps(dict(vlogi=zapis), ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"{JSON.relative_to(TU.parent)}: {len(zapis)} vlogov, "
+              f"{sum(z['trajanje'] for z in zapis) / 60:.0f} min")
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

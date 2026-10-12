@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{napaka_naslov_strani}}</title>
+<meta name="description" content="{{napaka_opis}}">
+<meta name="robots" content="noindex">
+<link rel="alternate" hreflang="en" href="{{url_en}}">
+<link rel="alternate" hreflang="sl" href="{{url_sl}}">
+<link rel="icon" href="{{koren}}media/logo.svg" type="image/svg+xml">
+<meta http-equiv="Content-Security-Policy" content="{{csp}}">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preload" href="{{koren}}pisave/instrument-serif-latin-03435c.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{koren}}pisave/instrument-sans-latin-11aa49.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{koren}}css/pisave.css">
+<link rel="stylesheet" href="{{koren}}css/slog.css">
+<script>document.documentElement.classList.add("js");{{preusmeritev}}</script>
+</head>
+<body>
+<!-- Ta datoteka je zgrajena iz predloga-404.html, deli/ in besedila.json (python3 zgradi.py). Ne urejaj je ročno.
+     Strežnik jo pošlje na poljubnem naslovu, zato so vse poti absolutne. -->
+<div class="svet" aria-hidden="true">
+  <span class="svet-luc svet-luc-1" data-luc></span>
+  <span class="svet-luc svet-luc-2" data-luc></span>
+  <span class="svet-luc svet-luc-3" data-luc></span>
+  <span class="svet-kazalec" data-kazalec></span>
+</div>
+<a class="preskoci" href="#vsebina">{{preskoci}}</a>
+
+{{glava}}
+
+<main id="vsebina" class="napaka-stran">
+  <section class="napaka" aria-labelledby="napaka-naslov">
+    <h1 id="napaka-naslov" class="serif" data-naslov-uvod>{{napaka_naslov}}</h1>
+    <p class="uvodnik" data-uvod>{{napaka_besedilo}}</p>
+    <a class="gumb gumb-velik" href="{{dom}}" data-uvod>{{napaka_gumb}}</a>
+  </section>
+</main>
+
+{{obvestilo}}
+
+{{noga}}
+
+<!-- knjižnice so na lastnem strežniku (gsap 3.15.0, lenis 1.3.26), brez CDN -->
+<script src="{{koren}}js/knjiznice/gsap.min.js" defer></script>
+<script src="{{koren}}js/knjiznice/ScrollTrigger.min.js" defer></script>
+<script src="{{koren}}js/knjiznice/lenis.min.js" defer></script>
+<script type="module" src="{{koren}}js/napaka.js"></script>
+</body>
+</html>

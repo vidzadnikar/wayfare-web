@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wayfare 3D logotip</title>
+<style>
+  :root {
+    --ozadje: #070a12;
+    --ozadje-sij: #121a33;
+    --besedilo: #e8ecf6;
+    --tiho: #8a93ab;
+  }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: radial-gradient(ellipse 70% 60% at 50% 45%, var(--ozadje-sij), var(--ozadje) 70%);
+    color: var(--besedilo);
+    font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+    overflow: hidden;
+  }
+  canvas { display: block; position: fixed; inset: 0; width: 100%; height: 100%; cursor: grab; }
+  canvas:active { cursor: grabbing; }
+  header {
+    position: fixed; left: 16px; right: 16px; top: 16px;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+    pointer-events: none;
+  }
+  h1 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: 0.01em; }
+  h1 span { color: var(--tiho); font-weight: 400; }
+  footer { position: fixed; left: 16px; right: 16px; bottom: 16px; color: var(--tiho); font-size: 12px; text-align: center; pointer-events: none; }
+  #napaka { position: fixed; inset: auto 16px 48px 16px; color: #ff8a8a; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Wayfare <span>· 3D logotip, predogled</span></h1>
+</header>
+<footer>Povleci za vrtenje · kolešček za približanje</footer>
+<div id="napaka"></div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+// Neutralna preslikava tonov ohrani barve znamke (ACES bi vijolično zamaknil proti modri)
+renderer.toneMapping = THREE.NeutralToneMapping;
+renderer.toneMappingExposure = 1.0;
+document.body.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+
+// Temen studio s tremi svetlobnimi ploščami: obraz ploščice ostane temnomoder,
+// odsevi tečejo po zaobljenih robovih. Za kamero (+Z) je temno, ker obraz
+// odseva prav tisto, kar je za gledalcem.
+function studio() {
+  const okolje = new THREE.Scene();
+  const krogla = new THREE.Mesh(
+    new THREE.SphereGeometry(20, 32, 16),
+    new THREE.MeshBasicMaterial({ color: 0x05070d, side: THREE.BackSide }));
+  okolje.add(krogla);
+  const plosca = (s, v, jakost, barva, x, y, z) => {
+    const m = new THREE.MeshBasicMaterial({ color: barva, side: THREE.DoubleSide });
+    m.color.multiplyScalar(jakost);
+    const p = new THREE.Mesh(new THREE.PlaneGeometry(s, v), m);
+    p.position.set(x, y, z);
+    p.lookAt(0, 0, 0);
+    okolje.add(p);
+  };
+  plosca(7, 4, 6, 0xffffff, -6, 7, 5);      // glavna, zgoraj levo spredaj
+  plosca(1.2, 10, 4, 0xffffff, 8, 0, 1);    // trak desno
+  plosca(10, 2, 3, 0xdfe4ff, 0, 8, -6);     // zgoraj zadaj, obris zgornjega roba
+  plosca(5, 5, 1.5, 0x8a7dff, -8, -2, -4);  // vijoličen odsev levo zadaj
+  plosca(30, 4, 0.25, 0xffffff, 0, -9, 0);  // šibko tla, da spodnji robovi niso črni
+  return okolje;
+}
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(studio(), 0.02).texture;
+scene.environmentIntensity = 1.0;
+
+// Pri fizikalnih enotah da jakost π na beli ploskvi polno barvo; spredaj
+// zgoraj postavljena luč zato pokaže barve znamke skoraj take, kot so.
+const kljucna = new THREE.DirectionalLight(0xffffff, 3.2);
+kljucna.position.set(2.5, 3.5, 6);
+scene.add(kljucna);
+const obrobna = new THREE.DirectionalLight(0xc4caff, 1.8);
+obrobna.position.set(-4, 2.5, -3);
+scene.add(obrobna);
+// Zadaj: pri razbitju se kosi obračajo in pokažejo hrbet, ki ne sme potemneti v modro
+const zadnja = new THREE.DirectionalLight(0xffffff, 2.0);
+zadnja.position.set(2, 2, -6);
+scene.add(zadnja);
+
+const camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 0.1, 100);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.enablePan = false;
+
+// Oddaljenost, pri kateri znak z robom zapolni ožjo stranico okna
+let polovica = 1.0;
+function umeri() {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  const navp = THREE.MathUtils.degToRad(camera.fov) / 2;
+  const vodor = Math.atan(Math.tan(navp) * camera.aspect);
+  const d = polovica / Math.tan(Math.min(navp, vodor)) + 0.3;
+  camera.position.setLength(d);
+  controls.minDistance = d * 0.6;
+  controls.maxDistance = d * 1.8;
+  renderer.setSize(innerWidth, innerHeight);
+}
+camera.position.set(0, 0, 1);
+umeri();
+
+const nosilec = new THREE.Group();
+scene.add(nosilec);
+
+new GLTFLoader().load("wayfare-logo.glb", (gltf) => {
+  const znak = gltf.scene.getObjectByName("Znak");
+  // vrti se okoli svojega središča, ne okoli središča nekdanje ploščice
+  const obseg = new THREE.Box3().setFromObject(znak);
+  znak.position.sub(obseg.getCenter(new THREE.Vector3()));
+  nosilec.add(znak);
+  const vel = obseg.getSize(new THREE.Vector3());
+  polovica = Math.max(vel.x, vel.y) / 2 * 1.2;
+  umeri();
+}, undefined, (e) => {
+  document.getElementById("napaka").textContent = "Modela ni bilo mogoče naložiti: " + e.message;
+});
+
+addEventListener("resize", umeri);
+
+// Mirno lebdenje: rahlo zibanje okoli navpične osi in počasno dviganje
+const ura = new THREE.Clock();
+const mirno = matchMedia("(prefers-reduced-motion: reduce)").matches;
+renderer.setAnimationLoop(() => {
+  const t = ura.getElapsedTime();
+  if (!mirno) {
+    nosilec.rotation.y = -0.35 + Math.sin(t * 0.45) * 0.28;
+    nosilec.rotation.x = -0.06 + Math.sin(t * 0.32) * 0.06;
+    nosilec.position.y = Math.sin(t * 0.8) * 0.05;
+  } else {
+    nosilec.rotation.set(-0.06, -0.35, 0);
+  }
+  controls.update();
+  renderer.render(scene, camera);
+});
+window.__nosilec = nosilec;
+</script>
+</body>
+</html>

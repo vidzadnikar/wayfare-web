@@ -1,0 +1,24 @@
+<div class="obvestilo" role="dialog" aria-labelledby="obvestilo-naslov" hidden data-obvestilo>
+  <button class="obvestilo-zapri" type="button" aria-label="{{obvestilo_zapri}}" data-obvestilo-zapri></button>
+  <div class="obvestilo-vsebina" data-obvestilo-vsebina></div>
+</div>
+<template id="obvestilo-mac">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">{{mac_naslov}}</p>
+  <ol class="obvestilo-koraki"><li>{{mac_korak1}}</li><li>{{mac_korak2}}</li><li>{{mac_korak3}}</li></ol>
+  <p class="drobno">{{prenos_ime}} · {{prenos_velikost}}</p>
+</template>
+<template id="obvestilo-intel">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">{{intel_naslov}}</p>
+  <p>{{intel_opis}}</p>
+  <div class="obvestilo-akcije"><a class="gumb gumb-majhen" href="{{prenos_href}}" download data-prenos-vseeno>{{prenesi_vseeno}}</a></div>
+</template>
+<template id="obvestilo-drugo">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">{{drugo_naslov}}</p>
+  <p>{{drugo_opis}}</p>
+  <div class="obvestilo-akcije"><a class="gumb gumb-majhen gumb-tihi" href="{{prenos_href}}" download data-prenos-vseeno>{{prenesi_vseeno}}</a></div>
+</template>
+<template id="obvestilo-mobilno">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">{{mobilno_naslov}}</p>
+  <p>{{mobilno_opis}}</p>
+  <div class="obvestilo-akcije"><button class="gumb gumb-majhen" type="button" data-deli data-kopirano="{{povezava_kopirana}}">{{deli_povezavo}}</button></div>
+</template>

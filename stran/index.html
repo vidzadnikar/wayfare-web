@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wayfare Studio — You film the trip. We handle the edit.</title>
+<meta name="description" content="Wayfare Studio turns your raw travel clips into a finished, publish-ready vlog. Claude edits, you decide.">
+<meta property="og:title" content="Wayfare Studio — You film the trip. We handle the edit.">
+<meta property="og:description" content="Wayfare Studio turns your raw travel clips into a finished, publish-ready vlog. Claude edits, you decide.">
+<meta property="og:image" content="media/promo-naslovna.jpg">
+<link rel="alternate" hreflang="en" href="./">
+<link rel="alternate" hreflang="sl" href="sl/">
+<link rel="icon" href="media/logo.svg" type="image/svg+xml">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-C/HbM9P81CJhKmgqex7kHe8zaADx8+aja4CCTHcaopE=' 'sha256-o0Yc4uDke0rpRa0nkjTA2HTCozckGKg0LV96ywCE6e8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self'; font-src 'self'; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preload" href="pisave/instrument-serif-latin-03435c.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="pisave/instrument-sans-latin-11aa49.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/pisave.css">
+<link rel="stylesheet" href="css/slog.css">
+<script>document.documentElement.classList.add("js");try{var j=localStorage.getItem("wayfare-jezik");if(!j&&/^sl\b/i.test(navigator.language||""))j="sl";if(j==="sl")location.replace("sl/"+location.hash);}catch(e){}</script>
+</head>
+<body>
+<!-- Ta datoteka je zgrajena iz predloga.html in besedila.json (python3 zgradi.py). Ne urejaj je ročno. -->
+<div class="svet" aria-hidden="true">
+  <span class="svet-luc svet-luc-1" data-luc></span>
+  <span class="svet-luc svet-luc-2" data-luc></span>
+  <span class="svet-luc svet-luc-3" data-luc></span>
+  <span class="svet-kazalec" data-kazalec></span>
+</div>
+<a class="preskoci" href="#vsebina">Skip to content</a>
+
+<header class="glava" data-uvod>
+  <a class="znamka" href="#vrh" aria-label="Wayfare Studio, back to top">
+    <img src="media/logo.svg" alt="" width="26" height="26">
+    <span><b>wayfare</b> studio</span>
+  </a>
+  <nav class="glava-nav" aria-label="Main">
+    <ul>
+      <li><a href="#aplikacija">The app</a></li>
+      <li><a href="#film">Film</a></li>
+      <li><a href="vlogi/">Vlogs</a></li>
+      <li><a href="#claude">Claude</a></li>
+    </ul>
+  </nav>
+  <nav class="jezik" aria-label="Language">
+    <a href="./" hreflang="en" lang="en" data-jezik="en" aria-current="page">EN</a>
+    <a href="sl/" hreflang="sl" lang="sl" data-jezik="sl" >SL</a>
+  </nav>
+  <a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos>Download</a>
+</header>
+
+<main id="vsebina">
+  <section class="hero" id="vrh" aria-labelledby="hero-naslov">
+    <div class="hero-medij" data-hero-medij aria-hidden="true">
+      <video class="hero-ozadje" autoplay muted loop playsinline preload="auto" poster="media/hero-mesta.jpg">
+        <source src="media/hero-mesta-720.mp4" type="video/mp4" media="(max-width: 899px)">
+        <source src="media/hero-mesta-1080.mp4" type="video/mp4">
+      </video>
+      <div class="hero-tancica"></div>
+    </div>
+    <div class="hero-znak" data-znak>
+      <img class="znak-nadomestek" src="media/logo.svg" alt="" width="240" height="240">
+    </div>
+    <div class="hero-besedilo">
+      <h1 id="hero-naslov" class="serif" data-naslov-uvod>You film <em>the trip.</em><br>We handle the edit.</h1>
+      <p class="uvodnik" data-uvod>Drop in your raw clips. Claude edits — you decide.</p>
+      <div class="akcije" data-uvod>
+        <a class="gumb" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos>Download for macOS</a>
+        <a class="gumb gumb-tihi" href="#film" data-poglej-film>Watch the film <span class="mono">01:02</span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="mesta" aria-hidden="true" data-mesta>
+    <div class="mesta-vrsta" data-smer="1"><div class="mesta-tir"><span class="mesto">Lisboa</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Paris</span><span class="mesto-pika"></span><span class="mesto">Praha</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Venezia</span><span class="mesto-pika"></span><span class="mesto">Ljubljana</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Amsterdam</span><span class="mesto-pika"></span><span class="mesto">Roma</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Barcelona</span><span class="mesto-pika"></span><span class="mesto">Wien</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Madrid</span><span class="mesto-pika"></span><span class="mesto">Milano</span><span class="mesto-pika"></span><span class="mesto">Lisboa</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Paris</span><span class="mesto-pika"></span><span class="mesto">Praha</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Venezia</span><span class="mesto-pika"></span><span class="mesto">Ljubljana</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Amsterdam</span><span class="mesto-pika"></span><span class="mesto">Roma</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Barcelona</span><span class="mesto-pika"></span><span class="mesto">Wien</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Madrid</span><span class="mesto-pika"></span><span class="mesto">Milano</span><span class="mesto-pika"></span></div></div>
+    <div class="mesta-vrsta" data-smer="-1"><div class="mesta-tir"><span class="mesto">Madrid</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Wien</span><span class="mesto-pika"></span><span class="mesto">Barcelona</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Roma</span><span class="mesto-pika"></span><span class="mesto">Amsterdam</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Ljubljana</span><span class="mesto-pika"></span><span class="mesto">Venezia</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Praha</span><span class="mesto-pika"></span><span class="mesto">Paris</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Lisboa</span><span class="mesto-pika"></span><span class="mesto">Milano</span><span class="mesto-pika"></span><span class="mesto">Madrid</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Wien</span><span class="mesto-pika"></span><span class="mesto">Barcelona</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Roma</span><span class="mesto-pika"></span><span class="mesto">Amsterdam</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Ljubljana</span><span class="mesto-pika"></span><span class="mesto">Venezia</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Praha</span><span class="mesto-pika"></span><span class="mesto">Paris</span><span class="mesto-pika"></span><span class="mesto mesto-obris">Lisboa</span><span class="mesto-pika"></span><span class="mesto">Milano</span><span class="mesto-pika"></span></div></div>
+  </div>
+
+  <section class="film-app" id="aplikacija" aria-label="How Wayfare Studio works" data-sestavljanje>
+    <svg class="pot-crta" aria-hidden="true" data-pot><path class="pot-sled" d=""></path><path class="pot-pot" d=""></path></svg>
+    <div class="oder-ovoj">
+      <div class="oder" data-oder>
+        <div class="kamera" data-kamera>
+        <figure class="okno" data-okno role="img" aria-label="The Wayfare Studio editor, assembling piece by piece">
+          <img class="okno-osnova okno-mehka" src="media/kosi/sl/osnova-mehka.webp" alt="" data-osnova-mehka>
+          <img class="okno-osnova okno-cista" src="media/kosi/sl/osnova.webp" alt="" loading="lazy" data-osnova-cista>
+
+          <img class="kos" data-kos="casovnica" src="media/kosi/sl/casovnica.webp" alt="" loading="lazy" style="left:1.0417%;top:69.444%;width:97.917%">
+          <img class="kos" data-kos="katalog" src="media/kosi/sl/katalog.webp" alt="" loading="lazy" style="left:76.042%;top:6.667%;width:22.917%">
+          <img class="kos" data-kos="predogled" src="media/kosi/sl/predogled.webp" alt="" loading="lazy" style="left:1.0417%;top:6.667%;width:74.219%">
+          <img class="kos" data-kos="podatki" src="media/kosi/sl/podatki.webp" alt="" loading="lazy" style="left:1.0417%;top:61.111%;width:74.219%">
+          <img class="kos" data-kos="lastnosti" src="media/kosi/sl/lastnosti.webp" alt="" loading="lazy" style="left:76.042%;top:43.981%;width:22.917%">
+          <img class="kos" data-kos="vrstica" src="media/kosi/sl/vrstica.webp" alt="" loading="lazy" style="left:0;top:0.926%;width:100%">
+
+          <div class="prek-video" data-prek-video>
+            <video muted playsinline loop preload="none" poster="media/zanka-3d-milano.jpg" data-src="media/zanka-3d-milano.mp4"></video>
+          </div>
+
+          <div class="oblak" data-oblak><span class="sl" style="left:7.400%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t01.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:11.213%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t03.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:15.025%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t05.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:18.837%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t06.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:22.650%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t08.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:26.462%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t10.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:30.275%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t12.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:34.087%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t14.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:37.900%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t16.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:41.712%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t17.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:45.525%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t19.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:49.337%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t21.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:53.150%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t23.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:56.962%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t25.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:60.775%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t27.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:64.588%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t28.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:68.400%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t30.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:72.213%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t32.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:76.025%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t34.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:79.838%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t37.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:83.650%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t39.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:87.463%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t40.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:91.275%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t42.jpg" alt="" loading="lazy"></span>
+            <span class="sl" style="left:95.088%;top:78.4%;width:3.8125%;height:4.7%"><img src="media/posnetki/t44.jpg" alt="" loading="lazy"></span></div>
+
+          <div class="ukaz" data-ukaz data-besedilo="Shorten clip fourteen">
+            <span class="ukaz-polje"><span class="ukaz-namig" data-ukaz-namig>Tell Claude what to change…</span><span class="ukaz-tekst" data-ukaz-tekst></span><span class="ukaz-kazalka"></span></span>
+            <span class="ukaz-gumb"></span>
+          </div>
+          <p class="ukaz-potrdilo" data-ukaz-potrdilo><span class="ukaz-kljukica"></span>Done — clip 14 is shorter</p>
+
+          <span class="poudarek poudarek-a1" data-poudarek-a1></span>
+          <span class="poudarek poudarek-izvoz" data-poudarek-izvoz></span>
+
+          <img class="kos kos-modal" data-kos="glasba" src="media/kosi/sl/glasba.webp" alt="" loading="lazy" style="left:19.219%;top:16.481%;width:61.458%">
+          <img class="kos kos-modal" data-kos="pregled" src="media/kosi/sl/pregled.webp" alt="" loading="lazy" style="left:30.156%;top:8.611%;width:39.896%">
+        </figure>
+        </div>
+      </div>
+    </div>
+    <ol class="poglavja">
+      <li class="poglavje" data-stran="levo"><div class="napis"><span class="napis-pin" aria-hidden="true"></span><h2 class="serif">Fifty-five clips. <em>One day.</em></h2><p>Drop them in straight from the camera or phone.</p></div></li>
+      <li class="poglavje" data-stran="levo"><div class="napis"><span class="napis-pin" aria-hidden="true"></span><h2 class="serif">Every clip, <em>in its place.</em></h2><p>Sorted by the time you shot it. The story of your day, found for you.</p></div></li>
+      <li class="poglavje" data-stran="desno"><div class="napis"><span class="napis-pin" aria-hidden="true"></span><h2 class="serif">Claude edits. <em>You decide.</em></h2><p>Change anything with one sentence. No timeline to wrestle.</p></div></li>
+      <li class="poglavje" data-stran="levo"><div class="napis"><span class="napis-pin" aria-hidden="true"></span><h2 class="serif">Music that <em>fits the place.</em></h2><p>A built-in library by country and mood. It ducks under every word.</p></div></li>
+      <li class="poglavje" data-stran="desno"><div class="napis"><span class="napis-pin" aria-hidden="true"></span><h2 class="serif">Your day, <em>in motion.</em></h2><p>Place cards with local time, a trailer of the best moments and a real 3D map of your route.</p></div></li>
+      <li class="poglavje" data-stran="levo"><div class="napis"><span class="napis-pin" aria-hidden="true"></span><h2 class="serif">Checked <em>before you publish.</em></h2><p>Over twenty-five checks — loudness, cuts, captions — with one-click fixes.</p></div></li>
+      <li class="poglavje" data-stran="sredina"><div class="napis"><span class="napis-pin" aria-hidden="true"></span><h2 class="serif">Finished. <em>Ready to post.</em></h2><p>Export in one click, with a publishing package ready to go.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="kino" id="film" aria-labelledby="kino-naslov">
+    <div class="kino-pin" data-kino>
+      <div class="kino-naslov">
+        <h2 id="kino-naslov" class="serif"><em>Sixty-two seconds</em><br>of Wayfare.</h2>
+        <p class="kino-opomba"></p>
+      </div>
+      <div class="kino-okvir" data-promo data-stanje="pripravljen">
+        <video preload="none" playsinline poster="media/promo-naslovna.jpg" aria-label="Wayfare Studio — 62 second film">
+          <source src="media/promo-1080.mp4" type="video/mp4" media="(min-width: 900px)">
+          <source src="media/promo-720.mp4" type="video/mp4">
+        </video>
+        <div class="kino-gumb-ovoj" data-kino-gumb>
+          <button class="kino-gumb" type="button" data-predvajaj><span class="kino-ikona" aria-hidden="true"></span>Play the film</button>
+        </div>
+        <p class="kino-napaka" role="status">The film couldn’t load. <a href="media/promo-720.mp4">Open it directly</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="claude" id="claude" aria-labelledby="claude-naslov">
+    <div class="claude-mreza">
+      <div class="claude-besedilo">
+        <h2 id="claude-naslov" class="serif" data-naslov>Works <em>with Claude.</em></h2>
+        <p>Wayfare Studio is fully compatible with Claude. For the edit itself, we recommend our <b>vlog</b> skill — it guides Claude through every step, from the first cut to the publishing package.</p>
+      </div>
+      <div class="terminal" data-terminal>
+        <div class="terminal-glava">
+          <span class="terminal-tocke" aria-hidden="true"><i></i><i></i><i></i></span>
+          <div class="terminal-zavihki" role="tablist" aria-label="Install the vlog skill">
+            <button class="zavihek" type="button" role="tab" id="zavihek-vticnik" aria-controls="plosca-vticnik" aria-selected="true" data-zavihek>Plugin</button>
+            <button class="zavihek" type="button" role="tab" id="zavihek-npx" aria-controls="plosca-npx" aria-selected="false" data-zavihek>npx skills</button>
+          </div>
+        </div>
+        <div class="terminal-telo" id="plosca-vticnik" role="tabpanel" aria-labelledby="zavihek-vticnik" data-plosca>
+          <p class="terminal-komentar"># in Claude Code, no Node.js needed:</p>
+          <p class="terminal-vrstica terminal-ukaz-claude"><code id="ukaz-vticnik-1"><span class="cel">/plugin marketplace add</span> <span class="cel">vidzadnikar/<wbr>wayfare-skills</span></code><button class="kopiraj" type="button" aria-label="Copy command" aria-describedby="ukaz-vticnik-1" data-kopiraj data-za="ukaz-vticnik-1" data-kopirano="Copied"><svg class="kopiraj-ikona" viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 3.5v-.5a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5"/></svg><svg class="kopiraj-kljukica" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg></button></p>
+          <p class="terminal-vrstica terminal-ukaz-claude"><code id="ukaz-vticnik-2"><span class="cel">/plugin install</span> <span class="cel">wayfare@wayfare</span></code><button class="kopiraj" type="button" aria-label="Copy command" aria-describedby="ukaz-vticnik-2" data-kopiraj data-za="ukaz-vticnik-2" data-kopirano="Copied"><svg class="kopiraj-ikona" viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 3.5v-.5a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5"/></svg><svg class="kopiraj-kljukica" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg></button></p>
+          <p class="terminal-komentar"># then:</p>
+          <p class="terminal-vrstica terminal-claude">Make a vlog from my Lisbon clips.</p>
+        </div>
+        <div class="terminal-telo" id="plosca-npx" role="tabpanel" aria-labelledby="zavihek-npx" data-plosca>
+          <p class="terminal-vrstica terminal-lupina"><code id="ukaz-npx"><span class="cel">npx skills add</span> <span class="cel">vidzadnikar/<wbr>wayfare-skills</span> <span class="cel">--skill vlog</span> <span class="cel">-g</span> <span class="cel">-a claude-code</span></code><button class="kopiraj" type="button" aria-label="Copy command" aria-describedby="ukaz-npx" data-kopiraj data-za="ukaz-npx" data-kopirano="Copied"><svg class="kopiraj-ikona" viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 3.5v-.5a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5"/></svg><svg class="kopiraj-kljukica" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg></button></p>
+          <p class="terminal-komentar"># then, in Claude Code:</p>
+          <p class="terminal-vrstica terminal-claude">Make a vlog from my Lisbon clips.</p>
+        </div>
+        <p class="skrito" role="status" aria-live="polite" data-kopiraj-stanje></p>
+      </div>
+      <p class="drobno claude-zahteve">Needs Claude Code. The npx route also needs Node.js.</p>
+    </div>
+  </section>
+
+  <section class="cilj" id="prenos" aria-labelledby="cilj-naslov">
+    <div class="razglednice" aria-hidden="true" data-razglednice>
+      <figure class="razglednica" data-razglednica><div class="razglednica-list"><img src="media/razglednice/lisboa.webp" alt="" width="960" height="720" loading="lazy"><figcaption>Lisboa</figcaption></div></figure>
+      <figure class="razglednica" data-razglednica><div class="razglednica-list"><img src="media/razglednice/roma.webp" alt="" width="960" height="720" loading="lazy"><figcaption>Roma</figcaption></div></figure>
+      <figure class="razglednica" data-razglednica><div class="razglednica-list"><img src="media/razglednice/praha.webp" alt="" width="960" height="720" loading="lazy"><figcaption>Praha</figcaption></div></figure>
+      <figure class="razglednica" data-razglednica><div class="razglednica-list"><img src="media/razglednice/venezia.webp" alt="" width="960" height="720" loading="lazy"><figcaption>Venezia</figcaption></div></figure>
+      <figure class="razglednica" data-razglednica><div class="razglednica-list"><img src="media/razglednice/paris.webp" alt="" width="960" height="720" loading="lazy"><figcaption>Paris</figcaption></div></figure>
+      <figure class="razglednica" data-razglednica><div class="razglednica-list"><img src="media/razglednice/ljubljana.webp" alt="" width="960" height="720" loading="lazy"><figcaption>Ljubljana</figcaption></div></figure>
+    </div>
+    <span class="cilj-pin" aria-hidden="true"></span>
+    <h2 id="cilj-naslov" class="serif" data-naslov>Your next trip, <em>edited.</em></h2>
+    <a class="gumb gumb-velik" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos>Download for macOS</a>
+    <p class="drobno">For Mac with Apple silicon · macOS 12 or later · 434 MB · version 0.1.0 · 3D route maps need <a href="https://www.blender.org/download/" rel="noopener">Blender</a> (free)</p>
+  </section>
+</main>
+
+<div class="obvestilo" role="dialog" aria-labelledby="obvestilo-naslov" hidden data-obvestilo>
+  <button class="obvestilo-zapri" type="button" aria-label="Close" data-obvestilo-zapri></button>
+  <div class="obvestilo-vsebina" data-obvestilo-vsebina></div>
+</div>
+<template id="obvestilo-mac">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio is downloading</p>
+  <ol class="obvestilo-koraki"><li>Open the downloaded file and drag Wayfare Studio into Applications.</li><li>The first time, right-click the app and choose Open. If your Mac still blocks it, go to System Settings → Privacy &amp; Security and choose Open Anyway.</li><li>Wayfare Studio opens in your browser. Start a project and drop in your clips.</li></ol>
+  <p class="drobno">Wayfare-Studio-0.1.0.dmg · 434 MB</p>
+</template>
+<template id="obvestilo-intel">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">This Mac may not be supported</p>
+  <p>Your Mac seems to have an Intel processor. Wayfare Studio runs on Macs with Apple silicon (M1 or newer).</p>
+  <div class="obvestilo-akcije"><a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos-vseeno>Download anyway</a></div>
+</template>
+<template id="obvestilo-drugo">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio is made for Mac</p>
+  <p>It runs on Macs with Apple silicon (M1 or newer) and macOS 12 or later. There’s no Windows or Linux version yet.</p>
+  <div class="obvestilo-akcije"><a class="gumb gumb-majhen gumb-tihi" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos-vseeno>Download anyway</a></div>
+</template>
+<template id="obvestilo-mobilno">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Download it on your Mac</p>
+  <p>Wayfare Studio is a Mac app. Send yourself this page and open it on your Mac.</p>
+  <div class="obvestilo-akcije"><button class="gumb gumb-majhen" type="button" data-deli data-kopirano="Link copied">Share link</button></div>
+</template>
+
+<footer class="noga">
+  <span class="znamka"><img src="media/logo.svg" alt="" width="20" height="20"><span><b>wayfare</b> studio</span></span>
+  <nav class="noga-nav" aria-label="Site"><ul>
+    <li><a href="#aplikacija">The app</a></li>
+    <li><a href="#film">Film</a></li>
+    <li><a href="vlogi/">Vlogs</a></li>
+    <li><a href="#claude">Claude</a></li>
+  </ul></nav>
+  <p class="drobno">Map data © OpenStreetMap contributors · Natural Earth · Contains modified Copernicus Sentinel data (2021). City footage: Pexels. App footage from the maker’s own trips.</p>
+  <span class="drobno">© 2026 Wayfare</span>
+</footer>
+
+<!-- knjižnice so na lastnem strežniku (gsap 3.15.0, lenis 1.3.26, three 0.170.0), brez CDN -->
+<script src="js/knjiznice/gsap.min.js" defer></script>
+<script src="js/knjiznice/ScrollTrigger.min.js" defer></script>
+<script src="js/knjiznice/lenis.min.js" defer></script>
+<script type="importmap">
+{ "imports": {
+  "three": "./js/knjiznice/three/three.module.min.js",
+  "three/addons/": "./js/knjiznice/three/addons/"
+} }
+</script>
+<script type="module" src="js/glavno.js"></script>
+</body>
+</html>

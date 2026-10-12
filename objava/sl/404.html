@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wayfare Studio — Strani ni</title>
+<meta name="description" content="Te strani ni.">
+<meta name="robots" content="noindex">
+<link rel="alternate" hreflang="en" href="/404.html">
+<link rel="alternate" hreflang="sl" href="/sl/404.html">
+<link rel="icon" href="/media/logo.svg" type="image/svg+xml">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-WZRJfWvsnNCPcxzZwvyhovnZGqhZaC+8gPGPRbx6wTk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self'; font-src 'self'; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preload" href="/pisave/instrument-serif-latin-03435c.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/pisave/instrument-sans-latin-11aa49.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/pisave.css">
+<link rel="stylesheet" href="/css/slog.css">
+<script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+<!-- Ta datoteka je zgrajena iz predloga-404.html, deli/ in besedila.json (python3 zgradi.py). Ne urejaj je ročno.
+     Strežnik jo pošlje na poljubnem naslovu, zato so vse poti absolutne. -->
+<div class="svet" aria-hidden="true">
+  <span class="svet-luc svet-luc-1" data-luc></span>
+  <span class="svet-luc svet-luc-2" data-luc></span>
+  <span class="svet-luc svet-luc-3" data-luc></span>
+  <span class="svet-kazalec" data-kazalec></span>
+</div>
+<a class="preskoci" href="#vsebina">Preskoči na vsebino</a>
+
+<header class="glava" data-uvod>
+  <a class="znamka" href="/sl/#vrh" aria-label="Wayfare Studio, na vrh strani">
+    <img src="/media/logo.svg" alt="" width="26" height="26">
+    <span><b>wayfare</b> studio</span>
+  </a>
+  <nav class="glava-nav" aria-label="Glavna navigacija">
+    <ul>
+      <li><a href="/sl/#aplikacija">Aplikacija</a></li>
+      <li><a href="/sl/#film">Film</a></li>
+      <li><a href="/sl/vlogi/">Vlogi</a></li>
+      <li><a href="/sl/#claude">Claude</a></li>
+    </ul>
+  </nav>
+  <nav class="jezik" aria-label="Jezik">
+    <a href="/404.html" hreflang="en" lang="en" data-jezik="en" >EN</a>
+    <a href="/sl/404.html" hreflang="sl" lang="sl" data-jezik="sl" aria-current="page">SL</a>
+  </nav>
+  <a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos>Prenos</a>
+</header>
+
+<main id="vsebina" class="napaka-stran">
+  <section class="napaka" aria-labelledby="napaka-naslov">
+    <h1 id="napaka-naslov" class="serif" data-naslov-uvod>Zunaj <em>zemljevida.</em></h1>
+    <p class="uvodnik" data-uvod>Strani, ki jo iščeš, ni ali pa se je preselila.</p>
+    <a class="gumb gumb-velik" href="/sl/" data-uvod>Nazaj na začetek</a>
+  </section>
+</main>
+
+<div class="obvestilo" role="dialog" aria-labelledby="obvestilo-naslov" hidden data-obvestilo>
+  <button class="obvestilo-zapri" type="button" aria-label="Zapri" data-obvestilo-zapri></button>
+  <div class="obvestilo-vsebina" data-obvestilo-vsebina></div>
+</div>
+<template id="obvestilo-mac">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio se prenaša</p>
+  <ol class="obvestilo-koraki"><li>Odpri preneseno datoteko in povleci Wayfare Studio v mapo Aplikacije.</li><li>Prvič klikni aplikacijo z desno tipko in izberi Odpri. Če jo Mac še vedno ustavi, pojdi v Sistemske nastavitve → Zasebnost in varnost in izberi Vseeno odpri.</li><li>Wayfare Studio se odpre v brskalniku. Začni projekt in naloži posnetke.</li></ol>
+  <p class="drobno">Wayfare-Studio-0.1.0.dmg · 434 MB</p>
+</template>
+<template id="obvestilo-intel">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Ta Mac morda ni podprt</p>
+  <p>Tvoj Mac ima najbrž procesor Intel. Wayfare Studio deluje na Macih z Apple silicon (M1 ali novejši).</p>
+  <div class="obvestilo-akcije"><a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos-vseeno>Vseeno prenesi</a></div>
+</template>
+<template id="obvestilo-drugo">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio je narejen za Mac</p>
+  <p>Deluje na Macih z Apple silicon (M1 ali novejši) in macOS 12 ali novejšim. Različice za Windows in Linux še ni.</p>
+  <div class="obvestilo-akcije"><a class="gumb gumb-majhen gumb-tihi" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos-vseeno>Vseeno prenesi</a></div>
+</template>
+<template id="obvestilo-mobilno">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Prenesi ga na Macu</p>
+  <p>Wayfare Studio je aplikacija za Mac. Pošlji si to stran in jo odpri na Macu.</p>
+  <div class="obvestilo-akcije"><button class="gumb gumb-majhen" type="button" data-deli data-kopirano="Povezava kopirana">Deli povezavo</button></div>
+</template>
+
+<footer class="noga">
+  <span class="znamka"><img src="/media/logo.svg" alt="" width="20" height="20"><span><b>wayfare</b> studio</span></span>
+  <nav class="noga-nav" aria-label="Stran"><ul>
+    <li><a href="/sl/#aplikacija">Aplikacija</a></li>
+    <li><a href="/sl/#film">Film</a></li>
+    <li><a href="/sl/vlogi/">Vlogi</a></li>
+    <li><a href="/sl/#claude">Claude</a></li>
+  </ul></nav>
+  <p class="drobno">Map data © OpenStreetMap contributors · Natural Earth · Vsebuje spremenjene podatke Copernicus Sentinel (2021). Posnetki mest: Pexels. Posnetki v aplikaciji so z avtorjevih potovanj.</p>
+  <span class="drobno">© 2026 Wayfare</span>
+</footer>
+
+<!-- knjižnice so na lastnem strežniku (gsap 3.15.0, lenis 1.3.26), brez CDN -->
+<script src="/js/knjiznice/gsap.min.js" defer></script>
+<script src="/js/knjiznice/ScrollTrigger.min.js" defer></script>
+<script src="/js/knjiznice/lenis.min.js" defer></script>
+<script type="module" src="/js/napaka.js"></script>
+</body>
+</html>
