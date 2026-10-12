@@ -70,7 +70,8 @@
      "Navigli"
     ]
    ],
-   "jezik": "sl"
+   "jezik": "sl",
+   "youtube": null
   },
   {
    "oznaka": "milano-1",
@@ -142,7 +143,8 @@
    "visina": 1080,
    "posnetkov": 164,
    "poglavja": [],
-   "jezik": "sl"
+   "jezik": "sl",
+   "youtube": null
   },
   {
    "oznaka": "madrid-4",
@@ -206,7 +208,8 @@
      "Večerja"
     ]
    ],
-   "jezik": "sl"
+   "jezik": "sl",
+   "youtube": null
   },
   {
    "oznaka": "madrid-3",
@@ -266,7 +269,8 @@
      "Večerja"
     ]
    ],
-   "jezik": "sl"
+   "jezik": "sl",
+   "youtube": null
   },
   {
    "oznaka": "madrid-2",
@@ -330,7 +334,8 @@
      "Plaza Mayor"
     ]
    ],
-   "jezik": "sl"
+   "jezik": "sl",
+   "youtube": null
   },
   {
    "oznaka": "madrid-1",
@@ -386,7 +391,8 @@
      "Noč"
     ]
    ],
-   "jezik": "sl"
+   "jezik": "sl",
+   "youtube": null
   },
   {
    "oznaka": "rifnik",
@@ -405,7 +411,8 @@
    "visina": 1080,
    "posnetkov": null,
    "poglavja": [],
-   "jezik": "sl"
+   "jezik": "sl",
+   "youtube": null
   },
   {
    "oznaka": "budimpesta",
@@ -424,7 +431,8 @@
    "visina": 1920,
    "posnetkov": 30,
    "poglavja": [],
-   "jezik": "sl"
+   "jezik": "sl",
+   "youtube": null
   }
  ]
 }

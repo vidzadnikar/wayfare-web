@@ -11,7 +11,8 @@ kazalec nad kartico) in <oznaka>.jpg (naslovnica). Opis vseh vlogov je v
 
 Izvor je končni izvoz vsakega vloga v ~/Video. Poglavja in naslovnice pridejo
 iz paketa za objavo (_izris/objava), kjer obstaja; sicer naslovnico vzamemo
-iz filma ob navedenem času. Vrstni red v seznamu je vrstni red na strani:
+iz filma ob navedenem času. Vlog z oznako youtube dobi isto naslovnico kot na
+YouTubu (velika sličica videa), razen če je naslovna pot do lastne slike. Vrstni red v seznamu je vrstni red na strani:
 najnovejši prvi.
 
 Vlog z oznako youtube (v VLOGI ali že v vlogi.json) na strani igra z YouTuba:
@@ -22,6 +23,8 @@ import json
 import os
 import subprocess
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 TU = Path(__file__).resolve().parent
@@ -33,7 +36,8 @@ JSON = TU.parent / "stran" / "vlogi.json"
 
 # oznaka, izvor (pod ~/Video), projekt (mapa s katalogom in paketom za objavo),
 # naslov in kraj v obeh jezikih, dan snemanja (od, do), naslovnica: številka
-# slike iz paketa za objavo (1–6) ali čas v filmu (sekunde) za vloge brez paketa.
+# slike iz paketa za objavo (1–6), čas v filmu (sekunde) za vloge brez paketa
+# ali pot do lastne slike (ta velja tudi pred sličico z YouTuba).
 # youtube (po želji): oznaka videa na YouTubu, kamor gre izvorni izvoz iz ~/Video
 # (lahko kot Neobjavljen). Oznaka, ki je že v vlogi.json, se ohrani.
 VLOGI = [
@@ -143,14 +147,34 @@ def video(v, izvor, info, splet=True):
                     *X264, "-crf", "28", "-g", "60", str(CILJ / f"{v['oznaka']}-zanka.mp4")], check=True)
 
 
-def naslovnica(v, izvor):
-    """Naslovnica 1600 px brez metapodatkov: iz paketa za objavo ali iz filma."""
+def youtube_naslovnica(oznaka):
+    """Velika sličica videa na YouTubu (1280 × 720, brez metapodatkov) ali None,
+    če je YouTube še ni naredil (nastane nekaj minut po nalaganju)."""
+    try:
+        with urllib.request.urlopen(f"https://i.ytimg.com/vi/{oznaka}/maxresdefault.jpg", timeout=20) as odg:
+            return odg.read()
+    except urllib.error.HTTPError:
+        return None
+
+
+def naslovnica(v, izvor, youtube):
+    """Naslovnica brez metapodatkov, največ 1600 px: lastna slika (pot), sicer ista
+    kot na YouTubu, sicer iz paketa za objavo ali iz filma ob navedenem času."""
     cilj = CILJ / f"{v['oznaka']}.jpg"
-    if isinstance(v["naslovna"], int):
-        vir = VIDEO / v["projekt"] / "_izris" / "objava" / f"naslovna-{v['naslovna']}.jpg"
+    n = v["naslovna"]
+    if youtube and not isinstance(n, str):
+        slika = youtube_naslovnica(youtube)
+        if slika:
+            cilj.write_bytes(slika)
+            return
+        print(f"  {v['oznaka']}: YouTube še nima velike sličice, naslovnica kot brez YouTuba")
+    if isinstance(n, str):
+        ukaz = [FF, "-v", "error", "-y", "-i", str(Path(n).expanduser())]
+    elif isinstance(n, int):
+        vir = VIDEO / v["projekt"] / "_izris" / "objava" / f"naslovna-{n}.jpg"
         ukaz = [FF, "-v", "error", "-y", "-i", str(vir)]
     else:
-        ukaz = [FF, "-v", "error", "-y", "-ss", f"{v['naslovna']:.2f}", "-i", str(izvor), "-frames:v", "1"]
+        ukaz = [FF, "-v", "error", "-y", "-ss", f"{n:.2f}", "-i", str(izvor), "-frames:v", "1"]
     subprocess.run([*ukaz, "-vf", "scale=w=1600:h=1600:force_original_aspect_ratio=decrease",
                     "-q:v", "3", "-map_metadata", "-1", str(cilj)], check=True)
 
@@ -174,7 +198,7 @@ def main(argv):
         if not samo_slike:
             video(v, izvor, info, splet=not youtube)
         if not samo_video:
-            naslovnica(v, izvor)
+            naslovnica(v, izvor, youtube)
         zapis.append(dict(
             oznaka=v["oznaka"], naslov=v["naslov"], kraj=v["kraj"],
             datum=v["datum"][0], datum_do=v["datum"][1],
