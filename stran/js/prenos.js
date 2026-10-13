@@ -2,13 +2,17 @@
 // zato prenos dela tudi brez JS. Ta modul glede na napravo pokaže obvestilo:
 //   mac       prenos teče naprej, obvestilo pove, kako aplikacijo odpreš prvič
 //   mac-intel brskalnik (Chromium) pove, da je procesor Intel: najprej opozorilo
-//   mobilno   telefon ali tablica: namesto prenosa deli povezavo do strani
-//   drugo     Windows, Linux ...: razlaga in »Vseeno prenesi«
+//   android   gumbi kazejo na .apk; obvestilo o namestitvi iz brskalnika
+//   mobilno   iPhone, iPad: namesto prenosa deli povezavo do strani
+//   windows   gumbi kazejo na namestitveni program za Windows; obvestilo o SmartScreenu
+//   drugo     Linux ...: razlaga in »Vseeno prenesi«
 
 function zaznajNapravo() {
   const ua = navigator.userAgent;
   const ipad = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1; // iPadOS se predstavi kot Mac
-  if (/Android|iPhone|iPod|iPad|Mobile/.test(ua) || ipad) return Promise.resolve("mobilno");
+  if (/Android/.test(ua)) return Promise.resolve("android");
+  if (/iPhone|iPod|iPad|Mobile/.test(ua) || ipad) return Promise.resolve("mobilno");
+  if (/Windows NT/.test(ua)) return Promise.resolve("windows");
   if (!/Macintosh|Mac OS X/.test(ua)) return Promise.resolve("drugo");
   // arhitekturo pove le Chromium; Safari in Firefox je ne izdata, zato velja Apple silicon
   const ud = navigator.userAgentData;
@@ -23,7 +27,16 @@ export function prenos() {
   const vsebina = plosca.querySelector("[data-obvestilo-vsebina]");
   const zapri = plosca.querySelector("[data-obvestilo-zapri]");
   let naprava = "mac";
-  zaznajNapravo().then((n) => { naprava = n; });
+  zaznajNapravo().then((n) => {
+    naprava = n;
+    // na Windows in Androidu gumbi za prenos kazejo na paket za ta sistem
+    if (n !== "windows" && n !== "android") return;
+    for (const gumb of document.querySelectorAll(`[data-prenos-${n}]`)) {
+      gumb.href = gumb.dataset[n === "windows" ? "prenosWindows" : "prenosAndroid"];
+      const besedilo = gumb.dataset[n === "windows" ? "besediloWindows" : "besediloAndroid"];
+      if (besedilo) gumb.textContent = besedilo;
+    }
+  });
   let prej = null;
 
   function pokazi(predloga, gumb) {
@@ -61,7 +74,7 @@ export function prenos() {
 
   for (const gumb of document.querySelectorAll("[data-prenos]")) {
     gumb.addEventListener("click", (e) => {
-      if (naprava === "mac") { pokazi("mac", gumb); return; } // prenos teče naprej
+      if (naprava === "mac" || naprava === "windows" || naprava === "android") { pokazi(naprava, gumb); return; } // prenos teče naprej
       e.preventDefault();
       pokazi(naprava, gumb);
     });

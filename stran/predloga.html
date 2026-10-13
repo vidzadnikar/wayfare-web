@@ -47,7 +47,7 @@
       <h1 id="hero-naslov" class="serif" data-naslov-uvod>{{hero_naslov}}</h1>
       <p class="uvodnik" data-uvod>{{hero_uvod}}</p>
       <div class="akcije" data-uvod>
-        <a class="gumb" href="{{prenos_href}}" download data-prenos>{{gumb_prenos}}</a>
+        <a class="gumb" href="{{prenos_href}}" download data-prenos data-prenos-windows="{{prenos_windows_href}}" data-besedilo-windows="{{gumb_prenos_windows}}" data-prenos-android="{{prenos_android_href}}" data-besedilo-android="{{gumb_prenos_android}}">{{gumb_prenos}}</a>
         <a class="gumb gumb-tihi" href="{{pot_vlogi}}">{{gumb_vlogi}}</a>
       </div>
     </div>
@@ -200,8 +200,10 @@
     </div>
     <span class="cilj-pin" aria-hidden="true"></span>
     <h2 id="cilj-naslov" class="serif" data-naslov>{{cilj_naslov}}</h2>
-    <a class="gumb gumb-velik" href="{{prenos_href}}" download data-prenos>{{gumb_prenos}}</a>
+    <a class="gumb gumb-velik" href="{{prenos_href}}" download data-prenos data-prenos-windows="{{prenos_windows_href}}" data-besedilo-windows="{{gumb_prenos_windows}}" data-prenos-android="{{prenos_android_href}}" data-besedilo-android="{{gumb_prenos_android}}">{{gumb_prenos}}</a>
     <p class="drobno">{{cilj_opomba}}</p>
+    <p class="drobno">{{cilj_windows}}</p>
+    <p class="drobno">{{cilj_android}}</p>
   </section>
 </main>
 

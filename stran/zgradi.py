@@ -116,6 +116,10 @@ def zgoscene_skript(html_):
 # repozitorija strani: izdaja z oznako v<različica> in paketom kot prilogo.
 # WAYFARE_PRENOS_URL nadomesti naslov s poljubnim drugim.
 PRENOS_URL = "https://github.com/vidzadnikar/wayfare-web/releases/download/v{razlicica}/{ime}"
+# Paket za Windows: namestitveni program iz GitHub Actions (zasebni repozitorij
+# wayfare), prilozen isti izdaji. Velikost pride iz kopije v prenos/, ce je tam.
+PRENOS_WINDOWS = "Wayfare-Studio-Setup-{razlicica}.exe"
+PRENOS_ANDROID = "Wayfare-Studio-{razlicica}.apk"
 
 
 def prenos():
@@ -124,11 +128,20 @@ def prenos():
         raise SystemExit("V prenos/ ni paketa. Najprej zaženi ../paket/zgradi_paket.py.")
     dmg = paketi[-1]
     razlicica = re.search(r"Studio-(.+)\.dmg$", dmg.name)[1]
+    windows = PRENOS_WINDOWS.format(razlicica=razlicica)
+    exe = Path(TU, "prenos", windows)
     return {
         "url": os.environ.get("WAYFARE_PRENOS_URL") or PRENOS_URL.format(razlicica=razlicica, ime=dmg.name),
         "prenos_ime": dmg.name,
         "prenos_velikost": f"{round(dmg.stat().st_size / 1e6)} MB",
         "razlicica": razlicica,
+        "prenos_windows_href": PRENOS_URL.format(razlicica=razlicica, ime=windows),
+        "prenos_windows_ime": windows,
+        "prenos_windows_velikost": f" · {round(exe.stat().st_size / 1e6)} MB" if exe.is_file() else "",
+        "prenos_android_href": PRENOS_URL.format(razlicica=razlicica, ime=PRENOS_ANDROID.format(razlicica=razlicica)),
+        "prenos_android_ime": PRENOS_ANDROID.format(razlicica=razlicica),
+        "prenos_android_velikost": (f" · {round(apk.stat().st_size / 1e6)} MB"
+                                    if (apk := Path(TU, "prenos", PRENOS_ANDROID.format(razlicica=razlicica))).is_file() else ""),
     }
 
 
@@ -484,7 +497,9 @@ def main():
             for kljuc, vrednost in b.items():
                 html_ = html_.replace("{{" + kljuc + "}}", vrednost)
             html_ = html_.replace("{{prenos_href}}", paket["url"])
-            for kljuc in ("prenos_ime", "prenos_velikost", "razlicica"):
+            for kljuc in ("prenos_ime", "prenos_velikost", "razlicica", "prenos_windows_href",
+                          "prenos_windows_ime", "prenos_windows_velikost", "prenos_android_href",
+                          "prenos_android_ime", "prenos_android_velikost"):
                 html_ = html_.replace("{{" + kljuc + "}}", paket[kljuc])
             zgoscene = zgoscene_skript(html_)
             vse_zgoscene |= zgoscene

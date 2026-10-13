@@ -47,7 +47,7 @@
     <a href="./" hreflang="en" lang="en" data-jezik="en" aria-current="page">EN</a>
     <a href="../sl/vlogi/" hreflang="sl" lang="sl" data-jezik="sl" >SL</a>
   </nav>
-  <a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos>Download</a>
+  <a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos data-prenos-windows="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-Setup-0.1.0.exe" data-prenos-android="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.apk">Download</a>
 </header>
 
 <main id="vsebina" class="vlogi-stran">
@@ -102,14 +102,24 @@
   <p>Your Mac seems to have an Intel processor. Wayfare Studio runs on Macs with Apple silicon (M1 or newer).</p>
   <div class="obvestilo-akcije"><a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos-vseeno>Download anyway</a></div>
 </template>
+<template id="obvestilo-windows">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio is downloading</p>
+  <ol class="obvestilo-koraki"><li>Run the downloaded installer. It installs for your user, no administrator rights needed.</li><li>Windows SmartScreen warns because the program isn’t signed yet: click “More info”, then “Run anyway”.</li><li>Wayfare Studio opens in your browser; its icon stays in the taskbar tray (quit it there). Start a project and add your clips.</li></ol>
+  <p class="drobno">Wayfare-Studio-Setup-0.1.0.exe · 312 MB</p>
+</template>
+<template id="obvestilo-android">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio is downloading</p>
+  <ol class="obvestilo-koraki"><li>Open the downloaded .apk file. Android asks whether to allow installing from this source (your browser): allow it.</li><li>On first launch allow access to all files, so the studio can see the clips in your phone’s folders.</li><li>A project is a folder with clips (for example DCIM/Camera or a Wayfare folder). Rendering runs on the phone, so it is slower than on a computer.</li></ol>
+  <p class="drobno">Wayfare-Studio-0.1.0.apk · 45 MB</p>
+</template>
 <template id="obvestilo-drugo">
-  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio is made for Mac</p>
-  <p>It runs on Macs with Apple silicon (M1 or newer) and macOS 12 or later. There’s no Windows or Linux version yet.</p>
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio is for Mac, Windows and Android</p>
+  <p>It runs on Macs with Apple silicon (macOS 12 or later), on 64-bit Windows 10 or later and on Android 8 or later. There is no Linux version yet.</p>
   <div class="obvestilo-akcije"><a class="gumb gumb-majhen gumb-tihi" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos-vseeno>Download anyway</a></div>
 </template>
 <template id="obvestilo-mobilno">
-  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Download it on your Mac</p>
-  <p>Wayfare Studio is a Mac app. Send yourself this page and open it on your Mac.</p>
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Not on iPhone or iPad</p>
+  <p>Wayfare Studio is for Mac, Windows and Android. Send yourself this page and open it there.</p>
   <div class="obvestilo-akcije"><button class="gumb gumb-majhen" type="button" data-deli data-kopirano="Link copied">Share link</button></div>
 </template>
 

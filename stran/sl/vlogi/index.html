@@ -47,7 +47,7 @@
     <a href="../../vlogi/" hreflang="en" lang="en" data-jezik="en" >EN</a>
     <a href="./" hreflang="sl" lang="sl" data-jezik="sl" aria-current="page">SL</a>
   </nav>
-  <a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos>Prenos</a>
+  <a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos data-prenos-windows="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-Setup-0.1.0.exe" data-prenos-android="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.apk">Prenos</a>
 </header>
 
 <main id="vsebina" class="vlogi-stran">
@@ -102,14 +102,24 @@
   <p>Tvoj Mac ima najbrž procesor Intel. Wayfare Studio deluje na Macih z Apple silicon (M1 ali novejši).</p>
   <div class="obvestilo-akcije"><a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos-vseeno>Vseeno prenesi</a></div>
 </template>
+<template id="obvestilo-windows">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio se prenaša</p>
+  <ol class="obvestilo-koraki"><li>Zaženi preneseni namestitveni program. Namesti se za tvojega uporabnika, brez skrbniških pravic.</li><li>Windows SmartScreen opozori, ker program še ni podpisan: klikni »Več informacij« in nato »Vseeno zaženi«.</li><li>Wayfare Studio se odpre v brskalniku, ikona ostane v opravilni vrstici (tam ga tudi ustaviš). Začni projekt in naloži posnetke.</li></ol>
+  <p class="drobno">Wayfare-Studio-Setup-0.1.0.exe · 312 MB</p>
+</template>
+<template id="obvestilo-android">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio se prenaša</p>
+  <ol class="obvestilo-koraki"><li>Odpri preneseno datoteko .apk. Android vpraša, ali dovoliš namestitev iz tega vira (brskalnika): dovoli.</li><li>Ob prvem zagonu dovoli dostop do vseh datotek, da studio vidi posnetke v mapah telefona.</li><li>Projekt je mapa s posnetki (npr. DCIM/Camera ali mapa Wayfare). Izris teče na telefonu, zato je počasnejši kot na računalniku.</li></ol>
+  <p class="drobno">Wayfare-Studio-0.1.0.apk · 45 MB</p>
+</template>
 <template id="obvestilo-drugo">
-  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio je narejen za Mac</p>
-  <p>Deluje na Macih z Apple silicon (M1 ali novejši) in macOS 12 ali novejšim. Različice za Windows in Linux še ni.</p>
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio je za Mac, Windows in Android</p>
+  <p>Deluje na Macih z Apple silicon (macOS 12 ali novejši), na 64-bitnem Windows 10 ali novejšem in na Androidu 8 ali novejšem. Različice za Linux še ni.</p>
   <div class="obvestilo-akcije"><a class="gumb gumb-majhen gumb-tihi" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos-vseeno>Vseeno prenesi</a></div>
 </template>
 <template id="obvestilo-mobilno">
-  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Prenesi ga na Macu</p>
-  <p>Wayfare Studio je aplikacija za Mac. Pošlji si to stran in jo odpri na Macu.</p>
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Na iPhonu in iPadu ga ni</p>
+  <p>Wayfare Studio je za Mac, Windows in Android. Pošlji si to stran in jo odpri tam.</p>
   <div class="obvestilo-akcije"><button class="gumb gumb-majhen" type="button" data-deli data-kopirano="Povezava kopirana">Deli povezavo</button></div>
 </template>
 
