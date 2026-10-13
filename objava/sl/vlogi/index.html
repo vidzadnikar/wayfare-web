@@ -93,7 +93,8 @@
 </div>
 <template id="obvestilo-mac">
   <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio se prenaša</p>
-  <ol class="obvestilo-koraki"><li>Odpri preneseno datoteko in povleci Wayfare Studio v mapo Aplikacije.</li><li>Prvič klikni aplikacijo z desno tipko in izberi Odpri. Če jo Mac še vedno ustavi, pojdi v Sistemske nastavitve → Zasebnost in varnost in izberi Vseeno odpri.</li><li>Wayfare Studio se odpre v brskalniku. Začni projekt in naloži posnetke.</li></ol>
+  <ol class="obvestilo-koraki"><li>Odpri preneseno datoteko in povleci Wayfare Studio v mapo Aplikacije.</li><li>Prvič: odpri aplikacijo. Mac jo ustavi z opozorilom, da je ne more preveriti (aplikacija še ni notarizirana pri Applu). Pojdi v Sistemske nastavitve → Zasebnost in varnost, na dnu klikni »Vseeno odpri« in potrdi. Od takrat se odpira normalno. Na starejšem macOS zadošča desni klik → Odpri.</li><li>Wayfare Studio se odpre v brskalniku. Začni projekt in naloži posnetke.</li></ol>
+  <p class="drobno">Če Mac pravi, da je aplikacija poškodovana, v Terminalu zaženi: <code>xattr -dr com.apple.quarantine "/Applications/Wayfare Studio.app"</code></p>
   <p class="drobno">Wayfare-Studio-0.1.0.dmg · 434 MB</p>
 </template>
 <template id="obvestilo-intel">

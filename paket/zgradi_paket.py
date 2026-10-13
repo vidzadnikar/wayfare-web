@@ -16,6 +16,10 @@ programi znova podpišejo (ad hoc). Na koncu skripta preveri, da ime nikjer ne
 ostane.
 
 Izhod: gradnja/Wayfare Studio.app in ../stran/prenos/Wayfare-Studio-<različica>.dmg
+
+Podpis: privzeto ad hoc (Gatekeeper paket prvič ustavi). Z WAYFARE_PODPIS in
+WAYFARE_NOTAR (glej spodaj) je paket podpisan z Developer ID, notariziran in
+ožigosan, zato se namesti brez opozoril.
 """
 
 import os
@@ -33,6 +37,18 @@ PRENOS = TU.parent / "stran" / "prenos"
 
 IME = "Wayfare Studio"
 ID = "studio.wayfare.app"
+
+# Podpis in notarizacija, da Gatekeeper paketa ne ustavi (potreben je Apple
+# Developer Program). Brez teh spremenljivk je podpis ad hoc in paket brez
+# notarizacije: macOS ga prvič ustavi, uporabnik ga dovoli v nastavitvah.
+#   WAYFARE_PODPIS  identiteta v keychainu, npr. "Developer ID Application: Ime Priimek (TEAMID)"
+#                   (Xcode → Settings → Accounts → Manage Certificates → + → Developer ID Application)
+#   WAYFARE_NOTAR   profil za notarytool, narejen enkrat z
+#                   xcrun notarytool store-credentials wayfare --apple-id <Apple ID> --team-id <TEAMID>
+#                   (geslo je »app-specific password« z appleid.apple.com)
+PODPIS = os.environ.get("WAYFARE_PODPIS", "-")
+NOTAR = os.environ.get("WAYFARE_NOTAR")
+UPRAVICENJA = TU / "upravicenja.plist"
 UPORABNIK = Path.home().name                 # zasebni niz, ki ne sme v paket
 NEVTRALNO = ("wayfare" * 4)[: len(UPORABNIK)]  # enaka dolžina
 
@@ -296,13 +312,26 @@ def main():
             "LSApplicationCategoryType": "public.app-category.video",
         }, f)
 
-    print("podpis (ad hoc) ...")
+    # Podpis od znotraj navzven: najprej vsaka Mach-O datoteka, nazadnje paket.
+    # Z Developer ID še okrepljeno izvajanje, časovni žig in upravičenja.
+    pravi = PODPIS != "-"
+    print("podpis (Developer ID) ..." if pravi else "podpis (ad hoc) ...")
+    dodatno = ["--timestamp", "--options", "runtime", "--entitlements", str(UPRAVICENJA)] if pravi else []
     for pot in viri.rglob("*"):
         if pot.is_file() and not pot.is_symlink() and je_macho(pot):
-            zazeni("codesign", "--force", "--sign", "-", str(pot),
+            zazeni("codesign", "--force", *dodatno, "--sign", PODPIS, str(pot),
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    zazeni("codesign", "--force", "--sign", "-", str(app))
+    zazeni("codesign", "--force", *dodatno, "--sign", PODPIS, str(app))
     zazeni("codesign", "--verify", "--deep", "--strict", str(app))
+    if pravi and NOTAR:
+        # notarizacija aplikacije (zip), nato žig v paket, da velja tudi brez spleta
+        print("notarizacija aplikacije ...")
+        zip_ = GRADNJA / "notar.zip"
+        zazeni("ditto", "-c", "-k", "--keepParent", str(app), str(zip_))
+        zazeni("xcrun", "notarytool", "submit", str(zip_), "--keychain-profile", NOTAR, "--wait")
+        zazeni("xcrun", "stapler", "staple", str(app))
+        zip_.unlink()
+        zazeni("spctl", "--assess", "--type", "execute", str(app))
 
     print("preverjanje zasebnosti ...")
     ostanki = [p for p in app.rglob("*") if p.is_file() and not p.is_symlink()
@@ -325,7 +354,14 @@ def main():
     zazeni("hdiutil", "create", "-volname", IME, "-srcfolder", str(oder), "-fs", "HFS+",
            "-format", "ULFO", "-ov", str(dmg), stdout=subprocess.DEVNULL)
     shutil.move(str(oder / app.name), app)
-    print(f"{dmg.name}: {dmg.stat().st_size / 1e6:.0f} MB")
+    if pravi:
+        zazeni("codesign", "--force", "--timestamp", "--sign", PODPIS, str(dmg))
+        if NOTAR:
+            print("notarizacija dmg ...")
+            zazeni("xcrun", "notarytool", "submit", str(dmg), "--keychain-profile", NOTAR, "--wait")
+            zazeni("xcrun", "stapler", "staple", str(dmg))
+    print(f"{dmg.name}: {dmg.stat().st_size / 1e6:.0f} MB"
+          + ("" if pravi and NOTAR else " (brez notarizacije: Gatekeeper ga bo prvič ustavil)"))
 
 
 main()

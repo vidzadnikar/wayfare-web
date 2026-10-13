@@ -62,7 +62,7 @@
   "obvestilo_zapri": "Close",
   "mac_naslov": "Wayfare Studio is downloading",
   "mac_korak1": "Open the downloaded file and drag Wayfare Studio into Applications.",
-  "mac_korak2": "The first time, right-click the app and choose Open. If your Mac still blocks it, go to System Settings → Privacy &amp; Security and choose Open Anyway.",
+  "mac_korak2": "First time: open the app. The Mac stops it with a warning that it can’t be verified (the app isn’t notarized with Apple yet). Go to System Settings → Privacy & Security, click “Open Anyway” at the bottom and confirm. From then on it opens normally. On older macOS, right-click → Open is enough.",
   "mac_korak3": "Wayfare Studio opens in your browser. Start a project and drop in your clips.",
   "intel_naslov": "This Mac may not be supported",
   "intel_opis": "Your Mac seems to have an Intel processor. Wayfare Studio runs on Macs with Apple silicon (M1 or newer).",
@@ -102,7 +102,8 @@
   "zemljevid_oddalji": "Zoom out",
   "zemljevid_vse": "Show the whole world",
   "zemljevid_namig": "Drag to spin. Zoom with the buttons, a pinch or ⌘/Ctrl + scroll. Click a place to fly there.",
-  "zemljevid_namig_kolescek": "Zoom with %tipka% + scroll or a pinch"
+  "zemljevid_namig_kolescek": "Zoom with %tipka% + scroll or a pinch",
+  "mac_opomba": "If the Mac says the app is damaged, run this in Terminal:"
  },
  "sl": {
   "lang": "sl",
@@ -167,7 +168,7 @@
   "obvestilo_zapri": "Zapri",
   "mac_naslov": "Wayfare Studio se prenaša",
   "mac_korak1": "Odpri preneseno datoteko in povleci Wayfare Studio v mapo Aplikacije.",
-  "mac_korak2": "Prvič klikni aplikacijo z desno tipko in izberi Odpri. Če jo Mac še vedno ustavi, pojdi v Sistemske nastavitve → Zasebnost in varnost in izberi Vseeno odpri.",
+  "mac_korak2": "Prvič: odpri aplikacijo. Mac jo ustavi z opozorilom, da je ne more preveriti (aplikacija še ni notarizirana pri Applu). Pojdi v Sistemske nastavitve → Zasebnost in varnost, na dnu klikni »Vseeno odpri« in potrdi. Od takrat se odpira normalno. Na starejšem macOS zadošča desni klik → Odpri.",
   "mac_korak3": "Wayfare Studio se odpre v brskalniku. Začni projekt in naloži posnetke.",
   "intel_naslov": "Ta Mac morda ni podprt",
   "intel_opis": "Tvoj Mac ima najbrž procesor Intel. Wayfare Studio deluje na Macih z Apple silicon (M1 ali novejši).",
@@ -207,6 +208,7 @@
   "zemljevid_oddalji": "Oddalji",
   "zemljevid_vse": "Pokaži ves svet",
   "zemljevid_namig": "Zavrti z vlečenjem. Približaj z gumboma, s ščipom ali s ⌘/Ctrl + koleščkom. Klik na kraj te pripelje k njemu.",
-  "zemljevid_namig_kolescek": "Približaj z %tipka% + koleščkom ali s ščipom"
+  "zemljevid_namig_kolescek": "Približaj z %tipka% + koleščkom ali s ščipom",
+  "mac_opomba": "Če Mac pravi, da je aplikacija poškodovana, v Terminalu zaženi:"
  }
 }

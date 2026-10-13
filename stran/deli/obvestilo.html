@@ -5,6 +5,7 @@
 <template id="obvestilo-mac">
   <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">{{mac_naslov}}</p>
   <ol class="obvestilo-koraki"><li>{{mac_korak1}}</li><li>{{mac_korak2}}</li><li>{{mac_korak3}}</li></ol>
+  <p class="drobno">{{mac_opomba}} <code>xattr -dr com.apple.quarantine "/Applications/Wayfare Studio.app"</code></p>
   <p class="drobno">{{prenos_ime}} · {{prenos_velikost}}</p>
 </template>
 <template id="obvestilo-intel">
