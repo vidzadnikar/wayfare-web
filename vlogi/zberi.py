@@ -83,6 +83,10 @@ VLOGI = [
          naslov=dict(en="Rifnik", sl="Rifnik"),
          kraj=dict(en="Rifnik, Slovenia", sl="Rifnik, Slovenija"),
          datum=("2026-09-05", None), naslovna=72.7),
+    dict(oznaka="malta-1", izvor="Malta 2026/Malta day 1.mov", projekt=None,
+         naslov=dict(en="Malta — Day 1", sl="Malta — 1. dan"),
+         kraj=dict(en="Malta", sl="Malta"),
+         datum=("2026-04-26", None), naslovna=12, youtube="OQpgyF4b1N4"),
     dict(oznaka="budimpesta", izvor="Budimpešta/_izris/Budimpešta.mp4", projekt="Budimpešta",
          naslov=dict(en="Budapest", sl="Budimpešta"),
          kraj=dict(en="Budapest, Hungary", sl="Budimpešta, Madžarska"),
@@ -97,6 +101,7 @@ KRAJI = {
     "Madrid, Spain":     dict(lon=-3.704, lat=40.417),
     "Rifnik, Slovenia":  dict(lon=15.42,  lat=46.22,  stran="spodaj"),
     "Budapest, Hungary": dict(lon=19.04,  lat=47.498),
+    "Malta":             dict(lon=14.51,  lat=35.9),
 }
 
 # x264 kot pri zanki heroja; vlogi so 60 sličic/s, zato je zgornja meja višja

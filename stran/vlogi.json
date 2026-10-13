@@ -549,6 +549,26 @@
    "youtube": null
   },
   {
+   "oznaka": "malta-1",
+   "naslov": {
+    "en": "Malta — Day 1",
+    "sl": "Malta — 1. dan"
+   },
+   "kraj": {
+    "en": "Malta",
+    "sl": "Malta"
+   },
+   "datum": "2026-04-26",
+   "datum_do": null,
+   "trajanje": 341.3,
+   "sirina": 3840,
+   "visina": 2160,
+   "posnetkov": null,
+   "poglavja": [],
+   "jezik": "sl",
+   "youtube": "OQpgyF4b1N4"
+  },
+  {
    "oznaka": "budimpesta",
    "naslov": {
     "en": "Budapest",
@@ -591,6 +611,11 @@
    "kljuc": "Budapest, Hungary",
    "lon": 19.04,
    "lat": 47.498
+  },
+  {
+   "kljuc": "Malta",
+   "lon": 14.51,
+   "lat": 35.9
   }
  ]
 }
