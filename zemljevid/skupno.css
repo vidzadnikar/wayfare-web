@@ -1,0 +1,63 @@
+/* Zemljevid krajev s filmi: trije primeri, isti svet kot stran (slog.css). */
+main { padding-top: 72px; }
+.zemljevid-uvod {
+  max-width: 1240px; margin-inline: auto; display: grid; gap: var(--s4);
+  padding: clamp(var(--s8), 10svh, var(--s9)) var(--rob) var(--s7);
+}
+.zemljevid-uvod h1 { font-size: clamp(44px, 6.4vw, 104px); max-width: 14ch; }
+.zemljevid-ovoj { padding: 0 var(--rob); }
+.zemljevid {
+  position: relative; max-width: 1240px; margin-inline: auto; height: clamp(380px, 56vw, 680px);
+  overflow: hidden; border-radius: var(--radius-lg); isolation: isolate; touch-action: pan-y;
+}
+/* robovi ravnega zemljevida se mehko iztečejo */
+.zemljevid-raven > canvas, .zemljevid-raven > svg {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent), linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent), linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent);
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+}
+@media (max-width: 640px) { .zemljevid { height: 82vw; min-height: 360px; } }
+.zemljevid canvas, .zemljevid svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.zemljevid svg { pointer-events: none; overflow: visible; }
+
+/* zatiči: gumb stoji na kraju (pika na točki, ime desno) */
+.zatici { position: absolute; inset: 0; pointer-events: none; }
+.zatic {
+  position: absolute; transform: translate(-7px, -50%); display: inline-flex; align-items: center; gap: 10px;
+  padding: 0 6px 0 0; border: 0; background: none; color: var(--fg); cursor: pointer; pointer-events: auto;
+  transition: opacity 400ms ease; will-change: left, top;
+}
+.zatic[data-skrit] { opacity: 0; pointer-events: none; }
+.zatic-levo { transform: translate(calc(-100% + 7px), -50%); padding: 0 0 0 6px; }
+.zatic-spodaj { flex-direction: column; gap: 6px; transform: translate(-50%, -7px); padding: 0; }
+.zatic-pika {
+  position: relative; display: grid; place-items: center; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 0 4px var(--accent-dim); color: var(--bg);
+  font: 600 11px/1 var(--sans); transition: background-color 200ms ease, box-shadow 200ms ease;
+}
+.zatic-pika::before {
+  content: ""; position: absolute; inset: -7px; border-radius: 50%; border: 1.5px solid var(--accent);
+  opacity: 0; animation: utrip 2.8s ease-out infinite;
+}
+@keyframes utrip { 0% { transform: scale(0.45); opacity: 0.9; } 100% { transform: scale(2); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .zatic-pika::before { animation: none; } }
+.zatic-ime {
+  font-family: var(--serif); font-size: clamp(19px, 1.8vw, 24px); letter-spacing: -0.01em; line-height: 1;
+  text-shadow: 0 2px 18px rgba(11, 16, 32, 0.95), 0 0 2px rgba(11, 16, 32, 0.9); transition: color 200ms ease;
+}
+.zatic:hover .zatic-ime { color: var(--accent); }
+.zatic[aria-pressed="true"] .zatic-pika { background: var(--fg); box-shadow: 0 0 0 5px rgba(239, 233, 223, 0.2); }
+.zatic[aria-pressed="true"] .zatic-pika::before { border-color: var(--fg); }
+.zatic[aria-pressed="true"] .zatic-ime { color: var(--fg); }
+.zatic:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: var(--radius-sm); }
+
+/* filmi izbranega kraja */
+.filmi { max-width: 1240px; margin-inline: auto; padding: var(--s8) var(--rob) var(--s10); display: grid; gap: var(--s5); }
+.filmi h2 { font-size: clamp(40px, 5vw, 72px); }
+.filmi .kartice { margin-top: var(--s4); }
+
+/* glava primerov */
+.glava ul a[aria-current="page"] { color: var(--fg); }
+.noga-primer { padding: var(--s8) var(--rob); color: var(--subtle); font-size: 14px; text-align: center; }
+/* v glavi primerov ostanejo vse tri povezave tudi na telefonu */
+@media (max-width: 640px) { .glava-nav li:not([data-nav]) { display: list-item; } .glava ul { gap: var(--s4); } }

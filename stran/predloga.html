@@ -69,6 +69,32 @@
     </div>
   </section>
 
+  <section class="zemljevid-odsek" id="zemljevid" aria-labelledby="zemljevid-naslov" data-zemljevid-odsek>
+    <div class="zemljevid-notri">
+      <div class="zemljevid-glava">
+        <h2 id="zemljevid-naslov" class="serif" data-naslov>{{zemljevid_naslov}}</h2>
+        <p class="uvodnik">{{zemljevid_uvod}}</p>
+      </div>
+      <div class="zemljevid" data-zemljevid role="region" aria-label="{{zemljevid_oznaka}}">
+        <canvas></canvas>
+        <div class="zatici"></div>
+        <div class="globus-ukazi">
+          <button class="globus-ukaz" type="button" data-zoom="in" aria-label="{{zemljevid_priblizaj}}">+</button>
+          <button class="globus-ukaz" type="button" data-zoom="out" aria-label="{{zemljevid_oddalji}}">−</button>
+        </div>
+        <button class="gumb gumb-tihi gumb-majhen globus-vse" type="button" data-zoom="vse" hidden>{{zemljevid_vse}}</button>
+        <p class="globus-namig" data-namig hidden></p>
+      </div>
+      <p class="drobno zemljevid-namig" data-zemljevid-namig>{{zemljevid_namig}}</p>
+      <div class="zemljevid-filmi" data-filmi aria-live="polite">
+        <h3 class="serif" data-filmi-naslov></h3>
+        <p class="uvodnik" data-filmi-opis></p>
+        <ul class="kartice" data-filmi-kartice></ul>
+      </div>
+    </div>
+  </section>
+  <script type="application/json" id="zemljevid-podatki">{{zemljevid_json}}</script>
+
   <section class="film-app" id="aplikacija" aria-label="{{aplikacija_oznaka}}" data-sestavljanje>
     <svg class="pot-crta" aria-hidden="true" data-pot><path class="pot-sled" d=""></path><path class="pot-pot" d=""></path></svg>
     <div class="oder-ovoj">

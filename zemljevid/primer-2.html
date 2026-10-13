@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zemljevid — primer 2: Pot</title>
+<link rel="icon" href="../stran/media/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../stran/css/pisave.css">
+<link rel="stylesheet" href="../stran/css/slog.css">
+<link rel="stylesheet" href="skupno.css">
+<style>
+.pot { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.pot-senca { fill: none; stroke: rgba(100, 226, 214, 0.18); stroke-width: 10; stroke-linecap: round; filter: blur(4px); }
+.postaje-ovoj { padding: var(--s6) var(--rob) 0; }
+.postaje { list-style: none; margin: 0 auto; padding: 0; max-width: 1240px; display: grid; gap: var(--s3); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 900px) { .postaje { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.postaja {
+  width: 100%; display: grid; gap: var(--s2); justify-items: start; padding: var(--s4) var(--s4) var(--s4) 0; border: 0; border-top: 1px solid rgba(239, 233, 223, 0.14);
+  background: none; color: var(--fg); text-align: left; cursor: pointer; transition: border-color 200ms ease;
+}
+.postaja-st { font: 500 13px/1 var(--sans); color: var(--subtle); font-variant-numeric: tabular-nums; }
+.postaja-kraj { font-size: clamp(24px, 2.4vw, 32px); line-height: 1; }
+.postaja-cas { font-size: 14px; color: var(--muted); }
+.postaja:hover { border-color: rgba(239, 233, 223, 0.5); }
+.postaja[aria-pressed="true"] { border-color: var(--accent); }
+.postaja[aria-pressed="true"] .postaja-st { color: var(--accent); }
+.postaja:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius-sm); }
+</style>
+<script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+<div class="svet" aria-hidden="true">
+  <span class="svet-luc svet-luc-1" data-luc></span>
+  <span class="svet-luc svet-luc-2" data-luc></span>
+  <span class="svet-luc svet-luc-3" data-luc></span>
+</div>
+<header class="glava">
+  <a class="znamka" href="index.html" aria-label="Zemljevid, pregled primerov">
+    <img src="../stran/media/logo.svg" alt="" width="26" height="26">
+    <span><b>wayfare</b> studio</span>
+  </a>
+  <nav class="glava-nav" aria-label="Primeri"><ul><li><a href="primer-1.html">Pike</a></li><li><a href="primer-2.html" aria-current="page">Pot</a></li><li><a href="primer-3.html">Globus</a></li></ul></nav>
+  <a class="gumb gumb-majhen" href="../stran/sl/">Nazaj na stran</a>
+</header>
+<main>
+  <section class="zemljevid-uvod">
+    <h1 class="serif">Kje smo <em>bili.</em></h1>
+    <p class="uvodnik">Vsak kraj, kjer je nastal film. Klikni ga, pa dobiš filme od tam.</p>
+  </section>
+  <div class="zemljevid-ovoj">
+    <section class="zemljevid zemljevid-raven" data-zemljevid aria-label="Zemljevid krajev">
+      <canvas></canvas><svg aria-hidden="true"><path class="pot-senca" data-pot-senca d=""></path><path class="pot" data-pot d=""></path></svg><div class="zatici"></div>
+    </section>
+  </div>
+  <div class="postaje-ovoj"><ol class="postaje" data-postaje></ol></div>
+
+  <section class="filmi" data-filmi aria-live="polite">
+    <h2 class="serif" data-filmi-naslov></h2>
+    <p class="uvodnik" data-filmi-opis></p>
+    <ul class="kartice" data-filmi-kartice></ul>
+  </section>
+</main>
+<footer class="noga-primer">Primer 2 od 3 · Pot. Zemljevid: Natural Earth.</footer>
+<script src="../stran/js/knjiznice/gsap.min.js"></script>
+<script type="module" src="primer-2.js"></script>
+</body>
+</html>

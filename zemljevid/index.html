@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zemljevid — trije primeri</title>
+<link rel="icon" href="../stran/media/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../stran/css/pisave.css">
+<link rel="stylesheet" href="../stran/css/slog.css">
+<link rel="stylesheet" href="skupno.css">
+<style>
+.primeri { list-style: none; margin: 0 auto; padding: 0 var(--rob) var(--s10); max-width: 1240px; display: grid; gap: var(--s5); }
+@media (min-width: 900px) { .primeri { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.primer { display: grid; gap: var(--s3); padding: var(--s6); border: 1px solid rgba(239, 233, 223, 0.12); border-radius: var(--radius-lg); color: inherit; text-decoration: none; background: rgba(18, 26, 48, 0.45); transition: border-color 200ms ease, transform 400ms var(--ease-out); }
+.primer:hover { border-color: var(--accent); transform: translateY(-3px); }
+.primer-st { color: var(--subtle); font-size: 14px; }
+.primer-ime { font-size: clamp(36px, 3.6vw, 56px); }
+.primer-opis { color: var(--muted); }
+</style>
+<script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+<div class="svet" aria-hidden="true">
+  <span class="svet-luc svet-luc-1" data-luc></span>
+  <span class="svet-luc svet-luc-2" data-luc></span>
+  <span class="svet-luc svet-luc-3" data-luc></span>
+</div>
+<header class="glava">
+  <a class="znamka" href="index.html" aria-label="Zemljevid, pregled primerov">
+    <img src="../stran/media/logo.svg" alt="" width="26" height="26">
+    <span><b>wayfare</b> studio</span>
+  </a>
+  <nav class="glava-nav" aria-label="Primeri"><ul><li><a href="primer-1.html">Pike</a></li><li><a href="primer-2.html">Pot</a></li><li><a href="primer-3.html">Globus</a></li></ul></nav>
+  <a class="gumb gumb-majhen" href="../stran/sl/">Nazaj na stran</a>
+</header>
+<main>
+  <section class="zemljevid-uvod">
+    <h1 class="serif">Zemljevid, <em>trije primeri.</em></h1>
+    <p class="uvodnik">Kraji, kjer so nastali filmi, s klikom na filme od tam. Izberi, kateri ti je najbolj všeč.</p>
+  </section>
+  <ul class="primeri"><li><a class="primer" href="primer-1.html"><span class="primer-st">Primer 1</span><span class="primer-ime serif">Pike</span><span class="primer-opis">Ravni zemljevid iz pik. Ob prihodu se svet približa na Evropo, kraji utripajo, klik pokaže filme od tam.</span></a></li><li><a class="primer" href="primer-2.html"><span class="primer-st">Primer 2</span><span class="primer-ime serif">Pot</span><span class="primer-opis">Isti zemljevid, čez njega se nariše pot med kraji po vrsti potovanj. Postaje so oštevilčene, pod zemljevidom je trak postaj.</span></a></li><li><a class="primer" href="primer-3.html"><span class="primer-st">Primer 3</span><span class="primer-ime serif">Globus</span><span class="primer-opis">3D globus iz pik, ki se počasi vrti. Vlečeš ga z miško ali prstom, klik na kraj ga obrne k tebi in pokaže filme.</span></a></li></ul>
+</main>
+</body>
+</html>

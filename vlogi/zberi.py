@@ -8,7 +8,8 @@
 Izhod v ../stran/media/vlogi/: <oznaka>-1080.mp4 in <oznaka>-720.mp4 (spletni
 različici, x264 kot pri heroju), <oznaka>-zanka.mp4 (6 s nemega predogleda za
 kazalec nad kartico) in <oznaka>.jpg (naslovnica). Opis vseh vlogov je v
-../stran/vlogi.json; iz njega zgradi.py sestavi stran vlogi/.
+../stran/vlogi.json (s koordinatami krajev iz KRAJI za globus); iz njega zgradi.py
+sestavi stran vlogi/ in zemljevid na domači strani.
 
 Izvor je končni izvoz vsakega vloga v ~/Video. Poglavja in naslovnice pridejo
 iz paketa za objavo (_izris/objava), kjer obstaja; sicer naslovnico vzamemo
@@ -83,6 +84,16 @@ VLOGI = [
          kraj=dict(en="Budapest, Hungary", sl="Budimpešta, Madžarska"),
          datum=("2025-12-26", None), naslovna=35.8),
 ]
+
+# Kraji na globusu (zemljevid na domači strani): ključ je kraj v angleščini, kot v VLOGI.
+# stran: kje stoji ime ob piki (levo, spodaj; privzeto desno), da se imena bližnjih krajev
+# ne prekrivajo. Vlog s krajem, ki ga tu ni, na globusu ni.
+KRAJI = {
+    "Milan, Italy":      dict(lon=9.19,   lat=45.464, stran="levo"),
+    "Madrid, Spain":     dict(lon=-3.704, lat=40.417),
+    "Rifnik, Slovenia":  dict(lon=15.42,  lat=46.22,  stran="spodaj"),
+    "Budapest, Hungary": dict(lon=19.04,  lat=47.498),
+}
 
 # x264 kot pri zanki heroja; vlogi so 60 sličic/s, zato je zgornja meja višja
 X264 = ["-c:v", "libx264", "-preset", "fast", "-profile:v", "high", "-pix_fmt", "yuv420p",
@@ -212,7 +223,11 @@ def main(argv):
             posnetkov=posnetkov(v), poglavja=poglavja(v), jezik="sl", youtube=youtube,
         ))
     if not samo_video:
-        JSON.write_text(json.dumps(dict(vlogi=zapis), ensure_ascii=False, indent=1), encoding="utf-8")
+        brez = sorted({v["kraj"]["en"] for v in VLOGI if v["kraj"]["en"] not in KRAJI})
+        if brez:
+            print("brez koordinat za globus (dodaj v KRAJI):", ", ".join(brez))
+        kraji = [dict(kljuc=k, **v) for k, v in KRAJI.items()]
+        JSON.write_text(json.dumps(dict(vlogi=zapis, kraji=kraji), ensure_ascii=False, indent=1), encoding="utf-8")
         print(f"{JSON.relative_to(TU.parent)}: {len(zapis)} vlogov, "
               f"{sum(z['trajanje'] for z in zapis) / 60:.0f} min")
 

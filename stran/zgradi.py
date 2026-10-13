@@ -245,6 +245,49 @@ def vlogi_podatki():
     return json.load(open(p, encoding="utf-8"))["vlogi"]
 
 
+def kraji_podatki():
+    """Kraji s koordinatami za globus (KRAJI v ../vlogi/zberi.py)."""
+    return json.load(open(Path(TU, "vlogi.json"), encoding="utf-8")).get("kraji", [])
+
+
+MESECI = {"sl": ["jan", "feb", "mar", "apr", "maj", "jun", "jul", "avg", "sep", "okt", "nov", "dec"],
+          "en": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]}
+
+
+def obdobje(od, do, jezik):
+    """Obdobje med dvema dnevoma, kratko: 9.–11. okt 2026, 5. sep 2026, 26. dec 2025 – 5. sep 2026."""
+    l1, m1, d1 = map(int, od.split("-"))
+    l2, m2, d2 = map(int, do.split("-"))
+    M = MESECI[jezik]
+    pika = "." if jezik == "sl" else ""
+    if od == do:
+        return f"{d1}{pika} {M[m1 - 1]} {l1}"
+    if (l1, m1) == (l2, m2):
+        return f"{d1}{pika}–{d2}{pika} {M[m1 - 1]} {l1}"
+    return f"{d1}{pika} {M[m1 - 1]} – {d2}{pika} {M[m2 - 1]} {l2}"
+
+
+def zemljevid_dom(jezik, b, p):
+    """Globus na domači strani: kraji s koordinatami, za vsakega opis (število filmov,
+    obdobje) in kartice filmov od tam, že zgrajene v HTML; vrstni red kot vlogi
+    (najnovejše potovanje prvo). Skript bere JSON s strani, zemljevid.js."""
+    vlogi = vlogi_podatki()
+    media = p["koren"] + "media/vlogi/"
+    seznam = []
+    for k in kraji_podatki():
+        filmi = [v for v in vlogi if v["kraj"]["en"] == k["kljuc"]]
+        if not filmi:
+            continue
+        od = min(v["datum"] for v in filmi)
+        do = max(v.get("datum_do") or v["datum"] for v in filmi)
+        kartice = "".join(kartica_html(v, opis_vloga(v, jezik, media), f'{p["pot_vlogi"]}#{v["oznaka"]}', izberi=False) for v in filmi)
+        seznam.append(dict(ime=filmi[0]["kraj"][jezik].split(",")[0].strip(), lon=k["lon"], lat=k["lat"], stran=k.get("stran"),
+                           od=od, opis=f"{mnozina(len(filmi), jezik, 'film')} · {obdobje(od, do, jezik)}", kartice=kartice))
+    seznam.sort(key=lambda k: k["od"], reverse=True)
+    podatki = {"kraji": seznam, "besedila": {"kolescek": b["zemljevid_namig_kolescek"]}}
+    return {"zemljevid_json": json.dumps(podatki, ensure_ascii=False).replace("</", "<\\/")}
+
+
 def poglavja_html(poglavja):
     return "".join(
         f'<li><button type="button" class="poglavje-gumb" data-cas="{t}">'
@@ -375,6 +418,7 @@ def objavi(zgoscene, strani, okvirji):
         uporabljeni |= set(re.findall(r"(media/[\w./-]+?\.(?:mp4|jpg|jpeg|png|webp|svg))", t))
     uporabljeni = {u for u in uporabljeni if not SPLETNI_VIDEO.match(u)}
     uporabljeni.add("model/wayfare-znak-kosi.glb")
+    uporabljeni.add("media/zemljevid/meje.json")  # črte globusa (zemljevid.js jih naloži s fetch)
     manjkajo = [u for u in sorted(uporabljeni) if not Path(TU, u).is_file()]
     if manjkajo:
         raise SystemExit(f"Stran kaže na datoteke, ki jih ni: {manjkajo}")
@@ -421,6 +465,7 @@ def main():
                 b.update(vlogi_stran(jezik, b, p))
             elif stran == "dom":
                 b.update(vlogi_dom(jezik, p))
+                b.update(zemljevid_dom(jezik, b, p))
             html_ = predloga
             for ime, vsebina in deli.items():
                 html_ = html_.replace("{{" + ime + "}}", vsebina)

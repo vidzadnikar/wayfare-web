@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zemljevid — primer 3: Globus</title>
+<link rel="icon" href="../stran/media/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../stran/css/pisave.css">
+<link rel="stylesheet" href="../stran/css/slog.css">
+<link rel="stylesheet" href="skupno.css">
+<style>
+.zemljevid { height: clamp(440px, 62vw, 760px); touch-action: pan-y; cursor: grab; }
+.globus-namig {
+  position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: 4; margin: 0; padding: var(--s3) var(--s5);
+  border-radius: var(--radius-pill); background: rgba(11, 16, 32, 0.78); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  color: var(--fg); font-size: 15px; white-space: nowrap; pointer-events: none; animation: namig-pokazi 200ms ease-out;
+}
+.globus-namig[hidden] { display: none; }
+@keyframes namig-pokazi { from { opacity: 0; translate: -50% -40%; } }
+.zemljevid[data-vlecenje] { cursor: grabbing; }
+@media (max-width: 640px) { .zemljevid { height: min(104vw, 72svh); } }
+.zatic { left: 0; top: 0; transition: opacity 250ms ease; will-change: translate; }
+.zatic[data-brez-imena]:not(:hover):not(:focus-visible) .zatic-ime { display: none; }
+/* ukazi za približevanje */
+.globus-ukazi { position: absolute; right: var(--s4); bottom: var(--s4); z-index: 3; display: grid; gap: var(--s2); }
+.globus-ukaz {
+  width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(239, 233, 223, 0.22);
+  background: rgba(18, 26, 48, 0.65); color: var(--fg); font: 400 22px/1 var(--sans); cursor: pointer;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: grid; place-items: center;
+  transition: border-color 160ms ease, transform 120ms var(--ease-out);
+}
+.globus-ukaz:hover { border-color: rgba(239, 233, 223, 0.55); }
+.globus-ukaz:active { transform: scale(0.95); }
+.globus-ukaz:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.globus-vse { position: absolute; left: var(--s4); bottom: var(--s4); z-index: 3; }
+.globus-vse[hidden] { display: none; }
+.zemljevid-namig { max-width: 1240px; margin: var(--s4) auto 0; padding: 0 var(--rob); color: var(--subtle); font-size: 14px; }
+</style>
+<script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+<div class="svet" aria-hidden="true">
+  <span class="svet-luc svet-luc-1" data-luc></span>
+  <span class="svet-luc svet-luc-2" data-luc></span>
+  <span class="svet-luc svet-luc-3" data-luc></span>
+</div>
+<header class="glava">
+  <a class="znamka" href="index.html" aria-label="Zemljevid, pregled primerov">
+    <img src="../stran/media/logo.svg" alt="" width="26" height="26">
+    <span><b>wayfare</b> studio</span>
+  </a>
+  <nav class="glava-nav" aria-label="Primeri"><ul><li><a href="primer-1.html">Pike</a></li><li><a href="primer-2.html">Pot</a></li><li><a href="primer-3.html" aria-current="page">Globus</a></li></ul></nav>
+  <a class="gumb gumb-majhen" href="../stran/sl/">Nazaj na stran</a>
+</header>
+<main>
+  <section class="zemljevid-uvod">
+    <h1 class="serif">Kje smo <em>bili.</em></h1>
+    <p class="uvodnik">Vsak kraj, kjer je nastal film. Klikni ga, pa dobiš filme od tam.</p>
+  </section>
+  <div class="zemljevid-ovoj">
+    <section class="zemljevid" data-zemljevid aria-label="Zemljevid krajev">
+      <canvas></canvas><div class="zatici"></div>
+      <div class="globus-ukazi">
+        <button class="globus-ukaz" type="button" data-zoom="in" aria-label="Približaj">+</button>
+        <button class="globus-ukaz" type="button" data-zoom="out" aria-label="Oddalji">−</button>
+      </div>
+      <button class="gumb gumb-tihi gumb-majhen globus-vse" type="button" data-zoom="vse" hidden>Pokaži ves svet</button>
+      <p class="globus-namig" data-namig hidden></p>
+    </section>
+  </div>
+  <p class="zemljevid-namig">Zavrti z vlečenjem, približaj z gumboma, s ščipom ali s ⌘/Ctrl + koleščkom. Klik na kraj te pripelje k njemu.</p>
+
+  <section class="filmi" data-filmi aria-live="polite">
+    <h2 class="serif" data-filmi-naslov></h2>
+    <p class="uvodnik" data-filmi-opis></p>
+    <ul class="kartice" data-filmi-kartice></ul>
+  </section>
+</main>
+<footer class="noga-primer">Primer 3 od 3 · Globus. Zemljevid: Natural Earth.</footer>
+<script src="../stran/js/knjiznice/gsap.min.js"></script>
+<script type="module" src="primer-3.js"></script>
+</body>
+</html>

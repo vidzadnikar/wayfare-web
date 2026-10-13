@@ -2,6 +2,7 @@ import { zazeniDrsenje, prikaziNaslove, promoPredvajalnik, znak, besede, mirno, 
 import { sestavljanje } from "./sestavljanje.js";
 import { prenos } from "./prenos.js";
 import { zankeKartic, prihodKartic } from "./kartice.js";
+import { zemljevid } from "./zemljevid.js";
 
 const { gsap, ScrollTrigger, lenis } = zazeniDrsenje();
 if (!mirno) document.documentElement.classList.add("gibanje");
@@ -110,8 +111,11 @@ prikaziNaslove("[data-naslov]", { gsap });
 promoPredvajalnik(document.querySelector("[data-promo]"));
 
 // filmi s poti: najnovejše kartice z zavihka Vlogi
-zankeKartic(document.querySelectorAll("[data-vlog]"));
-prihodKartic(".kartica", { gsap, ScrollTrigger });
+zankeKartic(document.querySelectorAll(".dom-vlogi [data-vlog]"));
+prihodKartic(".dom-vlogi .kartica", { gsap, ScrollTrigger });
+
+// kje smo bili: globus s kraji, klik pokaže filme od tam
+zemljevid(document.querySelector("[data-zemljevid]"), { gsap, koren });
 
 // Claude: zavihka namestitve (vtičnik je privzet, ker ne rabi Node.js).
 // Brez JS sta vidni obe poti; tu se skrije neizbrana.

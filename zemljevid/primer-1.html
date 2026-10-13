@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zemljevid — primer 1: Pike</title>
+<link rel="icon" href="../stran/media/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../stran/css/pisave.css">
+<link rel="stylesheet" href="../stran/css/slog.css">
+<link rel="stylesheet" href="skupno.css">
+<script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+<div class="svet" aria-hidden="true">
+  <span class="svet-luc svet-luc-1" data-luc></span>
+  <span class="svet-luc svet-luc-2" data-luc></span>
+  <span class="svet-luc svet-luc-3" data-luc></span>
+</div>
+<header class="glava">
+  <a class="znamka" href="index.html" aria-label="Zemljevid, pregled primerov">
+    <img src="../stran/media/logo.svg" alt="" width="26" height="26">
+    <span><b>wayfare</b> studio</span>
+  </a>
+  <nav class="glava-nav" aria-label="Primeri"><ul><li><a href="primer-1.html" aria-current="page">Pike</a></li><li><a href="primer-2.html">Pot</a></li><li><a href="primer-3.html">Globus</a></li></ul></nav>
+  <a class="gumb gumb-majhen" href="../stran/sl/">Nazaj na stran</a>
+</header>
+<main>
+  <section class="zemljevid-uvod">
+    <h1 class="serif">Kje smo <em>bili.</em></h1>
+    <p class="uvodnik">Vsak kraj, kjer je nastal film. Klikni ga, pa dobiš filme od tam.</p>
+  </section>
+  <div class="zemljevid-ovoj">
+    <section class="zemljevid zemljevid-raven" data-zemljevid aria-label="Zemljevid krajev">
+      <canvas></canvas><div class="zatici"></div>
+    </section>
+  </div>
+
+  <section class="filmi" data-filmi aria-live="polite">
+    <h2 class="serif" data-filmi-naslov></h2>
+    <p class="uvodnik" data-filmi-opis></p>
+    <ul class="kartice" data-filmi-kartice></ul>
+  </section>
+</main>
+<footer class="noga-primer">Primer 1 od 3 · Pike. Zemljevid: Natural Earth.</footer>
+<script src="../stran/js/knjiznice/gsap.min.js"></script>
+<script type="module" src="primer-1.js"></script>
+</body>
+</html>

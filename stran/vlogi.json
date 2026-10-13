@@ -507,5 +507,29 @@
    "jezik": "sl",
    "youtube": null
   }
+ ],
+ "kraji": [
+  {
+   "kljuc": "Milan, Italy",
+   "lon": 9.19,
+   "lat": 45.464,
+   "stran": "levo"
+  },
+  {
+   "kljuc": "Madrid, Spain",
+   "lon": -3.704,
+   "lat": 40.417
+  },
+  {
+   "kljuc": "Rifnik, Slovenia",
+   "lon": 15.42,
+   "lat": 46.22,
+   "stran": "spodaj"
+  },
+  {
+   "kljuc": "Budapest, Hungary",
+   "lon": 19.04,
+   "lat": 47.498
+  }
  ]
 }
