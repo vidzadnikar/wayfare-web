@@ -549,6 +549,26 @@
    "youtube": null
   },
   {
+   "oznaka": "malta-6",
+   "naslov": {
+    "en": "Malta — Day 6",
+    "sl": "Malta — 6. dan"
+   },
+   "kraj": {
+    "en": "Malta",
+    "sl": "Malta"
+   },
+   "datum": "2026-05-01",
+   "datum_do": null,
+   "trajanje": 256.933,
+   "sirina": 3840,
+   "visina": 2160,
+   "posnetkov": null,
+   "poglavja": [],
+   "jezik": "sl",
+   "youtube": "sXzOiCZ46kI"
+  },
+  {
    "oznaka": "malta-5",
    "naslov": {
     "en": "Malta — Day 5",
