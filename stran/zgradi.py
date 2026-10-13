@@ -56,8 +56,9 @@ HERO_VIDEO = "hero-mesta"  # media/<ime>-1080.mp4, <ime>-720.mp4, <ime>.jpg
 
 
 # Razglednice ob cilju: sličice iz posnetkov v videu heroja (media/razglednice/)
-RAZGLEDNICE = ["lisboa", "roma", "praha", "venezia", "paris", "ljubljana"]
-IMENA = {"lisboa": "Lisboa", "roma": "Roma", "praha": "Praha", "venezia": "Venezia", "paris": "Paris", "ljubljana": "Ljubljana"}
+RAZGLEDNICE = ["lisboa", "roma", "praha", "venezia", "paris", "ljubljana", "malta"]
+IMENA = {"lisboa": "Lisboa", "roma": "Roma", "praha": "Praha", "venezia": "Venezia", "paris": "Paris", "ljubljana": "Ljubljana",
+         "malta": "Malta"}   # malta: slika iz Higgsfield (Soul Cinema), 13. 10. 2026
 
 
 def razglednice():

@@ -463,6 +463,7 @@ p { text-wrap: pretty; }
 .razglednica:nth-child(4) { --x: 9%;  --y: 64%; --r: 6deg; }
 .razglednica:nth-child(5) { --x: 57%; --y: 70%; --r: -5deg; }
 .razglednica:nth-child(6) { --x: 80%; --y: 58%; --r: -3deg; }
+.razglednica:nth-child(7) { --x: 46%; --y: 9%; --r: 2deg; }
 /* telefon (in nizek ležeči zaslon): razglednice kot pahljača nad naslovom */
 @media (max-width: 640px), (max-height: 560px) and (orientation: landscape) {
   .cilj { min-height: 0; padding-top: var(--s9); }
@@ -474,6 +475,7 @@ p { text-wrap: pretty; }
   .razglednica:nth-child(4) { --x: 40%; --y: 6%;  --r: 5deg; }
   .razglednica:nth-child(5) { --x: 60%; --y: 18%; --r: 12deg; }
   .razglednica:nth-child(6) { display: none; }
+  .razglednica:nth-child(7) { display: none; }
 }
 
 .cilj-pin { width: 22px; height: 22px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 10px var(--accent-dim), 0 0 40px rgba(100, 226, 214, 0.55); margin-bottom: var(--s4); }
