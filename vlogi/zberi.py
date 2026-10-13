@@ -43,6 +43,10 @@ JSON = TU.parent / "stran" / "vlogi.json"
 # youtube (po želji): oznaka videa na YouTubu, kamor gre izvorni izvoz iz ~/Video
 # (lahko kot Neobjavljen). Oznaka, ki je že v vlogi.json, se ohrani.
 VLOGI = [
+    dict(oznaka="milano-4", izvor="Milano vlog day 4.mp4", projekt="Milano day 4",
+         naslov=dict(en="Milan — Day 4", sl="Milano — 4. dan"),
+         kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
+         datum=("2026-10-12", None), naslovna=1, youtube="oV69oloS8Bk"),
     dict(oznaka="milano-3", izvor="Milano vlog day 3.mp4", projekt="Milano day 3",
          naslov=dict(en="Milan — Day 3", sl="Milano — 3. dan"),
          kraj=dict(en="Milan, Italy", sl="Milano, Italija"),

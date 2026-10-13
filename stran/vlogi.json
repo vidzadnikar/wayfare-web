@@ -1,6 +1,67 @@
 {
  "vlogi": [
   {
+   "oznaka": "milano-4",
+   "naslov": {
+    "en": "Milan — Day 4",
+    "sl": "Milano — 4. dan"
+   },
+   "kraj": {
+    "en": "Milan, Italy",
+    "sl": "Milano, Italija"
+   },
+   "datum": "2026-10-12",
+   "datum_do": null,
+   "trajanje": 499.45,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": 57,
+   "poglavja": [
+    [
+     0.0,
+     "Uvod"
+    ],
+    [
+     14.4,
+     "Day 4 Milano"
+    ],
+    [
+     68.1,
+     "Caffè Napoli"
+    ],
+    [
+     87.1,
+     "Basilica di Sant'Ambrogio"
+    ],
+    [
+     161.7,
+     "Slovo od stanovanja"
+    ],
+    [
+     243.4,
+     "Piazza del Duomo"
+    ],
+    [
+     298.5,
+     "Kosilo"
+    ],
+    [
+     352.9,
+     "Milano Centrale"
+    ],
+    [
+     429.5,
+     "Proti domu"
+    ],
+    [
+     441.9,
+     "Prihod domov"
+    ]
+   ],
+   "jezik": "sl",
+   "youtube": "oV69oloS8Bk"
+  },
+  {
    "oznaka": "milano-3",
    "naslov": {
     "en": "Milan — Day 3",
