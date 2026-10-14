@@ -9,70 +9,157 @@ export const T = {
     pozdrav: (ime) => (ime ? `Živjo, ${ime}.` : "Živjo."),
     potrditev_zadeva: "Potrdi prijavo na obvestila Wayfare Studia",
     potrditev_naslov: "Še en klik.",
+    potrditev_uvod: "Potrdi e-naslov in obveščen boš o vsakem novem filmu in novi različici aplikacije.",
     potrditev_besedilo: "Klikni gumb in e-naslov je potrjen. Potem ti pišemo, ko objavimo nov film ali novo različico aplikacije. Povezava velja en dan.",
     potrditev_gumb: "Potrdi e-naslov",
     potrditev_opomba: "Če tega nisi zahteval ti, pošto prezri: brez klika se ne zgodi nič.",
+    potrditev_noga: "To pošto si dobil, ker je bil ta e-naslov vpisan na strani Wayfare Studio.",
     vlog_zadeva: (naslov) => `Nov film: ${naslov}`,
     vlog_gumb: "Poglej film",
     izdaja_gumb: "Prenesi",
     novica_gumb: "Preberi več",
     noga: "To pošto dobiš, ker si prijavljen na obvestila Wayfare Studia.",
+    stran: "Spletna stran",
+    vlogi: "Vlogi",
     odjava: "Odjava od obvestil",
+    gumb_rezerva: "Če gumb ne deluje, odpri to povezavo:",
   },
   en: {
     pozdrav: (ime) => (ime ? `Hi ${ime},` : "Hi,"),
     potrditev_zadeva: "Confirm your Wayfare Studio updates",
     potrditev_naslov: "One more click.",
+    potrditev_uvod: "Confirm your email to hear about every new film and app release.",
     potrditev_besedilo: "Click the button to confirm your email. We'll then write when a new film or a new version of the app is out. The link is valid for one day.",
     potrditev_gumb: "Confirm email",
     potrditev_opomba: "If this wasn't you, ignore this email: nothing happens without the click.",
+    potrditev_noga: "You're getting this because this address was entered on the Wayfare Studio site.",
     vlog_zadeva: (naslov) => `New film: ${naslov}`,
     vlog_gumb: "Watch the film",
     izdaja_gumb: "Download",
     novica_gumb: "Read more",
     noga: "You're getting this because you signed up for Wayfare Studio updates.",
+    stran: "Website",
+    vlogi: "Vlogs",
     odjava: "Unsubscribe",
+    gumb_rezerva: "If the button doesn't work, open this link:",
   },
 };
 
-const PISAVA = "-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+// Barve in pisave iz strani (stran/css/slog.css): temnomodra podlaga, kremno
+// besedilo, turkizna le na gumbu. Pošta je temna kot stran; color-scheme
+// "dark" odjemalcem pove, naj je ne obračajo.
+const B = {
+  bg: "#0b1020", surface: "#121a30", border: "#232c45",
+  fg: "#efe9df", muted: "#a3abbe", subtle: "#858ea6",
+  accent: "#64e2d6", accentFg: "#0b1020",
+};
+const SANS = "'Instrument Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+const SERIF = "'Instrument Serif','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif";
 
 // Odstavki besedila: prazna vrstica loči odstavke, povezave postanejo klikljive.
 export const odstavkiIz = (besedilo) => String(besedilo || "").replace(/\r\n?/g, "\n").split(/\n{2,}/).map((o) => o.trim()).filter(Boolean);
 
 function odstavekHtml(odstavek) {
   return pobegni(odstavek)
-    .replace(/https?:\/\/[^\s<]+[^\s<.,;:!?)]/g, (u) => `<a href="${u}" style="color:#0b1020">${u}</a>`)
+    .replace(/https?:\/\/[^\s<]+[^\s<.,;:!?)]/g, (u) => `<a href="${u}" style="color:${B.fg};text-decoration:underline">${u}</a>`)
     .replace(/\n/g, "<br>");
 }
 
-// Preprosta pošta s svetlo podlago, ki jo pokaže vsak odjemalec. `odstavki`
-// so že HTML (odstavekHtml), drugo se pobegne tu.
-function ovoj({ jezik, naslov, odstavki, gumb, opomba, noga, odjavaUrl }) {
+// Koren strani za slike in povezave v nogi: iz povezave, ki je v pošti.
+const korenIz = (url) => { try { return new URL(url).origin; } catch { return ""; } };
+
+// Slika ob obvestilu: naslovnica vloga, pri izdaji naslovnica promo filma.
+function slikaObvestila(o, koren) {
+  const vlog = /^vlog:([\w-]+)$/.exec(o.kljuc || "");
+  if (vlog) return `${koren}/media/vlogi/${vlog[1]}.jpg`;
+  if (o.vrsta === "izdaja") return `${koren}/media/promo-naslovna.jpg`;
+  return null;
+}
+
+// Gumb, ki deluje tudi v Outlooku (celica z barvo ozadja, povezava v njej).
+const gumbHtml = (gumb) => `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 0"><tr>
+<td bgcolor="${B.accent}" style="border-radius:999px;background:${B.accent}">
+<a href="${pobegni(gumb.url)}" style="display:inline-block;padding:14px 28px;font:600 15px/20px ${SANS};color:${B.accentFg};text-decoration:none;border-radius:999px">${pobegni(gumb.besedilo)}&nbsp;&rarr;</a>
+</td></tr></table>`;
+
+// Temna pošta v slogu strani. `odstavki` so že HTML (odstavekHtml), drugo se
+// pobegne tu. Struktura s tabelami in slogi v vrstici, ker jo tako pokaže
+// vsak odjemalec (Gmail, Apple Mail, Outlook).
+function ovoj({ jezik, koren, naslov, predogled, slika, slikaUrl, uvod, odstavki, gumb, opomba, noga, odjavaUrl }) {
   const t = T[jezik];
-  const odst = odstavki.map((o) => `<p style="margin:0 0 14px;font:16px/1.55 ${PISAVA};color:#1b1f2a">${o}</p>`).join("");
+  const domov = `${koren}${jezik === "sl" ? "/sl/" : "/"}`;
+  const vlogi = `${koren}${jezik === "sl" ? "/sl/vlogi/" : "/vlogi/"}`;
+  const p = (html, barva = B.muted) => `<p style="margin:0 0 16px;font:400 16px/26px ${SANS};color:${barva}">${html}</p>`;
+  const povezava = (url, besedilo) => `<a href="${pobegni(url)}" style="color:${B.muted};text-decoration:underline">${pobegni(besedilo)}</a>`;
+  const loci = `<span style="color:${B.border}">&nbsp;&nbsp;·&nbsp;&nbsp;</span>`;
+  const slikaVrstica = slika ? `<tr><td style="padding:0;line-height:0;font-size:0">
+<a href="${pobegni(slikaUrl || gumb?.url || domov)}" style="text-decoration:none"><img src="${pobegni(slika)}" width="560" alt="${pobegni(naslov)}" style="display:block;width:100%;max-width:560px;height:auto;border:0;border-radius:12px 12px 0 0;background:${B.border}"></a>
+</td></tr>` : "";
   return `<!doctype html>
-<html lang="${jezik}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${pobegni(naslov)}</title></head>
-<body style="margin:0;padding:0;background:#f3f1ec">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f1ec"><tr><td align="center" style="padding:32px 16px">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:14px">
-<tr><td style="padding:30px 32px 0;font:14px/1.4 ${PISAVA};color:#6b7280"><b style="color:#0b1020">wayfare</b> studio</td></tr>
-<tr><td style="padding:22px 32px 10px;font:400 30px/1.15 Georgia,'Times New Roman',serif;color:#0b1020">${pobegni(naslov)}</td></tr>
-<tr><td style="padding:0 32px">${odst}</td></tr>
-${gumb ? `<tr><td style="padding:6px 32px 26px"><a href="${pobegni(gumb.url)}" style="display:inline-block;background:#0b1020;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:999px;font:500 15px ${PISAVA}">${pobegni(gumb.besedilo)}</a></td></tr>` : ""}
-${opomba ? `<tr><td style="padding:0 32px 24px;font:13px/1.5 ${PISAVA};color:#6b7280">${pobegni(opomba)}</td></tr>` : ""}
-${noga ? `<tr><td style="padding:16px 32px 28px;border-top:1px solid #e8e6e1;font:12px/1.5 ${PISAVA};color:#6b7280">${pobegni(noga)}${odjavaUrl ? ` <a href="${pobegni(odjavaUrl)}" style="color:#6b7280">${pobegni(t.odjava)}</a>` : ""}</td></tr>` : "<tr><td style=\"padding:0 0 24px\"></td></tr>"}
-</table></td></tr></table>
+<html lang="${jezik}" xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark"><meta name="supported-color-schemes" content="dark">
+<meta name="x-apple-disable-message-reformatting">
+<title>${pobegni(naslov)}</title>
+<style>
+:root{color-scheme:dark;supported-color-schemes:dark}
+body{margin:0!important;padding:0!important;-webkit-text-size-adjust:100%}
+a{color:${B.fg}}
+@media (max-width:600px){
+  .ovoj{padding:32px 16px 48px!important}
+  .vsebina{padding:32px 24px!important}
+  .naslov{font-size:30px!important;line-height:34px!important}
+}
+</style></head>
+<body bgcolor="${B.bg}" style="margin:0;padding:0;background:${B.bg}">
+<div style="display:none;max-height:0;max-width:0;overflow:hidden;opacity:0;mso-hide:all">${pobegni(predogled || "")}${"&#8199;&#847;".repeat(60)}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${B.bg}" style="background:${B.bg};background-image:linear-gradient(${B.bg},${B.bg})">
+<tr><td align="center" class="ovoj" style="padding:48px 16px 64px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px">
+
+<tr><td style="padding:0 0 24px">
+<a href="${pobegni(domov)}" style="text-decoration:none"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+<td style="vertical-align:middle"><img src="${koren}/media/posta/logo.png" width="36" height="36" alt="" style="display:block;border:0;border-radius:9px"></td>
+<td style="vertical-align:middle;padding-left:12px;font:600 16px/20px ${SANS};color:${B.fg};letter-spacing:-0.01em">Wayfare Studio</td>
+</tr></table></a>
+</td></tr>
+
+<tr><td bgcolor="${B.surface}" style="background:${B.surface};border:1px solid ${B.border};border-radius:12px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+${slikaVrstica}
+<tr><td class="vsebina" style="padding:40px">
+<h1 class="naslov" style="margin:0 0 20px;font:400 36px/40px ${SERIF};color:${B.fg};letter-spacing:-0.01em">${pobegni(naslov).replace(/ (\S+)$/, "&nbsp;$1")}</h1>
+${uvod ? p(pobegni(uvod), B.fg) : ""}
+${odstavki.map((o) => p(o)).join("\n")}
+${gumb ? gumbHtml(gumb) : ""}
+${opomba ? `<p style="margin:32px 0 0;padding:24px 0 0;border-top:1px solid ${B.border};font:400 13px/20px ${SANS};color:${B.subtle}">${opomba}</p>` : ""}
+</td></tr>
+</table>
+</td></tr>
+
+<tr><td style="padding:32px 8px 0;font:400 13px/20px ${SANS};color:${B.subtle}">
+<p style="margin:0 0 8px">${pobegni(noga)}</p>
+<p style="margin:0">${povezava(domov, t.stran)}${loci}${povezava(vlogi, t.vlogi)}${odjavaUrl ? `${loci}${povezava(odjavaUrl, t.odjava)}` : ""}</p>
+</td></tr>
+
+</table>
+</td></tr></table>
 </body></html>`;
 }
 
 export function sestaviPotrditev({ jezik, povezava, ime = null }) {
   const t = T[jezik];
+  const koren = korenIz(povezava);
   const odstavki = [t.pozdrav(ime), t.potrditev_besedilo];
+  const opomba = `${pobegni(t.potrditev_opomba)}<br><br>${pobegni(t.gumb_rezerva)}<br><a href="${pobegni(povezava)}" style="color:${B.muted};word-break:break-all">${pobegni(povezava)}</a>`;
   return {
     zadeva: t.potrditev_zadeva,
-    html: ovoj({ jezik, naslov: t.potrditev_naslov, odstavki: odstavki.map(odstavekHtml), gumb: { besedilo: t.potrditev_gumb, url: povezava }, opomba: t.potrditev_opomba }),
-    besedilo: [t.potrditev_naslov, "", ...odstavki, "", `${t.potrditev_gumb}: ${povezava}`, "", t.potrditev_opomba].join("\n"),
+    html: ovoj({
+      jezik, koren, naslov: t.potrditev_naslov, predogled: t.potrditev_uvod,
+      odstavki: odstavki.map(odstavekHtml), gumb: { besedilo: t.potrditev_gumb, url: povezava },
+      opomba, noga: t.potrditev_noga,
+    }),
+    besedilo: [t.potrditev_naslov, "", ...odstavki, "", `${t.potrditev_gumb}: ${povezava}`, "", t.potrditev_opomba, "", "— Wayfare Studio"].join("\n"),
   };
 }
 
@@ -80,17 +167,23 @@ export function sestaviPotrditev({ jezik, povezava, ime = null }) {
 export function sestaviObvestilo(o, clan, { odjavaUrl }) {
   const jezik = clan.jezik === "sl" ? "sl" : "en";
   const t = T[jezik];
+  const koren = korenIz(odjavaUrl);
   const naslov = o[`naslov_${jezik}`] || o.naslov_sl || o.naslov_en || "";
   const besedilo = o[`besedilo_${jezik}`] || o.besedilo_sl || o.besedilo_en || "";
   const url = o[`url_${jezik}`] || o.url_sl || o.url_en || null;
   const zadeva = o.vrsta === "vlog" ? t.vlog_zadeva(naslov) : naslov;
   const gumbBesedilo = { vlog: t.vlog_gumb, izdaja: t.izdaja_gumb, novica: t.novica_gumb }[o.vrsta] || t.novica_gumb;
   const ime = clan.ime ? String(clan.ime).split(" ")[0] : null;
-  const odstavki = [t.pozdrav(ime), ...odstavkiIz(besedilo)];
+  const odstavki = odstavkiIz(besedilo);
   return {
     zadeva,
-    html: ovoj({ jezik, naslov, odstavki: odstavki.map(odstavekHtml), gumb: url ? { besedilo: gumbBesedilo, url } : null, noga: t.noga, odjavaUrl }),
-    besedilo: [naslov, "", ...odstavki, "", url ? `${gumbBesedilo}: ${url}` : "", "", t.noga, `${t.odjava}: ${odjavaUrl}`].join("\n"),
+    html: ovoj({
+      jezik, koren, naslov, predogled: odstavki[0] || naslov,
+      slika: slikaObvestila(o, koren), slikaUrl: url,
+      odstavki: [t.pozdrav(ime), ...odstavki].map(odstavekHtml),
+      gumb: url ? { besedilo: gumbBesedilo, url } : null, noga: t.noga, odjavaUrl,
+    }),
+    besedilo: [naslov, "", t.pozdrav(ime), ...odstavki, "", url ? `${gumbBesedilo}: ${url}` : "", "", "— Wayfare Studio", "", t.noga, `${t.odjava}: ${odjavaUrl}`].join("\n"),
     glave: { "List-Unsubscribe": `<${odjavaUrl}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" },
   };
 }

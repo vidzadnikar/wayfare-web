@@ -423,6 +423,11 @@ GLAVE = """/*
   X-Permitted-Cross-Domain-Policies: none
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
+
+# Slike v e-pošti (logo, naslovnice vlogov) nalaga odjemalec pošte z drugega
+# izvora, zato pod /media/ ni omejitve same-origin.
+/media/*
+  ! Cross-Origin-Resource-Policy
 """
 
 
@@ -451,6 +456,7 @@ def objavi(zgoscene, strani, okvirji):
     uporabljeni = {u for u in uporabljeni if not SPLETNI_VIDEO.match(u)}
     uporabljeni.add("model/wayfare-znak-kosi.glb")
     uporabljeni.add("media/zemljevid/meje.json")  # črte globusa (zemljevid.js jih naloži s fetch)
+    uporabljeni.add("media/posta/logo.png")  # glava e-pošte (zaledje/posta.js)
     manjkajo = [u for u in sorted(uporabljeni) if not Path(TU, u).is_file()]
     if manjkajo:
         raise SystemExit(f"Stran kaže na datoteke, ki jih ni: {manjkajo}")

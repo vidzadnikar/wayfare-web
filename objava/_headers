@@ -8,3 +8,8 @@
   X-Permitted-Cross-Domain-Policies: none
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
+
+# Slike v e-pošti (logo, naslovnice vlogov) nalaga odjemalec pošte z drugega
+# izvora, zato pod /media/ ni omejitve same-origin.
+/media/*
+  ! Cross-Origin-Resource-Policy

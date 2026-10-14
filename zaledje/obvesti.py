@@ -62,8 +62,8 @@ def postavka_vloga(v):
         "kljuc": f"vlog:{o}",
         "naslov": {"sl": v["naslov"]["sl"], "en": v["naslov"]["en"]},
         "besedilo": {
-            "sl": f"{v['kraj']['sl']} · {trajanje(v['trajanje'])}. Nov film je na strani.",
-            "en": f"{v['kraj']['en']} · {trajanje(v['trajanje'])}. A new film is up on the site.",
+            "sl": "Nov film s potovanja je na strani.",
+            "en": "A new travel film is up on the site.",
         },
         "url": {"sl": f"{STRAN_URL}/sl/vlogi/#{o}", "en": f"{STRAN_URL}/vlogi/#{o}"},
     }
