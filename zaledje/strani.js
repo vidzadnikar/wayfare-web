@@ -3,7 +3,7 @@
 // Ovoj obravnavaj() pričakovane napake (Napaka) vrne kot JSON ali stran.
 import { Napaka, json, pobegni, jezikIz } from "./osnova.js";
 
-export const CSP = "default-src 'none'; img-src 'self' https://lh3.googleusercontent.com; style-src 'self'; font-src 'self'; "
+export const CSP = "default-src 'none'; img-src 'self' data: https://lh3.googleusercontent.com; style-src 'self'; font-src 'self'; "
   + "script-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'";
 
 export const B = {

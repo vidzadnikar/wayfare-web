@@ -47,7 +47,7 @@
 .tabela a:hover { text-decoration-color: var(--fg); }
 a.tabela-gumb { text-decoration: none; display: inline-block; }
 
-.ploscice { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.ploscice { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 .ploscica { padding: var(--s5); border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); display: grid; gap: var(--s1); }
 .ploscica-vrednost { font-size: 44px; line-height: 1; color: var(--fg); }
 .ploscica-oznaka { color: var(--muted); font-size: 15px; }
@@ -78,3 +78,6 @@ a.tabela-gumb { text-decoration: none; display: inline-block; }
 .stikalo:checked::after { transform: translateX(18px); background: var(--accent-fg); }
 .stikalo:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { .stikalo, .stikalo::after { transition: none; } }
+.nadzor form { justify-items: stretch; }
+.nadzor form .nadzor-akcije { justify-content: flex-start; }
+.nadzor-odsek[hidden] { display: none; }

@@ -194,7 +194,8 @@ export function sestaviNoviClan({ clan, stranUrl }) {
   const koren = String(stranUrl || "").replace(/\/$/, "");
   const ime = clan.ime || clan.email;
   const pot = clan.vir === "google" ? "z Googlom" : "z e-naslovom";
-  const odstavki = [`${ime} (${clan.email}) se je prijavil ${pot}.`, `Jezik: ${clan.jezik === "sl" ? "slovenščina" : "angleščina"}.`];
+  const kdo = clan.ime ? `${clan.ime} (${clan.email})` : clan.email;
+  const odstavki = [`${kdo} se je prijavil ${pot}.`, `Jezik: ${clan.jezik === "sl" ? "slovenščina" : "angleščina"}.`];
   return {
     zadeva: `Nov član: ${ime}`,
     html: ovoj({

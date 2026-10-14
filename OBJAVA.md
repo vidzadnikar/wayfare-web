@@ -198,3 +198,38 @@ Ročni klic obvestila: `OBVESTI_SECRET=… STRAN_URL=http://localhost:8788 pytho
 - `stran/deli/prijava.html` in `stran/js/clan.js`: okno za prijavo in stanje
   v glavi; `stran/predloga-zasebnost.html`: stran o zasebnosti
   (`/zasebnost/`, `/sl/zasebnost/`), besedila v `besedila.json` (`zasebnost_*`).
+
+## Nadzor: nastavitve, vlogi z YouTuba, ogledi (od 15. 10. 2026)
+
+Na `/nadzor` (le za ADMIN_EMAIL) so poleg članov in novice še:
+
+- **Pregled:** aktivni člani, nalaganja strani danes, ogledi vlogov, pošta
+  danes in graf nalaganj zadnjih 14 dni (gostje sivo, člani turkizno).
+- **Čaka tebe:** zadržana obvestila (Pošlji ali Zavrzi) in vlogi z YouTuba,
+  ki jih ni bilo mogoče dodati (Poskusi znova).
+- **Nov vlog z YouTuba:** prilepiš povezavo, naslov in kraj se izpolnita iz
+  naslova na YouTubu ("Rome day 1" → "Rim — 1. dan", "Rim, Italija").
+  Dodaj ga da v vrsto. GitHub Action `.github/workflows/youtube.yml` vsakih
+  10 minut vpraša `/api/samodejno`, ali kaj čaka; če da, `vlogi/samodejno.py`
+  prenese naslovnico in dolžino z YouTuba, doda vlog v `stran/vlogi.json`
+  (z `"samodejno": true`), zgradi stran, naredi commit in push ter pošlje
+  obvestilo (`zaledje/obvesti.py`). Javne videe s kanala z naslovom vloga
+  ("… day 3", "… recap") stran najde sama (nastavitev »Javni videi s kanala«);
+  neobjavljenih YouTube ne pokaže v viru, zato jih vneseš z obrazcem.
+- **Ogledi vlogov:** kdo (član po imenu) ali koliko gostov je začel
+  predvajati film na strani.
+- **Nastavitve:** samodejna obvestila o vlogih in izdajah (izklopljeno →
+  obvestilo počaka v »Čaka tebe«), javni videi s kanala, odprte prijave,
+  pošta tebi ob novem članu, dnevna meja pošte, stavek v obvestilu o vlogu.
+
+Člani imajo v meniju z imenom **Nastavitve**: jezik pošte, katera obvestila
+hočejo (vlogi, aplikacija, novice), izklop vseh obvestil in izbris računa.
+
+**Pomembno doma:** GitHub Action sam dela commite na `main`. Pred vsakim
+lokalnim pushem zato najprej `git pull --rebase origin main`.
+
+Vlog, ki ga doda Action, nima predogleda za kazalec (zanke) in ima za datum
+dan objave na YouTubu, če ga v nadzoru ne vpišeš. Ko ga kdaj prevzameš v
+`VLOGI` v `vlogi/zberi.py` (z izvorom v ~/Video), dobi zanko in točen datum.
+`stran/prenos.json` hrani podatke o zadnjem paketu, da Action zgradi stran
+brez .dmg.
