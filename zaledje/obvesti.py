@@ -100,13 +100,18 @@ def postavka_izdaje():
     }
 
 
+# Cloudflare zavrne privzeti User-Agent Pythona (Python-urllib) z Error 1010
+# (403), zato se skript predstavi z lastnim imenom.
+GLAVE = {"User-Agent": "wayfare-obvesti/1.0 (+https://github.com/vidzadnikar/wayfare-web)"}
+
+
 def pocakaj_na_strani(oznake):
     """Počaka, da so vsi novi vlogi na objavljeni strani Vlogi."""
     konec = time.time() + CAKANJE_S
     manjkajo = set(oznake)
     while manjkajo and time.time() < konec:
         try:
-            with urllib.request.urlopen(f"{STRAN_URL}/vlogi/", timeout=20) as odg:
+            with urllib.request.urlopen(urllib.request.Request(f"{STRAN_URL}/vlogi/", headers=GLAVE), timeout=20) as odg:
                 html = odg.read().decode("utf-8", "replace")
             manjkajo = {o for o in manjkajo if f'data-vlog="{o}"' not in html}
         except (urllib.error.URLError, OSError) as e:
@@ -125,7 +130,7 @@ def poslji(postavke):
     telo = json.dumps({"postavke": postavke}).encode()
     zahteva = urllib.request.Request(
         f"{STRAN_URL}/api/obvesti", data=telo, method="POST",
-        headers={"Authorization": f"Bearer {skrivnost}", "Content-Type": "application/json", "Accept": "application/json"},
+        headers={**GLAVE, "Authorization": f"Bearer {skrivnost}", "Content-Type": "application/json", "Accept": "application/json"},
     )
     try:
         with urllib.request.urlopen(zahteva, timeout=120) as odg:
