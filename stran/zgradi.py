@@ -260,11 +260,20 @@ def cas(sekunde):
     return f"{s // 60}:{s % 60:02d}"
 
 
-def vlogi_podatki():
+def vsi_vlogi():
     p = Path(TU, "vlogi.json")
     if not p.is_file():
         raise SystemExit("Ni vlogi.json. Najprej zaženi ../vlogi/zberi.py --slike.")
     return json.load(open(p, encoding="utf-8"))["vlogi"]
+
+
+def vlogi_podatki():
+    """Vlogi na strani: le tisti z oznako youtube. Vlog brez nje še ni objavljen
+    (14. 10. 2026 Rifnik in Budimpešta), zato ga ni nikjer: ne v zavihku Vlogi,
+    ne na domači strani, ne na globusu. Ko dobi oznako (vlogi/zberi.py ali
+    vlogi.json), se ob naslednji gradnji pokaže sam, GitHub Action pa pošlje
+    obvestilo članom."""
+    return [v for v in vsi_vlogi() if v.get("youtube")]
 
 
 def kraji_podatki():
@@ -465,9 +474,9 @@ def objavi(zgoscene, strani, okvirji):
     print(f"objava: {len(datoteke)} datotek, {velikost:.0f} MB")
     if neuporabljeni:
         print("ni v objavi (stran jih ne uporablja):", ", ".join(neuporabljeni))
-    brez = [v["oznaka"] for v in vlogi_podatki() if not v.get("youtube")]
+    brez = [v["oznaka"] for v in vsi_vlogi() if not v.get("youtube")]
     if brez:
-        print("brez oznake youtube (na objavljeni strani ne igrajo):", ", ".join(brez))
+        print("brez oznake youtube (še niso objavljeni, na strani jih ni):", ", ".join(brez))
     if prevelike:
         raise SystemExit(f"Prevelike za Cloudflare Pages (nad {NAJVEC_MB} MB): {prevelike}")
 
