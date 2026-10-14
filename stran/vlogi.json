@@ -669,6 +669,26 @@
    "youtube": "OQpgyF4b1N4"
   },
   {
+   "oznaka": "budimpesta-1",
+   "naslov": {
+    "en": "Budapest — Day 1",
+    "sl": "Budimpešta — 1. dan"
+   },
+   "kraj": {
+    "en": "Budapest, Hungary",
+    "sl": "Budimpešta, Madžarska"
+   },
+   "datum": "2025-12-26",
+   "datum_do": null,
+   "trajanje": 221.611,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": null,
+   "poglavja": [],
+   "jezik": "sl",
+   "youtube": "6XAmNtaazx8"
+  },
+  {
    "oznaka": "budimpesta",
    "naslov": {
     "en": "Budapest",

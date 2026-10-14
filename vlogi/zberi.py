@@ -107,6 +107,11 @@ VLOGI = [
          naslov=dict(en="Malta — Day 1", sl="Malta — 1. dan"),
          kraj=dict(en="Malta", sl="Malta"),
          datum=("2026-04-26", None), naslovna=12, youtube="OQpgyF4b1N4"),
+    dict(oznaka="budimpesta-1", izvor="Budimpešta day 1.mov", projekt=None,
+         naslov=dict(en="Budapest — Day 1", sl="Budimpešta — 1. dan"),
+         kraj=dict(en="Budapest, Hungary", sl="Budimpešta, Madžarska"),
+         datum=("2025-12-26", None), naslovna=12, youtube="6XAmNtaazx8"),
+    # kratki film iz Wayfare Studia; brez oznake youtube ga na strani ni
     dict(oznaka="budimpesta", izvor="Budimpešta/_izris/Budimpešta.mp4", projekt="Budimpešta",
          naslov=dict(en="Budapest", sl="Budimpešta"),
          kraj=dict(en="Budapest, Hungary", sl="Budimpešta, Madžarska"),
