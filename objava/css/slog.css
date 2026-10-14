@@ -102,6 +102,7 @@ p { text-wrap: pretty; }
 .gumb-majhen { height: 38px; padding: 0 var(--s4); font-size: 14px; }
 .gumb-velik { height: 56px; padding: 0 var(--s6); font-size: 16px; }
 .gumb[aria-disabled="true"] { cursor: default; }
+.gumb[hidden] { display: none; }
 @media (hover: hover) and (pointer: fine) {
   .gumb:not(.gumb-tihi):hover { background: #fffaf2; }
   .gumb-tihi:hover { border-color: var(--fg); }
@@ -667,3 +668,90 @@ p { text-wrap: pretty; }
 
 /* ukaz v obvestilu ob prenosu (rešitev za Gatekeeper) */
 .obvestilo code { font: 500 12px/1.5 var(--mono); color: var(--fg); background: rgba(239, 233, 223, 0.08); padding: 2px 6px; border-radius: var(--radius-sm); overflow-wrap: anywhere; }
+
+/* -------------------------------------------------- prijava in član (glava, okno, sporočilo)
+   Gumb Prijava odpre okno z Googlom in e-naslovom (clan.js). Prijavljenega
+   kaže čip z imenom in sliko, ki odpre meni z izpisom. Brez JS gumba ni. */
+html:not(.js) .clan-mesto { display: none; }
+.clan-mesto { display: inline-flex; align-items: center; }
+.clan-prijava { gap: var(--s2); }
+.clan-prijava[hidden] { display: none; }
+.clan-ikona { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+@media (max-width: 640px) { .clan-prijava span { display: none; } .clan-prijava { width: 38px; padding: 0; } }
+.clan { position: relative; }
+.clan[hidden] { display: none; }
+.clan-gumb {
+  list-style: none; display: inline-flex; align-items: center; gap: var(--s2); height: 38px; padding: 4px 12px 4px 4px;
+  border: 1px solid rgba(239, 233, 223, 0.28); border-radius: var(--radius-pill); background: rgba(11, 16, 32, 0.35);
+  color: var(--fg); font-size: 14px; cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.clan-gumb::-webkit-details-marker { display: none; }
+.clan-gumb::marker { content: ""; }
+.clan-gumb:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.clan-slika, .clan-zacetnica { width: 28px; height: 28px; border-radius: 50%; flex: none; }
+.clan-zacetnica { display: grid; place-items: center; background: var(--accent); color: var(--accent-fg); font: 600 13px/1 var(--sans); }
+.clan-slika[hidden] { display: none; }
+.clan-slika:not([hidden]) + .clan-zacetnica { display: none; }
+@media (max-width: 640px) { .clan-ime { display: none; } .clan-gumb { padding-right: 4px; } }
+.clan-meni {
+  position: absolute; right: 0; top: calc(100% + 8px); z-index: 55; min-width: 220px; padding: var(--s2); display: grid; gap: 2px;
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-lg);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
+}
+.clan-email { padding: var(--s2) var(--s3); font-size: 13px; color: var(--subtle); overflow-wrap: anywhere; }
+.clan-povezava {
+  display: block; width: 100%; padding: var(--s2) var(--s3); border: 0; border-radius: var(--radius); background: transparent;
+  color: var(--fg); font: 400 15px/1.4 var(--sans); text-align: left; text-decoration: none; cursor: pointer;
+}
+.clan-povezava:hover { background: var(--surface-2); }
+.clan-povezava:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.clan-povezava[hidden] { display: none; }
+
+.prijava {
+  width: min(440px, calc(100vw - 2 * var(--s4))); max-height: calc(100svh - 2 * var(--s4)); padding: 0;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-lg); background: var(--surface); color: var(--fg);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
+}
+.prijava::backdrop { background: rgba(11, 16, 32, 0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.prijava[open] { animation: prijava-pride 260ms var(--ease-out); }
+@keyframes prijava-pride { from { opacity: 0; transform: translateY(12px) scale(0.98); } }
+.prijava-notri { position: relative; padding: var(--s6) var(--s5) var(--s5); }
+.prijava-korak { display: grid; gap: var(--s4); }
+.prijava-korak[hidden] { display: none; }
+.prijava .obvestilo-naslov { font-size: 30px; line-height: 1.05; color: var(--fg); padding-right: var(--s7); outline: none; }
+.prijava p { color: var(--muted); font-size: 15px; }
+.prijava-google { width: 100%; gap: var(--s3); }
+.prijava-g { width: 18px; height: 18px; flex: none; }
+.prijava-ali { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--s3); color: var(--subtle); font-size: 13px; }
+.prijava-ali::before, .prijava-ali::after { content: ""; height: 1px; background: var(--border-strong); }
+.prijava-obrazec { display: grid; gap: var(--s3); }
+.prijava-polje {
+  height: 50px; padding: 0 var(--s4); border: 1px solid var(--border-strong); border-radius: var(--radius-pill);
+  background: var(--bg); color: var(--fg); font: 400 16px var(--sans);
+}
+.prijava-polje::placeholder { color: var(--subtle); }
+.prijava-polje:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.prijava-obrazec .gumb { width: 100%; }
+.prijava-napaka { color: #ff9c8a; font-size: 14px; }
+.prijava-napaka[hidden] { display: none; }
+.prijava .drobno a { color: var(--muted); }
+
+.sporocilo {
+  position: fixed; z-index: 70; left: 50%; top: calc(72px + var(--s2)); transform: translateX(-50%);
+  width: max-content; max-width: calc(100vw - 2 * var(--s4)); margin: 0; padding: var(--s3) var(--s5);
+  border-radius: var(--radius-pill); background: var(--fg); color: var(--bg); font-size: 14px; text-align: center;
+  box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.8); animation: sporocilo-pride 300ms var(--ease-out);
+}
+.sporocilo[hidden] { display: none; }
+@keyframes sporocilo-pride { from { opacity: 0; transform: translate(-50%, -8px); } }
+
+/* -------------------------------------------------- strani z besedilom (zasebnost) */
+.besedilo-stran { padding: calc(72px + clamp(var(--s8), 12svh, var(--s10))) var(--rob) var(--s10); }
+.besedilo { max-width: 68ch; margin: 0 auto; display: grid; gap: var(--s6); }
+.besedilo h1 { font-size: clamp(44px, 6.4vw, 96px); }
+.besedilo .uvodnik { max-width: none; }
+.besedilo section { display: grid; gap: var(--s3); }
+.besedilo h2 { font-size: clamp(28px, 3vw, 40px); }
+.besedilo p { color: var(--muted); }
+.besedilo a { color: var(--fg); }
+.besedilo code { font: 500 13px/1.5 var(--mono); color: var(--fg); background: rgba(239, 233, 223, 0.08); padding: 2px 6px; border-radius: var(--radius-sm); }

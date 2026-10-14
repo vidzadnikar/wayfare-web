@@ -6,11 +6,12 @@
 Strani:
     predloga.html        → index.html (angleščina, koren) in sl/index.html
     predloga-vlogi.html  → vlogi/index.html in sl/vlogi/index.html
+    predloga-zasebnost.html → zasebnost/index.html in sl/zasebnost/index.html
 
 Besedila so v besedila.json; ključ {{x}} v predlogi se zamenja z vrednostjo.
 Vrednosti so zaupanja vredno besedilo z dovoljeno oznako (<em>, <br>).
-Skupni deli (glava, noga, obvestilo ob prenosu) so v deli/ in se vstavijo v
-vsako stran, da je glava povsod ista. Zavihek Vlogi bere vlogi.json, ki ga
+Skupni deli (glava, noga, obvestilo ob prenosu, okno za prijavo) so v deli/ in
+se vstavijo v vsako stran, da je glava povsod ista. Zavihek Vlogi bere vlogi.json, ki ga
 naredi ../vlogi/zberi.py. Stran 404 (predloga-404.html) ima absolutne poti,
 ker jo strežnik pošlje na poljubnem naslovu.
 
@@ -36,6 +37,7 @@ TU = os.path.dirname(os.path.abspath(__file__))
 STRANI = {
     "dom":   dict(predloga="predloga.html", izhod={"en": "index.html", "sl": "sl/index.html"}),
     "vlogi": dict(predloga="predloga-vlogi.html", izhod={"en": "vlogi/index.html", "sl": "sl/vlogi/index.html"}),
+    "zasebnost": dict(predloga="predloga-zasebnost.html", izhod={"en": "zasebnost/index.html", "sl": "sl/zasebnost/index.html"}),
     "napaka": dict(predloga="predloga-404.html", izhod={"en": "404.html", "sl": "sl/404.html"}),
 }
 
@@ -93,6 +95,8 @@ def youtube_okvir(oznaka):
 # Varnostna politika (CSP). Vse je z lastnega strežnika; vgrajeni skripti (razred
 # "js" s preusmeritvijo in importmap) sta dovoljeni le z zgoščeno vrednostjo, zato
 # vrinjena tuja skripta ne bi tekla. Slogi v atributih (mesta kosov) ostanejo.
+# Obrazca za prijavo (form-action) gresta na lastno zaledje (/api/…), slika
+# profila prijavljenega člana pride z Googlovega strežnika slik.
 # frame-ancestors in upgrade-insecure-requests sta le v glavah strežnika (_headers).
 # Okvir YouTuba je dovoljen le, kjer je potreben: v glavi strani Vlogi in v glavah
 # strežnika, ki veljajo za vse strani (druge strani ga v svoji glavi prepovejo).
@@ -101,9 +105,9 @@ def csp(zgoscene, okvirji=False):
     okvir = YOUTUBE if okvirji else "'none'"
     return ("default-src 'self'; "
             f"script-src 'self' {skripte}; "
-            "style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self'; "
-            "font-src 'self'; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; "
-            f"form-action 'none'; frame-src {okvir}; worker-src 'none'; manifest-src 'self'")
+            "style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; "
+            "media-src 'self'; font-src 'self'; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; "
+            f"form-action 'self'; frame-src {okvir}; worker-src 'none'; manifest-src 'self'")
 
 
 def zgoscene_skript(html_):
@@ -208,13 +212,15 @@ def poti(stran, jezik):
     dom = STRANI["dom"]["izhod"][jezik]
     en, sl = STRANI[stran]["izhod"]["en"], STRANI[stran]["izhod"]["sl"]
     vlogi = STRANI["vlogi"]["izhod"][jezik]
+    zasebnost = STRANI["zasebnost"]["izhod"][jezik]
     if stran == "napaka":
         absolutna = lambda do: "/" + do.removesuffix("index.html")
         koren, pot_dom = "/", absolutna(dom)
-        url_en, url_sl, pot_vlogi = absolutna(en), absolutna(sl), absolutna(vlogi)
+        url_en, url_sl, pot_vlogi, pot_zasebnost = absolutna(en), absolutna(sl), absolutna(vlogi), absolutna(zasebnost)
     else:
         koren, pot_dom = relmapa(ta, "index.html"), relmapa(ta, dom)
-        url_en, url_sl, pot_vlogi = relmapa(ta, en, "./"), relmapa(ta, sl, "./"), relmapa(ta, vlogi, "./")
+        url_en, url_sl = relmapa(ta, en, "./"), relmapa(ta, sl, "./")
+        pot_vlogi, pot_zasebnost = relmapa(ta, vlogi, "./"), relmapa(ta, zasebnost, "./")
     return {
         "lang": jezik,
         "koren": koren,
@@ -222,9 +228,11 @@ def poti(stran, jezik):
         "url_en": url_en,
         "url_sl": url_sl,
         "pot_vlogi": pot_vlogi,
+        "pot_zasebnost": pot_zasebnost,
         "en_aktiven": 'aria-current="page"' if jezik == "en" else "",
         "sl_aktiven": 'aria-current="page"' if jezik == "sl" else "",
         "vlogi_aktiven": ' aria-current="page"' if stran == "vlogi" else "",
+        "zasebnost_aktiven": ' aria-current="page"' if stran == "zasebnost" else "",
         "_drug": drug,
     }
 
@@ -467,7 +475,7 @@ def objavi(zgoscene, strani, okvirji):
 def main():
     besedila = json.load(open(os.path.join(TU, "besedila.json"), encoding="utf-8"))
     deli = {ime: open(os.path.join(TU, "deli", f"{ime}.html"), encoding="utf-8").read().rstrip("\n")
-            for ime in ("glava", "noga", "obvestilo")}
+            for ime in ("glava", "noga", "obvestilo", "prijava")}
     paket = prenos()
     okvirji = any(v.get("youtube") for v in vlogi_podatki())
     vse_zgoscene, izhodi = set(), []

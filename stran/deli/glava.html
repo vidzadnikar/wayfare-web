@@ -15,5 +15,23 @@
     <a href="{{url_en}}" hreflang="en" lang="en" data-jezik="en" {{en_aktiven}}>EN</a>
     <a href="{{url_sl}}" hreflang="sl" lang="sl" data-jezik="sl" {{sl_aktiven}}>SL</a>
   </nav>
+  <div class="clan-mesto" data-clan-mesto>
+    <button class="gumb gumb-majhen gumb-tihi clan-prijava" type="button" data-prijava-odpri>
+      <svg class="clan-ikona" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20.5c0-3.6 3.6-6 8-6s8 2.4 8 6"/></svg>
+      <span>{{nav_prijava}}</span>
+    </button>
+    <details class="clan" data-clan hidden>
+      <summary class="clan-gumb" aria-label="{{clan_oznaka}}">
+        <img class="clan-slika" alt="" width="28" height="28" referrerpolicy="no-referrer" data-clan-slika hidden>
+        <span class="clan-zacetnica" aria-hidden="true" data-clan-zacetnica></span>
+        <span class="clan-ime" data-clan-ime></span>
+      </summary>
+      <div class="clan-meni">
+        <p class="clan-email" data-clan-email></p>
+        <a class="clan-povezava" href="/nadzor" data-clan-nadzor hidden>{{nav_nadzor}}</a>
+        <button class="clan-povezava" type="button" data-izpis>{{nav_izpis}}</button>
+      </div>
+    </details>
+  </div>
   <a class="gumb gumb-majhen" href="{{prenos_href}}" download data-prenos data-prenos-windows="{{prenos_windows_href}}" data-prenos-android="{{prenos_android_href}}">{{nav_prenos}}</a>
 </header>

@@ -1,0 +1,45 @@
+# Samodejna obvestila članom strani (zaledje/obvesti.py → POST /api/obvesti).
+#  - push v main s spremembo stran/vlogi.json: novi vlogi (z oznako youtube)
+#  - objava izdaje na GitHubu: nova različica aplikacije
+#  - vsak dan ob 8:00 UTC: pošlje, kar čaka v vrsti zaradi dnevne meje pošte
+# Skrivnost OBVESTI_SECRET (ista kot v Cloudflare Pages): gh secret set OBVESTI_SECRET
+# Naslov strani: spremenljivka repozitorija STRAN_URL (privzeto wayfarestudio.pages.dev).
+name: Obvesti člane
+
+on:
+  push:
+    branches: [main]
+    paths: [stran/vlogi.json]
+  release:
+    types: [published]
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: obvesti
+  cancel-in-progress: false
+
+jobs:
+  obvesti:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OBVESTI_SECRET: ${{ secrets.OBVESTI_SECRET }}
+      STRAN_URL: ${{ vars.STRAN_URL }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Novi vlogi
+        if: github.event_name == 'push'
+        run: python3 zaledje/obvesti.py vlogi "${{ github.event.before }}"
+      - name: Nova izdaja
+        if: github.event_name == 'release'
+        run: python3 zaledje/obvesti.py izdaja
+      - name: Vrsta
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: python3 zaledje/obvesti.py vrsta

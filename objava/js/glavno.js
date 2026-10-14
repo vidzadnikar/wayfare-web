@@ -3,6 +3,7 @@ import { sestavljanje } from "./sestavljanje.js";
 import { prenos } from "./prenos.js";
 import { zankeKartic, prihodKartic } from "./kartice.js";
 import { zemljevid } from "./zemljevid.js";
+import { clan } from "./clan.js";
 
 const { gsap, ScrollTrigger, lenis } = zazeniDrsenje();
 if (!mirno) document.documentElement.classList.add("gibanje");
@@ -185,3 +186,4 @@ for (const a of document.querySelectorAll("[data-jezik]")) {
 }
 
 prenos();
+clan();

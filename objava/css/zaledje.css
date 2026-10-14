@@ -1,0 +1,38 @@
+/* Strani, ki jih vrne zaledje (potrditev, odjava, napake), in nadzor članov:
+   isti svet kot stran (slog.css), brez gibanja. */
+.zaledje form { display: grid; justify-items: center; }
+
+.nadzor { max-width: 1240px; margin: 0 auto; padding: calc(72px + var(--s7)) var(--rob) var(--s10); display: grid; gap: var(--s9); }
+.nadzor-glava { display: grid; gap: var(--s5); }
+.nadzor-glava h1 { font-size: clamp(44px, 6vw, 88px); }
+.nadzor-glava .uvodnik { max-width: none; }
+.nadzor-kdo { margin-left: auto; }
+.nadzor-akcije { display: flex; flex-wrap: wrap; gap: var(--s3); }
+.nadzor-sporocilo { color: var(--accent); font-size: 15px; }
+.nadzor-sporocilo.napaka { color: #ff9c8a; }
+.nadzor-sporocilo[hidden] { display: none; }
+.nadzor-odsek { display: grid; gap: var(--s5); }
+.nadzor-odsek h2 { font-size: clamp(32px, 3.6vw, 48px); }
+
+.tabela-ovoj { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.tabela { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tabela th, .tabela td { padding: var(--s3) var(--s4); text-align: left; vertical-align: middle; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.tabela th { font: 500 11px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--subtle); }
+.tabela tbody tr:last-child td { border-bottom: 0; }
+.tabela td.naslov { white-space: normal; min-width: 200px; }
+.tabela .stanje-aktiven { color: var(--accent); }
+.tabela .stanje-odjavljen, .tabela .stanje-nepotrjen { color: var(--subtle); }
+.tabela .stanje-blokiran { color: #ff9c8a; }
+.tabela-gumb { padding: 4px 10px; border: 1px solid var(--border-strong); border-radius: var(--radius-pill); background: transparent; color: var(--muted); font: 400 13px/1.4 var(--sans); cursor: pointer; }
+.tabela-gumb:hover { color: var(--fg); border-color: var(--fg); }
+.tabela-gumb-rdec:hover { color: #ff9c8a; border-color: #ff9c8a; }
+.tabela-gumb:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.clan-majhna { width: 24px; height: 24px; border-radius: 50%; vertical-align: middle; margin-right: var(--s2); display: inline-block; }
+
+.novica { display: grid; gap: var(--s5); }
+.novica-mreza { display: grid; gap: var(--s4); grid-template-columns: 1fr; }
+@media (min-width: 900px) { .novica-mreza { grid-template-columns: 1fr 1fr; } .novica-cela { grid-column: 1 / -1; } }
+.novica label { display: grid; gap: var(--s2); font-size: 13px; color: var(--subtle); }
+.novica input, .novica textarea { padding: var(--s3) var(--s4); border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--bg); color: var(--fg); font: 400 15px/1.5 var(--sans); }
+.novica textarea { resize: vertical; }
+.novica input:focus-visible, .novica textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

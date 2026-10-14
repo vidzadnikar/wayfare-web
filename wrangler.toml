@@ -1,0 +1,23 @@
+# Cloudflare Pages: nastavitve zaledja strani (Pages Functions v mapi functions/,
+# skupni moduli v zaledje/). Stran sama se objavi iz mape objava, ki jo zgradi
+# stran/zgradi.py. Cloudflare to datoteko bere ob vsaki objavi iz GitHuba, zato
+# tu ni skrivnosti: te so v nadzorni plošči Pages (Settings → Variables and
+# Secrets), doma pa v .dev.vars (ni v gitu; vzorec je .dev.vars.primer).
+name = "wayfarestudio"
+compatibility_date = "2026-09-01"
+pages_build_output_dir = "objava"
+
+# Baza članov (D1). Ustvari jo enkrat:
+#     npx wrangler d1 create wayfare-clani
+# in sem vpiši database_id iz izpisa. Tabele naredi migracija:
+#     npx wrangler d1 migrations apply wayfare-clani --remote
+# Doma (npx wrangler pages dev) je baza lokalna, v .wrangler/, ista migracija z --local.
+[[d1_databases]]
+binding = "DB"
+database_name = "wayfare-clani"
+database_id = "VPISI-PO-UKAZU-D1-CREATE"
+migrations_dir = "migrations"
+
+[vars]
+# Največ e-pošt na dan (Resend brezplačno: 100). Kar je čez, čaka v vrsti do naslednjega dne.
+DNEVNA_MEJA = "100"

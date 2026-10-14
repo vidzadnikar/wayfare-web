@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{zasebnost_naslov_strani}}</title>
+<meta name="description" content="{{zasebnost_opis}}">
+<link rel="alternate" hreflang="en" href="{{url_en}}">
+<link rel="alternate" hreflang="sl" href="{{url_sl}}">
+<link rel="icon" href="{{koren}}media/logo.svg" type="image/svg+xml">
+<meta http-equiv="Content-Security-Policy" content="{{csp}}">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preload" href="{{koren}}pisave/instrument-serif-latin-03435c.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{koren}}pisave/instrument-sans-latin-11aa49.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{koren}}css/pisave.css">
+<link rel="stylesheet" href="{{koren}}css/slog.css">
+<script>document.documentElement.classList.add("js");{{preusmeritev}}</script>
+</head>
+<body>
+<!-- Ta datoteka je zgrajena iz predloga-zasebnost.html, deli/ in besedila.json (python3 zgradi.py). Ne urejaj je ročno. -->
+<div class="svet" aria-hidden="true">
+  <span class="svet-luc svet-luc-1" data-luc></span>
+  <span class="svet-luc svet-luc-2" data-luc></span>
+  <span class="svet-luc svet-luc-3" data-luc></span>
+  <span class="svet-kazalec" data-kazalec></span>
+</div>
+<a class="preskoci" href="#vsebina">{{preskoci}}</a>
+
+{{glava}}
+
+<main id="vsebina" class="besedilo-stran">
+  <article class="besedilo" aria-labelledby="zasebnost-naslov">
+    <h1 id="zasebnost-naslov" class="serif" data-naslov-uvod>{{zasebnost_naslov}}</h1>
+    <p class="uvodnik" data-uvod>{{zasebnost_uvod}}</p>
+    <section><h2 class="serif">{{zasebnost_1_naslov}}</h2><p>{{zasebnost_1_besedilo}}</p></section>
+    <section><h2 class="serif">{{zasebnost_2_naslov}}</h2><p>{{zasebnost_2_besedilo}}</p></section>
+    <section><h2 class="serif">{{zasebnost_3_naslov}}</h2><p>{{zasebnost_3_besedilo}}</p></section>
+    <section><h2 class="serif">{{zasebnost_4_naslov}}</h2><p>{{zasebnost_4_besedilo}}</p></section>
+    <section><h2 class="serif">{{zasebnost_5_naslov}}</h2><p>{{zasebnost_5_besedilo}}</p></section>
+    <section><h2 class="serif">{{zasebnost_6_naslov}}</h2><p>{{zasebnost_6_besedilo}}</p></section>
+    <p class="drobno">{{zasebnost_datum}}</p>
+  </article>
+</main>
+
+{{obvestilo}}
+{{prijava}}
+
+{{noga}}
+
+<!-- knjižnice so na lastnem strežniku (gsap 3.15.0, lenis 1.3.26), brez CDN -->
+<script src="{{koren}}js/knjiznice/gsap.min.js" defer></script>
+<script src="{{koren}}js/knjiznice/ScrollTrigger.min.js" defer></script>
+<script src="{{koren}}js/knjiznice/lenis.min.js" defer></script>
+<script type="module" src="{{koren}}js/besedilo.js"></script>
+</body>
+</html>

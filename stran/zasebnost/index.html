@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wayfare Studio — Privacy</title>
+<meta name="description" content="What we keep about signed-in members and why.">
+<link rel="alternate" hreflang="en" href="./">
+<link rel="alternate" hreflang="sl" href="../sl/zasebnost/">
+<link rel="icon" href="../media/logo.svg" type="image/svg+xml">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/p5Tg6A9aHFZiGhy8vmOoN3/SDgKJT+M2V4Blw4UGyo='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; media-src 'self'; font-src 'self'; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; worker-src 'none'; manifest-src 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preload" href="../pisave/instrument-serif-latin-03435c.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../pisave/instrument-sans-latin-11aa49.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/pisave.css">
+<link rel="stylesheet" href="../css/slog.css">
+<script>document.documentElement.classList.add("js");try{var j=localStorage.getItem("wayfare-jezik");if(!j&&/^sl\b/i.test(navigator.language||""))j="sl";if(j==="sl")location.replace("../sl/zasebnost/"+location.hash);}catch(e){}</script>
+</head>
+<body>
+<!-- Ta datoteka je zgrajena iz predloga-zasebnost.html, deli/ in besedila.json (python3 zgradi.py). Ne urejaj je ročno. -->
+<div class="svet" aria-hidden="true">
+  <span class="svet-luc svet-luc-1" data-luc></span>
+  <span class="svet-luc svet-luc-2" data-luc></span>
+  <span class="svet-luc svet-luc-3" data-luc></span>
+  <span class="svet-kazalec" data-kazalec></span>
+</div>
+<a class="preskoci" href="#vsebina">Skip to content</a>
+
+<header class="glava" data-uvod>
+  <a class="znamka" href="../#vrh" aria-label="Wayfare Studio, back to top">
+    <img src="../media/logo.svg" alt="" width="26" height="26">
+    <span><b>wayfare</b> studio</span>
+  </a>
+  <nav class="glava-nav" aria-label="Main">
+    <ul>
+      <li><a href="../#aplikacija">The app</a></li>
+      <li><a href="../#film">Film</a></li>
+      <li data-nav="vlogi"><a href="../vlogi/">Vlogs</a></li>
+      <li><a href="../#claude">Claude</a></li>
+    </ul>
+  </nav>
+  <nav class="jezik" aria-label="Language">
+    <a href="./" hreflang="en" lang="en" data-jezik="en" aria-current="page">EN</a>
+    <a href="../sl/zasebnost/" hreflang="sl" lang="sl" data-jezik="sl" >SL</a>
+  </nav>
+  <div class="clan-mesto" data-clan-mesto>
+    <button class="gumb gumb-majhen gumb-tihi clan-prijava" type="button" data-prijava-odpri>
+      <svg class="clan-ikona" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20.5c0-3.6 3.6-6 8-6s8 2.4 8 6"/></svg>
+      <span>Sign in</span>
+    </button>
+    <details class="clan" data-clan hidden>
+      <summary class="clan-gumb" aria-label="Your account">
+        <img class="clan-slika" alt="" width="28" height="28" referrerpolicy="no-referrer" data-clan-slika hidden>
+        <span class="clan-zacetnica" aria-hidden="true" data-clan-zacetnica></span>
+        <span class="clan-ime" data-clan-ime></span>
+      </summary>
+      <div class="clan-meni">
+        <p class="clan-email" data-clan-email></p>
+        <a class="clan-povezava" href="/nadzor" data-clan-nadzor hidden>Admin</a>
+        <button class="clan-povezava" type="button" data-izpis>Sign out</button>
+      </div>
+    </details>
+  </div>
+  <a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos data-prenos-windows="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-Setup-0.1.0.exe" data-prenos-android="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.apk">Download</a>
+</header>
+
+<main id="vsebina" class="besedilo-stran">
+  <article class="besedilo" aria-labelledby="zasebnost-naslov">
+    <h1 id="zasebnost-naslov" class="serif" data-naslov-uvod>Little data, <em>plainly said.</em></h1>
+    <p class="uvodnik" data-uvod>You can browse without signing in and without cookies. Here is what we store if you sign up for updates.</p>
+    <section><h2 class="serif">What we keep</h2><p>Your email, name and profile picture (if you come via Google), your language, when you signed up, when you last visited and how many times. Nothing else.</p></section>
+    <section><h2 class="serif">Why</h2><p>To email you when a new film or a new version of Wayfare Studio is out, and to know how many people come back. We don't sell or share the data.</p></section>
+    <section><h2 class="serif">Where</h2><p>The data lives in a database at Cloudflare, which also hosts this site. Email is sent through Resend. Google sign-in happens at Google; we receive only your email, name and picture, and Google receives nothing from us.</p></section>
+    <section><h2 class="serif">How long</h2><p>For as long as you're subscribed. Every email has a one-click unsubscribe link at the bottom. If you want everything deleted, reply to any of our emails.</p></section>
+    <section><h2 class="serif">Cookies</h2><p>One cookie (<code>wayfare_seja</code>) keeps you signed in for a year; it's set only when you sign in. Your browser also remembers your language choice. There are no third-party cookies.</p></section>
+    <section><h2 class="serif">Visits</h2><p>For signed-in members we record the time of the last visit and the number of visits. All visits are counted with Cloudflare Web Analytics, without cookies and without identifying anyone.</p></section>
+    <p class="drobno">In effect from 14 October 2026.</p>
+  </article>
+</main>
+
+<div class="obvestilo" role="dialog" aria-labelledby="obvestilo-naslov" hidden data-obvestilo>
+  <button class="obvestilo-zapri" type="button" aria-label="Close" data-obvestilo-zapri></button>
+  <div class="obvestilo-vsebina" data-obvestilo-vsebina></div>
+</div>
+<template id="obvestilo-mac">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio is downloading</p>
+  <ol class="obvestilo-koraki"><li>Open the downloaded file and drag Wayfare Studio into Applications.</li><li>First time: open the app. The Mac stops it with a warning that it can’t be verified (the app isn’t notarized with Apple yet). Go to System Settings → Privacy & Security, click “Open Anyway” at the bottom and confirm. From then on it opens normally. On older macOS, right-click → Open is enough.</li><li>Wayfare Studio opens in your browser. Start a project and drop in your clips.</li></ol>
+  <p class="drobno">If the Mac says the app is damaged, run this in Terminal: <code>xattr -dr com.apple.quarantine "/Applications/Wayfare Studio.app"</code></p>
+  <p class="drobno">Wayfare-Studio-0.1.0.dmg · 434 MB</p>
+</template>
+<template id="obvestilo-intel">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">This Mac may not be supported</p>
+  <p>Your Mac seems to have an Intel processor. Wayfare Studio runs on Macs with Apple silicon (M1 or newer).</p>
+  <div class="obvestilo-akcije"><a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos-vseeno>Download anyway</a></div>
+</template>
+<template id="obvestilo-windows">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio is downloading</p>
+  <ol class="obvestilo-koraki"><li>Run the downloaded installer. It installs for your user, no administrator rights needed.</li><li>Windows SmartScreen warns because the program isn’t signed yet: click “More info”, then “Run anyway”.</li><li>Wayfare Studio opens in your browser; its icon stays in the taskbar tray (quit it there). Start a project and add your clips.</li></ol>
+  <p class="drobno">Wayfare-Studio-Setup-0.1.0.exe · 312 MB</p>
+</template>
+<template id="obvestilo-android">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio is downloading</p>
+  <ol class="obvestilo-koraki"><li>Open the downloaded .apk file. Android asks whether to allow installing from this source (your browser): allow it.</li><li>On first launch allow access to all files, so the studio can see the clips in your phone’s folders.</li><li>A project is a folder with clips (for example DCIM/Camera or a Wayfare folder). Rendering runs on the phone, so it is slower than on a computer.</li></ol>
+  <p class="drobno">Wayfare-Studio-0.1.0.apk · 45 MB</p>
+</template>
+<template id="obvestilo-drugo">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio is for Mac, Windows and Android</p>
+  <p>It runs on Macs with Apple silicon (macOS 12 or later), on 64-bit Windows 10 or later and on Android 8 or later. There is no Linux version yet.</p>
+  <div class="obvestilo-akcije"><a class="gumb gumb-majhen gumb-tihi" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos-vseeno>Download anyway</a></div>
+</template>
+<template id="obvestilo-mobilno">
+  <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Not on iPhone or iPad</p>
+  <p>Wayfare Studio is for Mac, Windows and Android. Send yourself this page and open it there.</p>
+  <div class="obvestilo-akcije"><button class="gumb gumb-majhen" type="button" data-deli data-kopirano="Link copied">Share link</button></div>
+</template>
+<dialog class="prijava" data-prijava data-lenis-prevent aria-labelledby="prijava-naslov">
+  <div class="prijava-notri">
+    <button class="obvestilo-zapri" type="button" aria-label="Close" data-prijava-zapri></button>
+    <div class="prijava-korak" data-korak="izbira">
+      <p class="obvestilo-naslov serif" id="prijava-naslov" tabindex="-1">Be first to the <em>next film.</em></p>
+      <p>Sign in and we'll email you when a new vlog or a new version of the app is out. Unsubscribe any time, with one click.</p>
+      <a class="gumb prijava-google" href="/api/google?jezik=en" data-prijava-google>
+        <svg class="prijava-g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.3l7.9 6.1C12.4 13.7 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 2.9-2.2 5.4-4.7 7.1l7.6 5.9c4.4-4.1 6.9-10.1 6.9-17.5z"/><path fill="#FBBC05" d="M10.5 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C.9 16.5 0 20.1 0 24s.9 7.5 2.6 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.3 0 11.7-2.1 15.6-5.7l-7.6-5.9c-2.1 1.4-4.8 2.3-8 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+        <span>Continue with Google</span>
+      </a>
+      <p class="prijava-ali" aria-hidden="true"><span>or</span></p>
+      <form class="prijava-obrazec" method="post" action="/api/prijava" data-prijava-obrazec>
+        <input type="hidden" name="jezik" value="en">
+        <input type="hidden" name="nazaj" value="../" data-nazaj>
+        <label class="skrito" for="prijava-email">Email</label>
+        <input class="prijava-polje" id="prijava-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com">
+        <button class="gumb gumb-tihi" type="submit">Email me a link</button>
+      </form>
+      <p class="prijava-napaka" role="alert" data-prijava-napaka data-email="That email doesn't look right." data-omejitev="Too many attempts. Try again in an hour." data-splosno="Something went wrong. Try again in a minute." hidden></p>
+      <p class="drobno">We keep only what's in our <a href="./">privacy notice</a>.</p>
+    </div>
+    <div class="prijava-korak" data-korak="poslano" data-opis="We sent a link to %email%. Click it to confirm. It's valid for one day; if it's missing, check your spam folder." hidden>
+      <p class="obvestilo-naslov serif" tabindex="-1">Check your <em>inbox.</em></p>
+      <p data-prijava-poslano-opis>We sent a link to %email%. Click it to confirm. It's valid for one day; if it's missing, check your spam folder.</p>
+    </div>
+  </div>
+</dialog>
+<p class="sporocilo" role="status" aria-live="polite" data-sporocilo hidden
+   data-google="You're signed in. We'll write when there's a new film or release." data-potrjeno="Email confirmed. We'll write when there's a new film or release." data-poslano="Check your inbox: we sent you a confirmation link."
+   data-napaka="Sign-in didn't work. Please try again." data-omejitev="Too many attempts. Try again in an hour." data-email="That email doesn't look right."
+   data-nadzor="Sign in with Google first to open the admin page." data-izpis="You're signed out." data-blokiran="This account has no access."></p>
+
+<footer class="noga">
+  <span class="znamka"><img src="../media/logo.svg" alt="" width="20" height="20"><span><b>wayfare</b> studio</span></span>
+  <nav class="noga-nav" aria-label="Site"><ul>
+    <li><a href="../#aplikacija">The app</a></li>
+    <li><a href="../#film">Film</a></li>
+    <li><a href="../vlogi/">Vlogs</a></li>
+    <li><a href="../#claude">Claude</a></li>
+    <li><a href="./" aria-current="page">Privacy</a></li>
+  </ul></nav>
+  <p class="drobno">Map data © OpenStreetMap contributors · Natural Earth · Contains modified Copernicus Sentinel data (2021). City footage: Pexels. App footage from the maker’s own trips.</p>
+  <span class="drobno">© 2026 Wayfare</span>
+</footer>
+
+<!-- knjižnice so na lastnem strežniku (gsap 3.15.0, lenis 1.3.26), brez CDN -->
+<script src="../js/knjiznice/gsap.min.js" defer></script>
+<script src="../js/knjiznice/ScrollTrigger.min.js" defer></script>
+<script src="../js/knjiznice/lenis.min.js" defer></script>
+<script type="module" src="../js/besedilo.js"></script>
+</body>
+</html>

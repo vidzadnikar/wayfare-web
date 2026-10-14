@@ -11,7 +11,7 @@
 <link rel="alternate" hreflang="en" href="../../vlogi/">
 <link rel="alternate" hreflang="sl" href="./">
 <link rel="icon" href="../../media/logo.svg" type="image/svg+xml">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-WZRJfWvsnNCPcxzZwvyhovnZGqhZaC+8gPGPRbx6wTk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self'; font-src 'self'; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src https://www.youtube-nocookie.com; worker-src 'none'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-WZRJfWvsnNCPcxzZwvyhovnZGqhZaC+8gPGPRbx6wTk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; media-src 'self'; font-src 'self'; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src https://www.youtube-nocookie.com; worker-src 'none'; manifest-src 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="preload" href="../../pisave/instrument-serif-latin-03435c.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../pisave/instrument-sans-latin-11aa49.woff2" as="font" type="font/woff2" crossorigin>
@@ -47,6 +47,24 @@
     <a href="../../vlogi/" hreflang="en" lang="en" data-jezik="en" >EN</a>
     <a href="./" hreflang="sl" lang="sl" data-jezik="sl" aria-current="page">SL</a>
   </nav>
+  <div class="clan-mesto" data-clan-mesto>
+    <button class="gumb gumb-majhen gumb-tihi clan-prijava" type="button" data-prijava-odpri>
+      <svg class="clan-ikona" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20.5c0-3.6 3.6-6 8-6s8 2.4 8 6"/></svg>
+      <span>Prijava</span>
+    </button>
+    <details class="clan" data-clan hidden>
+      <summary class="clan-gumb" aria-label="Tvoj račun">
+        <img class="clan-slika" alt="" width="28" height="28" referrerpolicy="no-referrer" data-clan-slika hidden>
+        <span class="clan-zacetnica" aria-hidden="true" data-clan-zacetnica></span>
+        <span class="clan-ime" data-clan-ime></span>
+      </summary>
+      <div class="clan-meni">
+        <p class="clan-email" data-clan-email></p>
+        <a class="clan-povezava" href="/nadzor" data-clan-nadzor hidden>Nadzor</a>
+        <button class="clan-povezava" type="button" data-izpis>Izpis</button>
+      </div>
+    </details>
+  </div>
   <a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos data-prenos-windows="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-Setup-0.1.0.exe" data-prenos-android="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.apk">Prenos</a>
 </header>
 
@@ -123,6 +141,37 @@
   <p>Wayfare Studio je za Mac, Windows in Android. Pošlji si to stran in jo odpri tam.</p>
   <div class="obvestilo-akcije"><button class="gumb gumb-majhen" type="button" data-deli data-kopirano="Povezava kopirana">Deli povezavo</button></div>
 </template>
+<dialog class="prijava" data-prijava data-lenis-prevent aria-labelledby="prijava-naslov">
+  <div class="prijava-notri">
+    <button class="obvestilo-zapri" type="button" aria-label="Zapri" data-prijava-zapri></button>
+    <div class="prijava-korak" data-korak="izbira">
+      <p class="obvestilo-naslov serif" id="prijava-naslov" tabindex="-1">Bodi prvi ob <em>novem filmu.</em></p>
+      <p>Prijavi se in dobiš e-pošto, ko objavimo nov vlog ali novo različico aplikacije. Odjava kadarkoli, z enim klikom.</p>
+      <a class="gumb prijava-google" href="/api/google?jezik=sl" data-prijava-google>
+        <svg class="prijava-g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.3l7.9 6.1C12.4 13.7 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 2.9-2.2 5.4-4.7 7.1l7.6 5.9c4.4-4.1 6.9-10.1 6.9-17.5z"/><path fill="#FBBC05" d="M10.5 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C.9 16.5 0 20.1 0 24s.9 7.5 2.6 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.3 0 11.7-2.1 15.6-5.7l-7.6-5.9c-2.1 1.4-4.8 2.3-8 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+        <span>Nadaljuj z Googlom</span>
+      </a>
+      <p class="prijava-ali" aria-hidden="true"><span>ali</span></p>
+      <form class="prijava-obrazec" method="post" action="/api/prijava" data-prijava-obrazec>
+        <input type="hidden" name="jezik" value="sl">
+        <input type="hidden" name="nazaj" value="../" data-nazaj>
+        <label class="skrito" for="prijava-email">E-naslov</label>
+        <input class="prijava-polje" id="prijava-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="tvoj@naslov.si">
+        <button class="gumb gumb-tihi" type="submit">Pošlji mi povezavo</button>
+      </form>
+      <p class="prijava-napaka" role="alert" data-prijava-napaka data-email="Ta e-naslov ne izgleda pravilno." data-omejitev="Preveč poskusov. Poskusi čez eno uro." data-splosno="Ni šlo. Poskusi znova čez minuto." hidden></p>
+      <p class="drobno">Hranimo le, kar piše v <a href="../zasebnost/">pravilih zasebnosti</a>.</p>
+    </div>
+    <div class="prijava-korak" data-korak="poslano" data-opis="Na %email% smo poslali povezavo. Klik nanjo potrdi prijavo. Velja en dan; če je ni, poglej med nezaželeno pošto." hidden>
+      <p class="obvestilo-naslov serif" tabindex="-1">Preveri <em>pošto.</em></p>
+      <p data-prijava-poslano-opis>Na %email% smo poslali povezavo. Klik nanjo potrdi prijavo. Velja en dan; če je ni, poglej med nezaželeno pošto.</p>
+    </div>
+  </div>
+</dialog>
+<p class="sporocilo" role="status" aria-live="polite" data-sporocilo hidden
+   data-google="Prijavljen si. Pišemo ti ob novem filmu ali izdaji." data-potrjeno="E-naslov je potrjen. Pišemo ti ob novem filmu ali izdaji." data-poslano="Preveri pošto: poslali smo ti povezavo za potrditev."
+   data-napaka="Prijava ni uspela. Poskusi znova." data-omejitev="Preveč poskusov. Poskusi čez eno uro." data-email="Ta e-naslov ne izgleda pravilno."
+   data-nadzor="Za nadzor se najprej prijavi z Googlom." data-izpis="Izpisan si." data-blokiran="Ta račun nima dostopa."></p>
 
 <footer class="noga">
   <span class="znamka"><img src="../../media/logo.svg" alt="" width="20" height="20"><span><b>wayfare</b> studio</span></span>
@@ -131,6 +180,7 @@
     <li><a href="../#film">Film</a></li>
     <li><a href="./" aria-current="page">Vlogi</a></li>
     <li><a href="../#claude">Claude</a></li>
+    <li><a href="../zasebnost/">Zasebnost</a></li>
   </ul></nav>
   <p class="drobno">Map data © OpenStreetMap contributors · Natural Earth · Vsebuje spremenjene podatke Copernicus Sentinel (2021). Posnetki mest: Pexels. Posnetki v aplikaciji so z avtorjevih potovanj.</p>
   <span class="drobno">© 2026 Wayfare</span>

@@ -1,0 +1,14 @@
+# Skrivnosti za domači zagon zaledja (npx wrangler pages dev). Kopiraj v .dev.vars
+# (ni v gitu). Na Cloudflaru iste vrednosti vpišeš v Pages → Settings → Variables
+# and Secrets (kot Secret). Vrednosti tu so le vzorec.
+SESSION_SECRET=zamenjaj-z-dolgim-nakljucnim-nizom
+OBVESTI_SECRET=zamenjaj-z-drugim-nakljucnim-nizom
+ADMIN_EMAIL=tvoj.naslov@gmail.com
+EMAIL_FROM=Wayfare Studio <obvestila@tvoja-domena.si>
+# dnevnik: pošto le zapiše v izpis strežnika, ne pošlje. Brez te vrstice pošilja prek Resend.
+EMAIL_NACIN=dnevnik
+RESEND_API_KEY=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+# Naslov strani v povezavah v pošti (privzeto izvor zahteve).
+# STRAN_URL=https://wayfarestudio.pages.dev

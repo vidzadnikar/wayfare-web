@@ -1,0 +1,31 @@
+<dialog class="prijava" data-prijava data-lenis-prevent aria-labelledby="prijava-naslov">
+  <div class="prijava-notri">
+    <button class="obvestilo-zapri" type="button" aria-label="{{obvestilo_zapri}}" data-prijava-zapri></button>
+    <div class="prijava-korak" data-korak="izbira">
+      <p class="obvestilo-naslov serif" id="prijava-naslov" tabindex="-1">{{prijava_naslov}}</p>
+      <p>{{prijava_opis}}</p>
+      <a class="gumb prijava-google" href="/api/google?jezik={{lang}}" data-prijava-google>
+        <svg class="prijava-g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.3l7.9 6.1C12.4 13.7 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 2.9-2.2 5.4-4.7 7.1l7.6 5.9c4.4-4.1 6.9-10.1 6.9-17.5z"/><path fill="#FBBC05" d="M10.5 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C.9 16.5 0 20.1 0 24s.9 7.5 2.6 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.3 0 11.7-2.1 15.6-5.7l-7.6-5.9c-2.1 1.4-4.8 2.3-8 2.3-6.3 0-11.6-4.2-13.5-9.9l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+        <span>{{prijava_google}}</span>
+      </a>
+      <p class="prijava-ali" aria-hidden="true"><span>{{prijava_ali}}</span></p>
+      <form class="prijava-obrazec" method="post" action="/api/prijava" data-prijava-obrazec>
+        <input type="hidden" name="jezik" value="{{lang}}">
+        <input type="hidden" name="nazaj" value="{{dom}}" data-nazaj>
+        <label class="skrito" for="prijava-email">{{prijava_email_oznaka}}</label>
+        <input class="prijava-polje" id="prijava-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="{{prijava_email_namig}}">
+        <button class="gumb gumb-tihi" type="submit">{{prijava_posli}}</button>
+      </form>
+      <p class="prijava-napaka" role="alert" data-prijava-napaka data-email="{{prijava_napaka_email}}" data-omejitev="{{prijava_napaka_omejitev}}" data-splosno="{{prijava_napaka_splosno}}" hidden></p>
+      <p class="drobno">{{prijava_zasebnost}} <a href="{{pot_zasebnost}}">{{prijava_zasebnost_povezava}}</a>.</p>
+    </div>
+    <div class="prijava-korak" data-korak="poslano" data-opis="{{prijava_poslano_opis}}" hidden>
+      <p class="obvestilo-naslov serif" tabindex="-1">{{prijava_poslano_naslov}}</p>
+      <p data-prijava-poslano-opis>{{prijava_poslano_opis}}</p>
+    </div>
+  </div>
+</dialog>
+<p class="sporocilo" role="status" aria-live="polite" data-sporocilo hidden
+   data-google="{{sporocilo_google}}" data-potrjeno="{{sporocilo_potrjeno}}" data-poslano="{{sporocilo_poslano}}"
+   data-napaka="{{sporocilo_napaka}}" data-omejitev="{{prijava_napaka_omejitev}}" data-email="{{prijava_napaka_email}}"
+   data-nadzor="{{sporocilo_nadzor}}" data-izpis="{{sporocilo_izpis}}" data-blokiran="{{sporocilo_blokiran}}"></p>
