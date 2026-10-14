@@ -40,6 +40,8 @@ JSON = TU.parent / "stran" / "vlogi.json"
 # naslov in kraj v obeh jezikih, dan snemanja (od, do), naslovnica: številka
 # slike iz paketa za objavo (1–6), čas v filmu (sekunde) za vloge brez paketa
 # ali pot do lastne slike (ta velja tudi pred sličico z YouTuba).
+# zanka (po želji): trije časi v sekundah za predogled ob kazalcu, kadar
+# privzeti (po deležih filma) padejo na prazne kadre.
 # youtube (po želji): oznaka videa na YouTubu, kamor gre izvorni izvoz iz ~/Video
 # (lahko kot Neobjavljen). Oznaka, ki je že v vlogi.json, se ohrani.
 VLOGI = [
@@ -120,6 +122,11 @@ VLOGI = [
          naslov=dict(en="Budapest", sl="Budimpešta"),
          kraj=dict(en="Budapest, Hungary", sl="Budimpešta, Madžarska"),
          datum=("2025-12-26", None), naslovna=35.8),
+    dict(oznaka="rim-1", izvor="Rim day 1.mov", projekt=None,
+         naslov=dict(en="Rome — Day 1", sl="Rim — 1. dan"),
+         kraj=dict(en="Rome, Italy", sl="Rim, Italija"),
+         datum=("2025-10-29", None), naslovna=122.0, youtube="F4BL7-oRi5s",
+         zanka=(10.5, 93.0, 121.5)),
 ]
 
 # Kraji na globusu (zemljevid na domači strani): ključ je kraj v angleščini, kot v VLOGI.
@@ -131,6 +138,7 @@ KRAJI = {
     "Rifnik, Slovenia":  dict(lon=15.42,  lat=46.22,  stran="spodaj"),
     "Budapest, Hungary": dict(lon=19.04,  lat=47.498),
     "Malta":             dict(lon=14.51,  lat=35.9),
+    "Rome, Italy":       dict(lon=12.496, lat=41.903),
 }
 
 # x264 kot pri zanki heroja; vlogi so 60 sličic/s, zato je zgornja meja višja
@@ -168,7 +176,9 @@ def posnetkov(v):
 
 
 def casi_zanke(v, info):
-    """Trije dvosekundni odseki za predogled: ob poglavjih, kjer so, sicer po deležih."""
+    """Trije dvosekundni odseki za predogled: navedeni (zanka=), ob poglavjih, kjer so, sicer po deležih."""
+    if v.get("zanka"):
+        return list(v["zanka"])
     pog = [t for t, _ in poglavja(v) if t > 20]
     if len(pog) >= 3:
         return [pog[0] + 1.0, pog[len(pog) // 2] + 1.0, pog[-1] + 1.0]

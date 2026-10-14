@@ -727,6 +727,26 @@
    "poglavja": [],
    "jezik": "sl",
    "youtube": null
+  },
+  {
+   "oznaka": "rim-1",
+   "naslov": {
+    "en": "Rome — Day 1",
+    "sl": "Rim — 1. dan"
+   },
+   "kraj": {
+    "en": "Rome, Italy",
+    "sl": "Rim, Italija"
+   },
+   "datum": "2025-10-29",
+   "datum_do": null,
+   "trajanje": 187.2,
+   "sirina": 3840,
+   "visina": 2160,
+   "posnetkov": null,
+   "poglavja": [],
+   "jezik": "sl",
+   "youtube": "F4BL7-oRi5s"
   }
  ],
  "kraji": [
@@ -756,6 +776,11 @@
    "kljuc": "Malta",
    "lon": 14.51,
    "lat": 35.9
+  },
+  {
+   "kljuc": "Rome, Italy",
+   "lon": 12.496,
+   "lat": 41.903
   }
  ]
 }
