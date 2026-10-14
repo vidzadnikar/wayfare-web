@@ -60,24 +60,23 @@ stran je na `/stran/`.
 Obiskovalci se lahko prijavijo (z Googlom ali z e-naslovom in povezavo za
 potrditev) in dobijo e-pošto ob novem vlogu ali novi izdaji aplikacije.
 Zaledje so Pages Functions v mapi `functions/` (skupni moduli v `zaledje/`),
-člani so v bazi Cloudflare D1, pošto pošilja Resend, nadzor je na `/nadzor`
-(vidi ga le prijavljeni član z e-naslovom `ADMIN_EMAIL`). Vse je zastonj do
-100 pošt na dan in 3000 na mesec (Resend, brezplačni paket).
+člani so v bazi Cloudflare D1, pošto pošilja Brevo (brezplačno do 300 pošt na
+dan), nadzor je na `/nadzor` (vidi ga le prijavljeni član z e-naslovom
+`ADMIN_EMAIL`, ne glede na to, ali je prišel prek Googla ali e-pošte). Vse je
+zastonj in brez lastne domene: Brevo brez potrjene domene pošiljatelja prepiše
+v `<lokalni-del>@<id>.brevosend.com`, ime pošiljatelja (»Wayfare Studio«) in
+naslov za odgovor pa ostaneta tvoja.
 
-### Prvič (koraki, ki jih narediš sam)
+### Prvič (koraki)
 
-1. **Domena.** Resend pošilja tujim prejemnikom le z lastne domene; brez nje
-   pošta ne gre ven. Kupi jo (najlažje Cloudflare → Domain Registration, brez
-   pribitka) in jo dodaj strani: Workers & Pages → wayfarestudio → Custom
-   domains. Proste 14. 10. 2026: wayfare-studio.com, wayfarestudio.app,
-   wayfarestudio.net, wayfarestudio.io, wayfarestudio.video.
+1. **Brevo** (brevo.com): brezplačen račun. Senders, Domains & Dedicated IPs →
+   Senders → Add a sender: ime »Wayfare Studio«, e-naslov tvoj Gmail (isti kot
+   `EMAIL_FROM` in `ADMIN_EMAIL`); potrditvena koda pride na ta naslov. Nato
+   SMTP & API → API Keys → Generate a new API key in:
 
-2. **Resend** (resend.com): račun → Domains → Add domain → vpiši DNS zapise
-   (če je domena na Cloudflaru, so v isti plošči) → počakaj na »Verified«.
-   API Keys → Create API key (Sending access); ključ gre v Pages (korak 5).
-   Pošiljatelj bo npr. `Wayfare Studio <obvestila@tvoja-domena>`.
+       npx wrangler pages secret put BREVO_API_KEY --project-name wayfarestudio
 
-3. **Google Cloud** (console.cloud.google.com), za prijavo z Googlom:
+2. **Google Cloud** (console.cloud.google.com), za prijavo z Googlom:
    - nov projekt (npr. »Wayfare Studio«);
    - APIs & Services → OAuth consent screen (Google Auth Platform): User type
      External; ime aplikacije, podporni e-naslov, e-naslov razvijalca; obsegi
@@ -85,43 +84,48 @@ Zaledje so Pages Functions v mapi `functions/` (skupni moduli v `zaledje/`),
      ker obsegi niso občutljivi; v stanju Testing bi se lahko prijavilo le do
      100 vnaprej vpisanih računov);
    - Credentials → Create credentials → OAuth client ID → Web application;
-     Authorized redirect URIs: `https://wayfarestudio.pages.dev/api/google/povratek`
-     in isto z lastno domeno (`https://tvoja-domena/api/google/povratek`);
-   - Client ID in Client secret gresta v Pages (korak 5).
+     Authorized redirect URIs: `https://wayfarestudio.pages.dev/api/google/povratek`;
+   - Client ID in Client secret:
 
-4. **Baza D1.** Enkrat, v tej mapi:
+         npx wrangler pages secret put GOOGLE_CLIENT_ID --project-name wayfarestudio
+         npx wrangler pages secret put GOOGLE_CLIENT_SECRET --project-name wayfarestudio
 
-       npx wrangler login
-       npx wrangler d1 create wayfare-clani
-
-   Izpisani `database_id` vpiši v `wrangler.toml` namesto
-   `VPISI-PO-UKAZU-D1-CREATE`. Nato naredi tabele:
+3. **Baza D1** `wayfare-clani` je ustvarjena 14. 10. 2026 (id je v
+   `wrangler.toml`; nova baza: `npx wrangler d1 create wayfare-clani` in nov id
+   v `wrangler.toml`). Tabele naredi migracija:
 
        npx wrangler d1 migrations apply wayfare-clani --remote
 
    Migracija vloge, ki so na strani že zdaj, označi kot poslane, da ob prvem
    samodejnem obvestilu ne gredo ven za nazaj.
 
-5. **Skrivnosti v Pages.** Workers & Pages → wayfarestudio → Settings →
-   Variables and Secrets → Add, vrsta Secret, okolje Production:
+4. **Skrivnosti in spremenljivke v Pages** (`npx wrangler pages secret put IME
+   --project-name wayfarestudio` ali Workers & Pages → wayfarestudio →
+   Settings → Variables and Secrets, okolje Production):
    - `SESSION_SECRET`: dolg naključen niz (`openssl rand -base64 48`);
-   - `OBVESTI_SECRET`: drug naključen niz (isti gre v GitHub, korak 6);
-   - `ADMIN_EMAIL`: tvoj Googlov e-naslov (kdo vidi `/nadzor`);
-   - `EMAIL_FROM`: `Wayfare Studio <obvestila@tvoja-domena>`;
-   - `RESEND_API_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`.
+   - `OBVESTI_SECRET`: drug naključen niz (isti je v GitHub secrets);
+   - `ADMIN_EMAIL`: tvoj Googlov e-naslov (kdo vidi `/nadzor`); ne piši ga v
+     repozitorij, ker je javen;
+   - `EMAIL_FROM`: pošiljatelj, potrjen pri Brevu (tvoj Gmail; lahko tudi
+     `Wayfare Studio <naslov>`);
+   - `POSTA_PONUDNIK`: `brevo` (privzeto; `resend` ko bo lastna domena,
+     `dnevnik` le doma);
+   - `POSTA_DNEVNO`: `300` (največ pošt na dan; kar je čez, čaka v vrsti);
+   - `BREVO_API_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` (koraka 1 in 2).
 
-   `DNEVNA_MEJA` (100) je v `wrangler.toml`. `EMAIL_NACIN` na Cloudflaru ne
-   nastavljaj: `dnevnik` je le za doma in pošto samo izpiše.
+   Stanje 14. 10. 2026: nastavljeni so SESSION_SECRET, OBVESTI_SECRET,
+   ADMIN_EMAIL, EMAIL_FROM, POSTA_PONUDNIK in POSTA_DNEVNO; manjkajo
+   BREVO_API_KEY, GOOGLE_CLIENT_ID in GOOGLE_CLIENT_SECRET. Brez Googlovih
+   ključev prijava z Googlom vrne napako, prijava z e-pošto dela; brez ključa
+   Brevo pošta ne gre ven (zaledje vrne napako, vrsta čaka).
 
-6. **GitHub.** Skrivnost za samodejna obvestila (ista vrednost kot v Pages):
+5. **GitHub.** `OBVESTI_SECRET` je v skrivnostih repozitorija (14. 10. 2026;
+   sicer `gh secret set OBVESTI_SECRET --repo vidzadnikar/wayfare-web`). Ko bo
+   stran kdaj na lastni domeni: `gh variable set STRAN_URL --body
+   https://tvoja-domena --repo vidzadnikar/wayfare-web` in isto kot `STRAN_URL`
+   v Pages.
 
-       gh secret set OBVESTI_SECRET --repo vidzadnikar/wayfare-web
-
-   Ko bo stran na lastni domeni, še naslov strani za povezave v pošti:
-   `gh variable set STRAN_URL --body https://tvoja-domena --repo vidzadnikar/wayfare-web`
-   (in isto kot spremenljivko `STRAN_URL` v Pages).
-
-7. **Web Analytics** (neobvezno, obiski vseh, brez piškotkov): Workers &
+6. **Web Analytics** (neobvezno, obiski vseh, brez piškotkov): Workers &
    Pages → wayfarestudio → Metrics → Enable Web Analytics. Cloudflare v stran
    vstavi svoj skript, zato v `stran/zgradi.py` v `csp()` dodaj
    `https://static.cloudflareinsights.com` k `script-src` in
@@ -129,10 +133,11 @@ Zaledje so Pages Functions v mapi `functions/` (skupni moduli v `zaledje/`),
    Če analitike ne vklopiš, v `stran/besedila.json` pri `zasebnost_6_besedilo`
    (SL in EN) umakni stavek o Web Analytics.
 
-8. Združi vejo `prijava` v `main` in push: Cloudflare objavi stran in zaledje.
+7. Združi vejo `prijava` v `main` in push: Cloudflare objavi stran in zaledje.
    Po objavi preveri: prijava z Googlom s pravim računom, `/nadzor` s svojim
-   računom, v nadzoru »Pošlji sebi« (preizkus pošte prek Resend), povezava za
-   odjavo na dnu te pošte.
+   računom, v nadzoru »Pošlji sebi« (preizkus pošte prek Breva), povezava za
+   odjavo na dnu te pošte. Če pošta pristane med nezaželeno, v Gmailu označi
+   »Ni nezaželeno« (brez lastne domene je to pričakovano).
 
 ### Kako deluje
 
@@ -146,14 +151,14 @@ Zaledje so Pages Functions v mapi `functions/` (skupni moduli v `zaledje/`),
   obvestilo z opombami izdaje (osnutki in predizdaje ne).
 - **Novica po meri:** `/nadzor` → Novica (SL in EN) → najprej »Pošlji sebi«,
   nato »Pošlji vsem«.
-- **Dnevna meja:** zaledje pošlje največ `DNEVNA_MEJA` − 10 obvestil na dan
+- **Dnevna meja:** zaledje pošlje največ `POSTA_DNEVNO` − 10 obvestil na dan
   (10 ostane za potrditvene povezave), ostalo čaka v vrsti. Action jo vsak dan
   ob 8:00 UTC izprazni, v nadzoru je tudi gumb »Pošlji, kar čaka«. Pri več kot
-  približno 90 članih obvestilo traja več dni; takrat Resend Pro (20 $/mesec)
-  ali večja meja pri drugem ponudniku.
-- **Odjava:** povezava na dnu vsake pošte (dela tudi odjava z enim klikom v
-  Gmailu). Blokiraj ali izbriši člana v nadzoru; blokiran se ne more
-  prijaviti in ne dobi pošte.
+  približno 290 članih obvestilo traja več dni.
+- **Odjava:** povezava na dnu vsake pošte. Brevo glave `List-Unsubscribe` ne
+  sprejme, zato je pri Brevu odjava le povezava v besedilu; pri Resendu gre
+  zraven tudi glava za odjavo z enim klikom. Blokiraj ali izbriši člana v
+  nadzoru; blokiran se ne more prijaviti in ne dobi pošte.
 - **Jezik:** vsaka pošta v jeziku, ki ga je član izbral ob prijavi.
 - **Obiski:** prijavljenim se zapiše zadnji obisk in število obiskov (največ
   enkrat na uro); vidno v nadzoru.
@@ -163,10 +168,14 @@ Zaledje so Pages Functions v mapi `functions/` (skupni moduli v `zaledje/`),
 - **CSP:** `form-action 'self'` (obrazca gresta na lastno zaledje) in
   `img-src` z `lh3.googleusercontent.com` (slika profila). Drugih zunanjih
   skriptov ni; prijava z Googlom teče prek preusmeritev.
+- **Kasneje z lastno domeno:** domeno dodaj strani (Custom domains), Googlu
+  dodaj redirect URI z domeno, pri Brevu potrdi domeno (pošiljatelj ni več
+  prepisan) ali preklopi na Resend (`POSTA_PONUDNIK=resend`, `RESEND_API_KEY`,
+  `EMAIL_FROM` na domeni, `POSTA_DNEVNO=100`).
 
 ### Doma
 
-    cp .dev.vars.primer .dev.vars            # vpiši vrednosti; EMAIL_NACIN=dnevnik pošto le izpiše
+    cp .dev.vars.primer .dev.vars            # vpiši vrednosti; POSTA_PONUDNIK=dnevnik pošto le izpiše
     npx wrangler d1 migrations apply wayfare-clani --local
     cd stran && python3 zgradi.py && cd ..
     npx wrangler pages dev objava --port 8788
@@ -182,10 +191,10 @@ Ročni klic obvestila: `OBVESTI_SECRET=… STRAN_URL=http://localhost:8788 pytho
   `jaz`, `izpis`, `odjava`, `obvesti`, `nadzor/clani`, `nadzor/clan`,
   `nadzor/izvoz`, `nadzor/novica`, `nadzor/vrsta`;
   `functions/nadzor.js` je stran nadzora, polni jo `stran/js/nadzor.js`.
-- `zaledje/`: skupni moduli (`osnova`, `seja`, `clani`, `posta`, `strani`)
-  in `obvesti.py` za Action.
+- `zaledje/`: skupni moduli (`osnova`, `seja`, `clani`, `posta` s ponudniki
+  Brevo, Resend in dnevnik, `strani`) in `obvesti.py` za Action.
 - `migrations/0001_clani.sql`: tabele clani, zetoni, omejitve, poslano,
-  vrsta, posta. `wrangler.toml`: D1 binding in dnevna meja.
+  vrsta, posta. `wrangler.toml`: D1 binding.
 - `stran/deli/prijava.html` in `stran/js/clan.js`: okno za prijavo in stanje
   v glavi; `stran/predloga-zasebnost.html`: stran o zasebnosti
   (`/zasebnost/`, `/sl/zasebnost/`), besedila v `besedila.json` (`zasebnost_*`).

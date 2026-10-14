@@ -1,7 +1,7 @@
-// Pošta: besedila (SL in EN), sestava sporočil, pošiljanje prek Resend
-// (doma z EMAIL_NACIN=dnevnik le izpis), odjavni žeton, vrsta za obvestila
-// in dnevna meja. Vsako poslano sporočilo gre v tabelo posta, po kateri se
-// šteje dnevna meja (Resend brezplačno: 100 na dan).
+// Pošta: besedila (SL in EN), sestava sporočil, pošiljanje prek Brevo ali
+// Resend (doma s POSTA_PONUDNIK=dnevnik le izpis), odjavni žeton, vrsta za
+// obvestila in dnevna meja. Vsako poslano sporočilo gre v tabelo posta, po
+// kateri se šteje dnevna meja POSTA_DNEVNO (Brevo brezplačno: 300 na dan).
 import { zdaj, nakljucno, podpisi, preveriPodpis, pobegni, zahtevaj } from "./osnova.js";
 
 export const T = {
@@ -109,44 +109,96 @@ export async function clanIzOdjavnegaZetona(env, db, zeton) {
 
 // ---------------------------------------------------------------- pošiljanje
 
-const RESEND_BATCH = "https://api.resend.com/emails/batch";
+// Ponudnik pošte: brevo (privzeto; brezplačno 300 na dan, brez lastne domene
+// Brevo pošiljatelja prepiše v <lokalni-del>@<id>.brevosend.com), resend (ko bo
+// lastna domena) ali dnevnik (doma: pošto le izpiše).
+export function ponudnik(env) {
+  const p = env.POSTA_PONUDNIK || "brevo";
+  if (!["brevo", "resend", "dnevnik"].includes(p)) throw new Error(`POSTA_PONUDNIK mora biti brevo, resend ali dnevnik, ne ${p}`);
+  return p;
+}
+
+// EMAIL_FROM je naslov (vid@…) ali »Ime <naslov>«; ime je privzeto Wayfare Studio.
+export function posiljatelj(env) {
+  const m = /^\s*(?:"?([^"<]*?)"?\s*)?<([^>]+)>\s*$/.exec(env.EMAIL_FROM || "");
+  if (m) return { ime: (m[1] || "Wayfare Studio").trim(), email: m[2].trim() };
+  return { ime: "Wayfare Studio", email: String(env.EMAIL_FROM || "").trim() };
+}
+
+const BREVO_URL = "https://api.brevo.com/v3/smtp/email";
+const RESEND_URL = "https://api.resend.com/emails/batch";
+
+async function preberiNapako(odg) {
+  const besedilo = (await odg.text()).slice(0, 300);
+  return `${odg.status}: ${besedilo}`;
+}
+
+// Brevo: en klic za več prejemnikov (messageVersions, vsak s svojo vsebino,
+// že v jeziku člana in z lastno povezavo za odjavo). Glave List-Unsubscribe
+// Brevo ne sprejme (standardna glava), zato je odjava povezava v besedilu.
+async function posljiBrevo(env, sporocila) {
+  const od = posiljatelj(env);
+  const telo = { sender: { name: od.ime, email: od.email }, replyTo: { email: od.email } };
+  const naslovnik = (s) => ({ email: s.za, ...(s.ime ? { name: String(s.ime).slice(0, 70) } : {}) });
+  if (sporocila.length === 1) {
+    const [s] = sporocila;
+    Object.assign(telo, { to: [naslovnik(s)], subject: s.zadeva, htmlContent: s.html, textContent: s.besedilo });
+  } else {
+    Object.assign(telo, {
+      subject: sporocila[0].zadeva, htmlContent: sporocila[0].html, textContent: sporocila[0].besedilo,
+      messageVersions: sporocila.map((s) => ({ to: [naslovnik(s)], subject: s.zadeva, htmlContent: s.html, textContent: s.besedilo })),
+    });
+  }
+  const odg = await fetch(BREVO_URL, {
+    method: "POST",
+    headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(telo),
+  });
+  if (!odg.ok) throw new Error(`Brevo ${await preberiNapako(odg)}`);
+  const podatki = await odg.json().catch(() => ({}));
+  const idji = podatki.messageIds || (podatki.messageId ? [podatki.messageId] : []);
+  return sporocila.map((_, i) => idji[i] ?? idji[0] ?? null);
+}
 
 async function posljiResend(env, sporocila) {
-  const odg = await fetch(RESEND_BATCH, {
+  const od = posiljatelj(env);
+  const odg = await fetch(RESEND_URL, {
     method: "POST",
     headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify(sporocila.map((s) => ({
-      from: env.EMAIL_FROM, to: [s.za], subject: s.zadeva, html: s.html, text: s.besedilo,
+      from: `${od.ime} <${od.email}>`, to: [s.za], subject: s.zadeva, html: s.html, text: s.besedilo,
       ...(s.glave ? { headers: s.glave } : {}),
     }))),
   });
-  if (!odg.ok) throw new Error(`Resend ${odg.status}: ${(await odg.text()).slice(0, 300)}`);
+  if (!odg.ok) throw new Error(`Resend ${await preberiNapako(odg)}`);
   const { data } = await odg.json();
   return (data || []).map((d) => d.id || null);
 }
 
-// Sporočilo: { za, zadeva, html, besedilo, glave?, vrsta, kljuc? }. Pošlje po
-// največ 100 na klic in vsako zapiše v tabelo posta.
+function posljiDnevnik(sporocila, zamik) {
+  return sporocila.map((s, k) => {
+    console.log(`[pošta ${s.vrsta}] za: ${s.za} | zadeva: ${s.zadeva}\n${s.besedilo}\n`);
+    return `dnevnik-${Date.now()}-${zamik + k}`;
+  });
+}
+
+const NA_KLIC = { brevo: 100, resend: 100, dnevnik: 100 };
+
+// Sporočilo: { za, ime?, zadeva, html, besedilo, glave?, vrsta, kljuc? }. Pošlje po
+// kosih in vsako zapiše v tabelo posta (po njej se šteje dnevna meja).
 export async function posljiPosto(env, db, sporocila) {
   if (!sporocila.length) return [];
-  const dnevnik = env.EMAIL_NACIN === "dnevnik";
-  if (!dnevnik) zahtevaj(env, "RESEND_API_KEY", "EMAIL_FROM");
+  const p = ponudnik(env);
+  if (p === "brevo") zahtevaj(env, "BREVO_API_KEY", "EMAIL_FROM");
+  if (p === "resend") zahtevaj(env, "RESEND_API_KEY", "EMAIL_FROM");
   const idji = [];
-  for (let i = 0; i < sporocila.length; i += 100) {
-    const kos = sporocila.slice(i, i + 100);
-    let kosIdji;
-    if (dnevnik) {
-      kosIdji = kos.map((s, k) => {
-        console.log(`[pošta ${s.vrsta}] za: ${s.za} | zadeva: ${s.zadeva}\n${s.besedilo}\n`);
-        return `dnevnik-${Date.now()}-${i + k}`;
-      });
-    } else {
-      kosIdji = await posljiResend(env, kos);
-    }
+  for (let i = 0; i < sporocila.length; i += NA_KLIC[p]) {
+    const kos = sporocila.slice(i, i + NA_KLIC[p]);
+    const kosIdji = p === "brevo" ? await posljiBrevo(env, kos) : p === "resend" ? await posljiResend(env, kos) : posljiDnevnik(kos, i);
     const t = zdaj();
     await db.batch(kos.map((s, k) => db.prepare(
       "INSERT INTO posta (prejemnik, vrsta, kljuc, nacin, odgovor_id, poslano_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
-    ).bind(s.za, s.vrsta, s.kljuc ?? null, dnevnik ? "dnevnik" : "resend", kosIdji[k] ?? null, t)));
+    ).bind(s.za, s.vrsta, s.kljuc ?? null, p, kosIdji[k] ?? null, t)));
     idji.push(...kosIdji);
   }
   return idji;
@@ -158,7 +210,7 @@ const REZERVA = 10; // dnevne pošte, ki jih vrsta pusti za potrditvene povezave
 const KOS = 50;     // vrstic na krog (D1 dovoli največ 100 vezanih vrednosti)
 
 export async function dnevnoStanje(env, db) {
-  const meja = Math.max(1, Number(env.DNEVNA_MEJA) || 100);
+  const meja = Math.max(1, Number(env.POSTA_DNEVNO) || 300);
   const danes = new Date().toISOString().slice(0, 10);
   const r = await db.prepare("SELECT COUNT(*) AS n FROM posta WHERE poslano_at >= ?").bind(danes).first();
   const poslanih = r?.n ?? 0;
@@ -211,7 +263,7 @@ export async function posljiIzVrste(env, db, stranUrl) {
     const sporocila = [];
     for (const v of za) {
       const odjavaUrl = `${stranUrl}/api/odjava?z=${await odjavaZeton(env, { id: v.clan_id, email: v.email })}`;
-      sporocila.push({ za: v.email, vrsta: "obvestilo", kljuc: v.kljuc, ...sestaviObvestilo(v, { ime: v.ime, jezik: v.jezik }, { odjavaUrl }) });
+      sporocila.push({ za: v.email, ime: v.ime, vrsta: "obvestilo", kljuc: v.kljuc, ...sestaviObvestilo(v, { ime: v.ime, jezik: v.jezik }, { odjavaUrl }) });
     }
     try {
       await posljiPosto(env, db, sporocila);

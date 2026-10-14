@@ -20,7 +20,7 @@ export const onRequestPost = obravnavaj(async ({ request, env }) => {
   if (komu === "sebi") {
     const odjavaUrl = `${izvorStrani}/api/odjava?z=${await odjavaZeton(env, admin)}`;
     const sporocila = ["sl", "en"].map((jezik) => ({
-      za: admin.email, vrsta: "preizkus",
+      za: admin.email, ime: admin.ime, vrsta: "preizkus",
       ...sestaviObvestilo(p, { ime: admin.ime, jezik }, { odjavaUrl }),
     }));
     await posljiPosto(env, env.DB, sporocila);

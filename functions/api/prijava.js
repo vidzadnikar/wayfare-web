@@ -22,6 +22,9 @@ export const onRequestPost = obravnavaj(async ({ request, env }) => {
   if (obstojec?.blokiran) return odgovor("poslano", 200);
   const zeton = await ustvariZeton(env.DB, { email, jezik, nazaj });
   const povezava = `${stranUrl(env, request)}/api/potrdi?z=${zeton}`;
-  await posljiPosto(env, env.DB, [{ za: email, vrsta: "potrditev", ...sestaviPotrditev({ jezik, povezava, ime: obstojec?.ime ? String(obstojec.ime).split(" ")[0] : null }) }]);
+  await posljiPosto(env, env.DB, [{
+    za: email, ime: obstojec?.ime || null, vrsta: "potrditev",
+    ...sestaviPotrditev({ jezik, povezava, ime: obstojec?.ime ? String(obstojec.ime).split(" ")[0] : null }),
+  }]);
   return odgovor("poslano", 200);
 });
