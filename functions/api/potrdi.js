@@ -4,6 +4,7 @@ import { preusmeri, varnaPot, domacaPot, jezikIz, zahtevaj } from "../../zaledje
 import { sejaPiskotek } from "../../zaledje/seja.js";
 import { clanPoEmailu, prijaviClana, porabiZeton } from "../../zaledje/clani.js";
 import { obravnavaj, stranNapake } from "../../zaledje/strani.js";
+import { poPrijavi } from "../../zaledje/dogodki.js";
 
 export const onRequestGet = obravnavaj(async ({ request, env }) => {
   zahtevaj(env, "SESSION_SECRET");
@@ -14,5 +15,6 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
   const obstojec = await clanPoEmailu(env.DB, zeton.email);
   if (obstojec?.blokiran) return stranNapake(jezik, "blokiran", 403);
   const clan = await prijaviClana(env.DB, { email: zeton.email, vir: "eposta", jezik });
+  await poPrijavi(env, request, clan, !obstojec);
   return preusmeri(`${varnaPot(zeton.nazaj, domacaPot(jezik))}?prijava=potrjeno`, { piskotki: [await sejaPiskotek(env, request, clan.id)] });
 }, { html: true });

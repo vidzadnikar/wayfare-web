@@ -171,3 +171,10 @@ export function zahtevaj(env, ...imena) {
   const manjka = imena.filter((i) => !env[i]);
   if (manjka.length) throw new Error(`Manjkajo nastavitve: ${manjka.join(", ")} (Pages → Settings → Variables and Secrets ali .dev.vars)`);
 }
+
+// Klic strojev (GitHub Actions): glava Authorization: Bearer <OBVESTI_SECRET>.
+export async function zahtevajSkrivnost(env, request) {
+  zahtevaj(env, "OBVESTI_SECRET");
+  const auth = (request.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
+  if (!(await enakaSkrivnost(auth, env.OBVESTI_SECRET))) throw new Napaka(401, "dostop");
+}

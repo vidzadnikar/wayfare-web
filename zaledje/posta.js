@@ -188,6 +188,24 @@ export function sestaviObvestilo(o, clan, { odjavaUrl }) {
   };
 }
 
+// Pošta adminu: nov član se je prijavil (ime, naslov, pot prijave).
+export function sestaviNoviClan({ clan, stranUrl }) {
+  const t = T.sl;
+  const koren = String(stranUrl || "").replace(/\/$/, "");
+  const ime = clan.ime || clan.email;
+  const pot = clan.vir === "google" ? "z Googlom" : "z e-naslovom";
+  const odstavki = [`${ime} (${clan.email}) se je prijavil ${pot}.`, `Jezik: ${clan.jezik === "sl" ? "slovenščina" : "angleščina"}.`];
+  return {
+    zadeva: `Nov član: ${ime}`,
+    html: ovoj({
+      jezik: "sl", koren, naslov: "Nov član.", predogled: odstavki[0],
+      odstavki: odstavki.map(odstavekHtml), gumb: { besedilo: "Odpri nadzor", url: `${koren}/nadzor` },
+      noga: "To pošto dobiš, ker je v nadzoru vklopljeno »Obvesti me ob novem članu«.",
+    }),
+    besedilo: ["Nov član.", "", ...odstavki, "", `Nadzor: ${koren}/nadzor`].join("\n"),
+  };
+}
+
 // Odjavni žeton je podpis (ne zapis v bazi), zato povezava v stari pošti velja
 // vedno; z menjavo e-naslova ali SESSION_SECRET neha veljati.
 export const odjavaZeton = async (env, clan) => `${clan.id}.${await podpisi(env.SESSION_SECRET, `odjava:${clan.id}:${clan.email}`)}`;
@@ -303,7 +321,9 @@ const REZERVA = 10; // dnevne pošte, ki jih vrsta pusti za potrditvene povezave
 const KOS = 50;     // vrstic na krog (D1 dovoli največ 100 vezanih vrednosti)
 
 export async function dnevnoStanje(env, db) {
-  const meja = Math.max(1, Number(env.POSTA_DNEVNO) || 300);
+  // nastavitev v nadzoru, sicer POSTA_DNEVNO, sicer 300
+  const zapis = await db.prepare("SELECT vrednost FROM nastavitve WHERE kljuc = 'posta_dnevno'").first().catch(() => null);
+  const meja = Math.max(1, Number(zapis?.vrednost) || Number(env.POSTA_DNEVNO) || 300);
   const danes = new Date().toISOString().slice(0, 10);
   const r = await db.prepare("SELECT COUNT(*) AS n FROM posta WHERE poslano_at >= ?").bind(danes).first();
   const poslanih = r?.n ?? 0;
@@ -315,11 +335,13 @@ export async function stanjeVrste(db) {
   return r?.n ?? 0;
 }
 
-// V vrsto da vse potrjene, neodjavljene, neblokirane člane. Obvestilo brez
-// prejemnikov je takoj poslano.
+// V vrsto da vse potrjene, neodjavljene, neblokirane člane, ki to vrsto
+// obvestil želijo. Obvestilo brez prejemnikov je takoj poslano.
 export async function napolniVrsto(db, kljuc) {
   const r = await db.prepare(
-    "INSERT OR IGNORE INTO vrsta (kljuc, clan_id) SELECT ?1, id FROM clani WHERE potrjen_at IS NOT NULL AND odjavljen_at IS NULL AND blokiran = 0",
+    `INSERT OR IGNORE INTO vrsta (kljuc, clan_id) SELECT ?1, id FROM clani
+     WHERE potrjen_at IS NOT NULL AND odjavljen_at IS NULL AND blokiran = 0
+       AND (CASE (SELECT vrsta FROM poslano WHERE kljuc = ?1) WHEN 'vlog' THEN zeli_vlogi WHEN 'izdaja' THEN zeli_izdaje ELSE zeli_novice END) = 1`,
   ).bind(kljuc).run();
   const n = r.meta?.changes ?? 0;
   if (!n) await db.prepare("UPDATE poslano SET poslano_at = COALESCE(poslano_at, ?1) WHERE kljuc = ?2").bind(zdaj(), kljuc).run();

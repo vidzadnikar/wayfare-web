@@ -57,6 +57,7 @@
       <div class="clan-meni">
         <p class="clan-email" data-clan-email></p>
         <a class="clan-povezava" href="/nadzor" data-clan-nadzor hidden>Admin</a>
+        <button class="clan-povezava" type="button" data-racun-odpri>Settings</button>
         <button class="clan-povezava" type="button" data-izpis>Sign out</button>
       </div>
     </details>
@@ -68,12 +69,12 @@
   <article class="besedilo" aria-labelledby="zasebnost-naslov">
     <h1 id="zasebnost-naslov" class="serif" data-naslov-uvod>Little data, <em>plainly said.</em></h1>
     <p class="uvodnik" data-uvod>You can browse without signing in and without cookies. Here is what we store if you sign up for updates.</p>
-    <section><h2 class="serif">What we keep</h2><p>Your email, name and profile picture (if you come via Google), your language, when you signed up, when you last visited and how many times. Nothing else.</p></section>
+    <section><h2 class="serif">What we keep</h2><p>Your email, name and profile picture (if you come via Google), your language and which updates you want, when you signed up, when you last visited, how many times, and which films you started watching on the site. Nothing else.</p></section>
     <section><h2 class="serif">Why</h2><p>To email you when a new film or a new version of Wayfare Studio is out, and to know how many people come back. We don't sell or share the data.</p></section>
     <section><h2 class="serif">Where</h2><p>The data lives in a database at Cloudflare, which also hosts this site. Email is sent through Brevo. Google sign-in happens at Google; we receive only your email, name and picture, and Google receives nothing from us.</p></section>
-    <section><h2 class="serif">How long</h2><p>For as long as you're subscribed. Every email has a one-click unsubscribe link at the bottom. If you want everything deleted, reply to any of our emails.</p></section>
+    <section><h2 class="serif">How long</h2><p>For as long as you have an account. Every email has a one-click unsubscribe link at the bottom. You can delete your account and all data yourself in Settings (the menu with your name at the top of the page).</p></section>
     <section><h2 class="serif">Cookies</h2><p>One cookie (<code>wayfare_seja</code>) keeps you signed in for a year; it's set only when you sign in. Your browser also remembers your language choice. There are no third-party cookies.</p></section>
-    <section><h2 class="serif">Visits</h2><p>For signed-in members we record the time of the last visit and the number of visits. All visits are counted with Cloudflare Web Analytics, without cookies and without identifying anyone.</p></section>
+    <section><h2 class="serif">Visits</h2><p>For signed-in members we record the time of the last visit, the number of visits and which films they started watching. For everyone else we only count how many times a day the site loads, without cookies and without identifying anyone.</p></section>
     <p class="drobno">In effect from 14 October 2026.</p>
   </article>
 </main>
@@ -131,7 +132,7 @@
         <input class="prijava-polje" id="prijava-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com">
         <button class="gumb gumb-tihi" type="submit">Email me a link</button>
       </form>
-      <p class="prijava-napaka" role="alert" data-prijava-napaka data-email="That email doesn't look right." data-omejitev="Too many attempts. Try again in an hour." data-splosno="Something went wrong. Try again in a minute." hidden></p>
+      <p class="prijava-napaka" role="alert" data-prijava-napaka data-email="That email doesn't look right." data-omejitev="Too many attempts. Try again in an hour." data-splosno="Something went wrong. Try again in a minute." data-zaprto="Sign-ups are closed right now." hidden></p>
       <p class="drobno">We keep only what's in our <a href="./">privacy notice</a>.</p>
     </div>
     <div class="prijava-korak" data-korak="poslano" data-opis="We sent a link to %email%. Click it to confirm. It's valid for one day; if it's missing, check your spam folder." hidden>
@@ -140,9 +141,32 @@
     </div>
   </div>
 </dialog>
+<dialog class="prijava racun" data-racun data-lenis-prevent aria-labelledby="racun-naslov">
+  <div class="prijava-notri">
+    <button class="obvestilo-zapri" type="button" aria-label="Close" data-racun-zapri></button>
+    <form class="prijava-korak racun-obrazec" data-racun-obrazec data-shranjeno="Saved." data-napaka="That didn't work. Try again." data-izbrisi-vprasanje="Delete your account? All your data goes and you won't get any more updates.">
+      <p class="obvestilo-naslov serif" id="racun-naslov" tabindex="-1">Your <em>settings.</em></p>
+      <fieldset class="racun-skupina">
+        <legend>Email language</legend>
+        <label class="racun-izbira"><input type="radio" name="jezik" value="sl"> Slovenian</label>
+        <label class="racun-izbira"><input type="radio" name="jezik" value="en"> English</label>
+      </fieldset>
+      <label class="racun-glavno"><input type="checkbox" class="stikalo" role="switch" name="obvestila"> Send me updates</label>
+      <fieldset class="racun-skupina" data-racun-zelje>
+        <legend>What you want to get</legend>
+        <label class="racun-izbira"><input type="checkbox" name="vlogi"> New vlogs</label>
+        <label class="racun-izbira"><input type="checkbox" name="izdaje"> New app versions</label>
+        <label class="racun-izbira"><input type="checkbox" name="novice"> News</label>
+      </fieldset>
+      <p class="prijava-napaka racun-sporocilo" role="status" aria-live="polite" data-racun-sporocilo hidden></p>
+      <button class="gumb" type="submit">Save</button>
+      <button class="racun-izbrisi" type="button" data-racun-izbrisi>Delete my account</button>
+    </form>
+  </div>
+</dialog>
 <p class="sporocilo" role="status" aria-live="polite" data-sporocilo hidden
    data-google="You're signed in. We'll write when there's a new film or release." data-potrjeno="Email confirmed. We'll write when there's a new film or release." data-poslano="Check your inbox: we sent you a confirmation link."
-   data-napaka="Sign-in didn't work. Please try again." data-omejitev="Too many attempts. Try again in an hour." data-email="That email doesn't look right."
+   data-napaka="Sign-in didn't work. Please try again." data-zaprto="Sign-ups are closed right now." data-izbrisan="Your account has been deleted." data-omejitev="Too many attempts. Try again in an hour." data-email="That email doesn't look right."
    data-nadzor="Sign in with Google first to open the admin page." data-izpis="You're signed out." data-blokiran="This account has no access."></p>
 
 <footer class="noga">

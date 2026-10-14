@@ -16,7 +16,7 @@
         <input class="prijava-polje" id="prijava-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="{{prijava_email_namig}}">
         <button class="gumb gumb-tihi" type="submit">{{prijava_posli}}</button>
       </form>
-      <p class="prijava-napaka" role="alert" data-prijava-napaka data-email="{{prijava_napaka_email}}" data-omejitev="{{prijava_napaka_omejitev}}" data-splosno="{{prijava_napaka_splosno}}" hidden></p>
+      <p class="prijava-napaka" role="alert" data-prijava-napaka data-email="{{prijava_napaka_email}}" data-omejitev="{{prijava_napaka_omejitev}}" data-splosno="{{prijava_napaka_splosno}}" data-zaprto="{{prijava_napaka_zaprto}}" hidden></p>
       <p class="drobno">{{prijava_zasebnost}} <a href="{{pot_zasebnost}}">{{prijava_zasebnost_povezava}}</a>.</p>
     </div>
     <div class="prijava-korak" data-korak="poslano" data-opis="{{prijava_poslano_opis}}" hidden>
@@ -25,7 +25,30 @@
     </div>
   </div>
 </dialog>
+<dialog class="prijava racun" data-racun data-lenis-prevent aria-labelledby="racun-naslov">
+  <div class="prijava-notri">
+    <button class="obvestilo-zapri" type="button" aria-label="{{obvestilo_zapri}}" data-racun-zapri></button>
+    <form class="prijava-korak racun-obrazec" data-racun-obrazec data-shranjeno="{{racun_shranjeno}}" data-napaka="{{racun_napaka}}" data-izbrisi-vprasanje="{{racun_izbrisi_vprasanje}}">
+      <p class="obvestilo-naslov serif" id="racun-naslov" tabindex="-1">{{racun_naslov}}</p>
+      <fieldset class="racun-skupina">
+        <legend>{{racun_jezik}}</legend>
+        <label class="racun-izbira"><input type="radio" name="jezik" value="sl"> {{racun_jezik_sl}}</label>
+        <label class="racun-izbira"><input type="radio" name="jezik" value="en"> {{racun_jezik_en}}</label>
+      </fieldset>
+      <label class="racun-glavno"><input type="checkbox" class="stikalo" role="switch" name="obvestila"> {{racun_obvestila}}</label>
+      <fieldset class="racun-skupina" data-racun-zelje>
+        <legend>{{racun_zelim}}</legend>
+        <label class="racun-izbira"><input type="checkbox" name="vlogi"> {{racun_vlogi}}</label>
+        <label class="racun-izbira"><input type="checkbox" name="izdaje"> {{racun_izdaje}}</label>
+        <label class="racun-izbira"><input type="checkbox" name="novice"> {{racun_novice}}</label>
+      </fieldset>
+      <p class="prijava-napaka racun-sporocilo" role="status" aria-live="polite" data-racun-sporocilo hidden></p>
+      <button class="gumb" type="submit">{{racun_shrani}}</button>
+      <button class="racun-izbrisi" type="button" data-racun-izbrisi>{{racun_izbrisi}}</button>
+    </form>
+  </div>
+</dialog>
 <p class="sporocilo" role="status" aria-live="polite" data-sporocilo hidden
    data-google="{{sporocilo_google}}" data-potrjeno="{{sporocilo_potrjeno}}" data-poslano="{{sporocilo_poslano}}"
-   data-napaka="{{sporocilo_napaka}}" data-omejitev="{{prijava_napaka_omejitev}}" data-email="{{prijava_napaka_email}}"
+   data-napaka="{{sporocilo_napaka}}" data-zaprto="{{sporocilo_zaprto}}" data-izbrisan="{{sporocilo_izbrisan}}" data-omejitev="{{prijava_napaka_omejitev}}" data-email="{{prijava_napaka_email}}"
    data-nadzor="{{sporocilo_nadzor}}" data-izpis="{{sporocilo_izpis}}" data-blokiran="{{sporocilo_blokiran}}"></p>

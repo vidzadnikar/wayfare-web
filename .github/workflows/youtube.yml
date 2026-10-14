@@ -1,0 +1,46 @@
+# Vlogi z YouTuba na stran, samodejno. Vsakih 10 minut vpraša stran
+# (/api/samodejno), ali kaj čaka: vlog, ki ga je admin vnesel v nadzoru, ali
+# nov javni video s kanala. Le takrat prenese repozitorij in zažene
+# vlogi/samodejno.py, ki vlog doda, zgradi in objavi stran ter pošlje
+# obvestilo članom. Ko nič ne čaka, je klic en sam curl.
+name: Vlogi z YouTuba
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: vlogi-youtube
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  dodaj:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OBVESTI_SECRET: ${{ secrets.OBVESTI_SECRET }}
+      STRAN_URL: ${{ vars.STRAN_URL }}
+    steps:
+      - name: Ali kaj čaka
+        id: preveri
+        run: |
+          url="${STRAN_URL:-https://wayfarestudio.pages.dev}"
+          odg=$(curl -sf --max-time 60 -A "wayfare-obvesti/1.0 (+https://github.com/vidzadnikar/wayfare-web)" \
+            -H "Authorization: Bearer $OBVESTI_SECRET" "$url/api/samodejno")
+          n=$(printf '%s' "$odg" | python3 -c "import json, sys; print(len(json.load(sys.stdin)['cakajo']))")
+          echo "čaka: $n"
+          echo "cakajo=$n" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        if: steps.preveri.outputs.cakajo != '0'
+        with:
+          fetch-depth: 0
+      - name: Dodaj, objavi, obvesti
+        if: steps.preveri.outputs.cakajo != '0'
+        run: |
+          git config user.name "Wayfare samodejno"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python3 vlogi/samodejno.py

@@ -270,11 +270,20 @@ def main(argv):
             trajanje=info["trajanje"], sirina=info["sirina"], visina=info["visina"],
             posnetkov=posnetkov(v), poglavja=poglavja(v), jezik="sl", youtube=youtube,
         ))
+    # vlogi in kraji, ki jih je dodal samodejno.py (GitHub Actions), ostanejo,
+    # dokler jih ne prevzameš v VLOGI oziroma KRAJI
+    staro = json.load(open(JSON, encoding="utf-8")) if JSON.is_file() else {"vlogi": [], "kraji": []}
+    oznake = {v["oznaka"] for v in VLOGI}
+    samodejni = [z for z in staro["vlogi"] if z.get("samodejno") and z["oznaka"] not in oznake]
+    if samodejni:
+        zapis = sorted(zapis + samodejni, key=lambda z: z["datum"], reverse=True)
+        print("ohranjeni samodejni vlogi:", ", ".join(z["oznaka"] for z in samodejni))
     if not samo_video:
         brez = sorted({v["kraj"]["en"] for v in VLOGI if v["kraj"]["en"] not in KRAJI})
         if brez:
             print("brez koordinat za globus (dodaj v KRAJI):", ", ".join(brez))
         kraji = [dict(kljuc=k, **v) for k, v in KRAJI.items()]
+        kraji += [k for k in staro.get("kraji", []) if k["kljuc"] not in KRAJI]
         JSON.write_text(json.dumps(dict(vlogi=zapis, kraji=kraji), ensure_ascii=False, indent=1), encoding="utf-8")
         print(f"{JSON.relative_to(TU.parent)}: {len(zapis)} vlogov, "
               f"{sum(z['trajanje'] for z in zapis) / 60:.0f} min")

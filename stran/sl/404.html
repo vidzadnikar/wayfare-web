@@ -59,6 +59,7 @@
       <div class="clan-meni">
         <p class="clan-email" data-clan-email></p>
         <a class="clan-povezava" href="/nadzor" data-clan-nadzor hidden>Nadzor</a>
+        <button class="clan-povezava" type="button" data-racun-odpri>Nastavitve</button>
         <button class="clan-povezava" type="button" data-izpis>Izpis</button>
       </div>
     </details>
@@ -127,7 +128,7 @@
         <input class="prijava-polje" id="prijava-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="tvoj@naslov.si">
         <button class="gumb gumb-tihi" type="submit">Pošlji mi povezavo</button>
       </form>
-      <p class="prijava-napaka" role="alert" data-prijava-napaka data-email="Ta e-naslov ne izgleda pravilno." data-omejitev="Preveč poskusov. Poskusi čez eno uro." data-splosno="Ni šlo. Poskusi znova čez minuto." hidden></p>
+      <p class="prijava-napaka" role="alert" data-prijava-napaka data-email="Ta e-naslov ne izgleda pravilno." data-omejitev="Preveč poskusov. Poskusi čez eno uro." data-splosno="Ni šlo. Poskusi znova čez minuto." data-zaprto="Prijave so trenutno zaprte." hidden></p>
       <p class="drobno">Hranimo le, kar piše v <a href="/sl/zasebnost/">pravilih zasebnosti</a>.</p>
     </div>
     <div class="prijava-korak" data-korak="poslano" data-opis="Na %email% smo poslali povezavo. Klik nanjo potrdi prijavo. Velja en dan; če je ni, poglej med nezaželeno pošto." hidden>
@@ -136,9 +137,32 @@
     </div>
   </div>
 </dialog>
+<dialog class="prijava racun" data-racun data-lenis-prevent aria-labelledby="racun-naslov">
+  <div class="prijava-notri">
+    <button class="obvestilo-zapri" type="button" aria-label="Zapri" data-racun-zapri></button>
+    <form class="prijava-korak racun-obrazec" data-racun-obrazec data-shranjeno="Shranjeno." data-napaka="Ni šlo. Poskusi znova." data-izbrisi-vprasanje="Izbrišem tvoj račun? Vsi tvoji podatki izginejo in obvestil ne dobiš več.">
+      <p class="obvestilo-naslov serif" id="racun-naslov" tabindex="-1">Tvoje <em>nastavitve.</em></p>
+      <fieldset class="racun-skupina">
+        <legend>Jezik pošte</legend>
+        <label class="racun-izbira"><input type="radio" name="jezik" value="sl"> Slovenščina</label>
+        <label class="racun-izbira"><input type="radio" name="jezik" value="en"> Angleščina</label>
+      </fieldset>
+      <label class="racun-glavno"><input type="checkbox" class="stikalo" role="switch" name="obvestila"> Pošiljaj mi obvestila</label>
+      <fieldset class="racun-skupina" data-racun-zelje>
+        <legend>Kaj želiš prejemati</legend>
+        <label class="racun-izbira"><input type="checkbox" name="vlogi"> Nove vloge</label>
+        <label class="racun-izbira"><input type="checkbox" name="izdaje"> Nove različice aplikacije</label>
+        <label class="racun-izbira"><input type="checkbox" name="novice"> Novice</label>
+      </fieldset>
+      <p class="prijava-napaka racun-sporocilo" role="status" aria-live="polite" data-racun-sporocilo hidden></p>
+      <button class="gumb" type="submit">Shrani</button>
+      <button class="racun-izbrisi" type="button" data-racun-izbrisi>Izbriši moj račun</button>
+    </form>
+  </div>
+</dialog>
 <p class="sporocilo" role="status" aria-live="polite" data-sporocilo hidden
    data-google="Prijavljen si. Pišemo ti ob novem filmu ali izdaji." data-potrjeno="E-naslov je potrjen. Pišemo ti ob novem filmu ali izdaji." data-poslano="Preveri pošto: poslali smo ti povezavo za potrditev."
-   data-napaka="Prijava ni uspela. Poskusi znova." data-omejitev="Preveč poskusov. Poskusi čez eno uro." data-email="Ta e-naslov ne izgleda pravilno."
+   data-napaka="Prijava ni uspela. Poskusi znova." data-zaprto="Prijave so trenutno zaprte." data-izbrisan="Tvoj račun je izbrisan." data-omejitev="Preveč poskusov. Poskusi čez eno uro." data-email="Ta e-naslov ne izgleda pravilno."
    data-nadzor="Za nadzor se najprej prijavi z Googlom." data-izpis="Izpisan si." data-blokiran="Ta račun nima dostopa."></p>
 
 <footer class="noga">

@@ -60,6 +60,7 @@
       <div class="clan-meni">
         <p class="clan-email" data-clan-email></p>
         <a class="clan-povezava" href="/nadzor" data-clan-nadzor hidden>Admin</a>
+        <button class="clan-povezava" type="button" data-racun-odpri>Settings</button>
         <button class="clan-povezava" type="button" data-izpis>Sign out</button>
       </div>
     </details>
@@ -327,7 +328,7 @@
         <input class="prijava-polje" id="prijava-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com">
         <button class="gumb gumb-tihi" type="submit">Email me a link</button>
       </form>
-      <p class="prijava-napaka" role="alert" data-prijava-napaka data-email="That email doesn't look right." data-omejitev="Too many attempts. Try again in an hour." data-splosno="Something went wrong. Try again in a minute." hidden></p>
+      <p class="prijava-napaka" role="alert" data-prijava-napaka data-email="That email doesn't look right." data-omejitev="Too many attempts. Try again in an hour." data-splosno="Something went wrong. Try again in a minute." data-zaprto="Sign-ups are closed right now." hidden></p>
       <p class="drobno">We keep only what's in our <a href="zasebnost/">privacy notice</a>.</p>
     </div>
     <div class="prijava-korak" data-korak="poslano" data-opis="We sent a link to %email%. Click it to confirm. It's valid for one day; if it's missing, check your spam folder." hidden>
@@ -336,9 +337,32 @@
     </div>
   </div>
 </dialog>
+<dialog class="prijava racun" data-racun data-lenis-prevent aria-labelledby="racun-naslov">
+  <div class="prijava-notri">
+    <button class="obvestilo-zapri" type="button" aria-label="Close" data-racun-zapri></button>
+    <form class="prijava-korak racun-obrazec" data-racun-obrazec data-shranjeno="Saved." data-napaka="That didn't work. Try again." data-izbrisi-vprasanje="Delete your account? All your data goes and you won't get any more updates.">
+      <p class="obvestilo-naslov serif" id="racun-naslov" tabindex="-1">Your <em>settings.</em></p>
+      <fieldset class="racun-skupina">
+        <legend>Email language</legend>
+        <label class="racun-izbira"><input type="radio" name="jezik" value="sl"> Slovenian</label>
+        <label class="racun-izbira"><input type="radio" name="jezik" value="en"> English</label>
+      </fieldset>
+      <label class="racun-glavno"><input type="checkbox" class="stikalo" role="switch" name="obvestila"> Send me updates</label>
+      <fieldset class="racun-skupina" data-racun-zelje>
+        <legend>What you want to get</legend>
+        <label class="racun-izbira"><input type="checkbox" name="vlogi"> New vlogs</label>
+        <label class="racun-izbira"><input type="checkbox" name="izdaje"> New app versions</label>
+        <label class="racun-izbira"><input type="checkbox" name="novice"> News</label>
+      </fieldset>
+      <p class="prijava-napaka racun-sporocilo" role="status" aria-live="polite" data-racun-sporocilo hidden></p>
+      <button class="gumb" type="submit">Save</button>
+      <button class="racun-izbrisi" type="button" data-racun-izbrisi>Delete my account</button>
+    </form>
+  </div>
+</dialog>
 <p class="sporocilo" role="status" aria-live="polite" data-sporocilo hidden
    data-google="You're signed in. We'll write when there's a new film or release." data-potrjeno="Email confirmed. We'll write when there's a new film or release." data-poslano="Check your inbox: we sent you a confirmation link."
-   data-napaka="Sign-in didn't work. Please try again." data-omejitev="Too many attempts. Try again in an hour." data-email="That email doesn't look right."
+   data-napaka="Sign-in didn't work. Please try again." data-zaprto="Sign-ups are closed right now." data-izbrisan="Your account has been deleted." data-omejitev="Too many attempts. Try again in an hour." data-email="That email doesn't look right."
    data-nadzor="Sign in with Google first to open the admin page." data-izpis="You're signed out." data-blokiran="This account has no access."></p>
 
 <footer class="noga">

@@ -6,6 +6,7 @@ import { piskotki, piskotek, preveriPodpis, dekodirajJson, odB64url, domacaPot, 
 import { sejaPiskotek } from "../../../zaledje/seja.js";
 import { normalizirajEmail, clanPoEmailu, prijaviClana } from "../../../zaledje/clani.js";
 import { obravnavaj } from "../../../zaledje/strani.js";
+import { prijavaDovoljena, poPrijavi } from "../../../zaledje/dogodki.js";
 import { GOOGLE_PISKOTEK } from "../google.js";
 
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
@@ -58,8 +59,10 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
   const email = normalizirajEmail(trditve.email);
   const obstojec = await clanPoEmailu(env.DB, email);
   if (obstojec?.blokiran) return napaka("blokiran");
+  if (!(await prijavaDovoljena(env.DB, obstojec))) return napaka("zaprto");
   const clan = await prijaviClana(env.DB, {
     email, ime: trditve.name || trditve.given_name || null, slika: trditve.picture || null, vir: "google", jezik,
   });
+  await poPrijavi(env, request, clan, !obstojec);
   return preusmeri(`${nazaj}?prijava=google`, { piskotki: [pobrisi, await sejaPiskotek(env, request, clan.id)] });
 }, { html: true });

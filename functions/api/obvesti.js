@@ -7,6 +7,7 @@
 import { Napaka, json, telo, enakaSkrivnost, stranUrl, zahtevaj } from "../../zaledje/osnova.js";
 import { napolniVrsto, posljiIzVrste } from "../../zaledje/posta.js";
 import { obravnavaj } from "../../zaledje/strani.js";
+import { preberiNastavitve } from "../../zaledje/nastavitve.js";
 
 const VRSTE = new Set(["vlog", "izdaja", "novica"]);
 
@@ -32,12 +33,15 @@ export function preveriPostavko(p) {
   };
 }
 
-// Vstavi obvestilo in napolni vrsto; vrne stanje postavke.
-export async function ustvariObvestilo(db, p) {
+// Vstavi obvestilo in napolni vrsto; vrne stanje postavke. Zadržano
+// obvestilo (samodejna obvestila za to vrsto so izklopljena) počaka v
+// nadzoru brez vrste, dokler ga admin ne pošlje ali zavrže.
+export async function ustvariObvestilo(db, p, { zadrzi = false } = {}) {
   const r = await db.prepare(
-    "INSERT OR IGNORE INTO poslano (kljuc, vrsta, naslov_sl, naslov_en, besedilo_sl, besedilo_en, url_sl, url_en) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
-  ).bind(p.kljuc, p.vrsta, p.naslov_sl, p.naslov_en, p.besedilo_sl, p.besedilo_en, p.url_sl, p.url_en).run();
+    "INSERT OR IGNORE INTO poslano (kljuc, vrsta, naslov_sl, naslov_en, besedilo_sl, besedilo_en, url_sl, url_en, zadrzano) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
+  ).bind(p.kljuc, p.vrsta, p.naslov_sl, p.naslov_en, p.besedilo_sl, p.besedilo_en, p.url_sl, p.url_en, zadrzi ? 1 : 0).run();
   if (!(r.meta?.changes ?? 0)) return { kljuc: p.kljuc, stanje: "ze_poslano" };
+  if (zadrzi) return { kljuc: p.kljuc, stanje: "zadrzano" };
   return { kljuc: p.kljuc, stanje: "novo", prejemnikov: await napolniVrsto(db, p.kljuc) };
 }
 
@@ -48,8 +52,14 @@ export const onRequestPost = obravnavaj(async ({ request, env }) => {
   const { podatki } = await telo(request);
   const postavke = Array.isArray(podatki.postavke) ? podatki.postavke : [];
   if (postavke.length > 50) throw new Napaka(400, "postavka", "Največ 50 postavk na klic.");
+  const s = await preberiNastavitve(env.DB);
   const obvestila = [];
-  for (const p of postavke) obvestila.push(await ustvariObvestilo(env.DB, preveriPostavko(p)));
+  for (const surova of postavke) {
+    const p = preveriPostavko(surova);
+    if (p.vrsta === "vlog") Object.assign(p, { besedilo_sl: s.besedilo_vlog_sl, besedilo_en: s.besedilo_vlog_en });
+    const zadrzi = (p.vrsta === "vlog" && !s.obvestila_vlogi) || (p.vrsta === "izdaja" && !s.obvestila_izdaje);
+    obvestila.push(await ustvariObvestilo(env.DB, p, { zadrzi }));
+  }
   const vrsta = await posljiIzVrste(env, env.DB, stranUrl(env, request));
   return json({ obvestila, ...vrsta });
 });

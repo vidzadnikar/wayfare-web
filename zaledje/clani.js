@@ -10,15 +10,16 @@ export function clanPoEmailu(db, email) {
 }
 
 // Prijava potrdi člana: nov član je potrjen takoj, obstoječemu se potrdi
-// e-naslov, prekliče odjava in osvežijo ime, slika in jezik. Vir ostane
-// tisti od prve prijave. Blokiranega preveri klicatelj pred tem.
+// e-naslov, prekliče odjava in osvežijo ime, slika in jezik (jezik ne, če ga
+// je član izbral sam v nastavitvah). Vir ostane tisti od prve prijave.
+// Blokiranega preveri klicatelj pred tem.
 export async function prijaviClana(db, { email, ime = null, slika = null, vir, jezik }) {
   await db.prepare(
     `INSERT INTO clani (email, ime, slika_url, vir, jezik, potrjen_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6)
      ON CONFLICT (email) DO UPDATE SET
        ime = COALESCE(excluded.ime, clani.ime),
        slika_url = COALESCE(excluded.slika_url, clani.slika_url),
-       jezik = excluded.jezik,
+       jezik = CASE WHEN clani.jezik_rocno = 1 THEN clani.jezik ELSE excluded.jezik END,
        potrjen_at = COALESCE(clani.potrjen_at, excluded.potrjen_at),
        odjavljen_at = NULL`,
   ).bind(email, ime, slika, vir, jezik, zdaj()).run();

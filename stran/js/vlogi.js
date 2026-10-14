@@ -84,8 +84,17 @@ addEventListener("message", (e) => {
 });
 
 // ---------------------------------------------------------------- predvajalnik
+// Ogled se zapiše enkrat na film na obisk strani (zaledje: /api/ogled).
+const ogledani = new Set();
+function zabeleziOgled(oznaka) {
+  if (!oznaka || ogledani.has(oznaka)) return;
+  ogledani.add(oznaka);
+  fetch("/api/ogled", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ oznaka }), keepalive: true }).catch(() => {});
+}
+
 function tece() {
   platno.dataset.stanje = "tece";
+  zabeleziOgled(trenutni);
   if (najavljen) return;
   najavljen = true;
   stanje.textContent = `${podatki.besedila.zdaj} ${vlogi.get(trenutni).naslov}`;

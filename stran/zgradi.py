@@ -128,9 +128,21 @@ PRENOS_ANDROID = "Wayfare-Studio-{razlicica}.apk"
 
 
 def prenos():
+    """Podatki za gumbe Prenos. Doma iz paketa v prenos/ (in zapis v
+    prenos.json); kjer paketa ni (GitHub Actions, vlogi/samodejno.py), iz
+    zadnjega zapisa prenos.json."""
+    zapis = Path(TU, "prenos.json")
     paketi = sorted(Path(TU, "prenos").glob("Wayfare-Studio-*.dmg"), key=lambda p: p.stat().st_mtime)
     if not paketi:
+        if zapis.is_file():
+            return json.load(open(zapis, encoding="utf-8"))
         raise SystemExit("V prenos/ ni paketa. Najprej zaženi ../paket/zgradi_paket.py.")
+    podatki = prenos_iz_paketa(paketi)
+    zapis.write_text(json.dumps(podatki, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    return podatki
+
+
+def prenos_iz_paketa(paketi):
     dmg = paketi[-1]
     razlicica = re.search(r"Studio-(.+)\.dmg$", dmg.name)[1]
     windows = PRENOS_WINDOWS.format(razlicica=razlicica)
@@ -334,7 +346,8 @@ def opis_vloga(v, jezik, media):
         oznaka=v["oznaka"], naslov=v["naslov"][jezik], kraj=v["kraj"][jezik],
         trajanje=cas(v["trajanje"]),
         slika=f"{media}{v['oznaka']}.jpg", v1080=f"{media}{v['oznaka']}-1080.mp4",
-        v720=f"{media}{v['oznaka']}-720.mp4", zanka=f"{media}{v['oznaka']}-zanka.mp4",
+        v720=f"{media}{v['oznaka']}-720.mp4",
+        zanka=f"{media}{v['oznaka']}-zanka.mp4" if Path(TU, "media", "vlogi", f"{v['oznaka']}-zanka.mp4").is_file() else "",
         youtube=yt, okvir=youtube_okvir(yt) if yt else "",
         # povezava kartice brez JS: film na YouTubu ali spletna datoteka
         povezava=f"https://www.youtube.com/watch?v={yt}" if yt else f"{media}{v['oznaka']}-1080.mp4",
@@ -352,7 +365,7 @@ def kartica_html(v, o, href, izberi=True):
         f'<span class="kartica-slika">'
         + (f'<img class="kartica-ozadje" src="{o["slika"]}" alt="" aria-hidden="true" loading="lazy" decoding="async">' if o["pokoncno"] else "") +
         f'<img src="{o["slika"]}" alt="" width="{v["sirina"]}" height="{v["visina"]}" loading="lazy" decoding="async">'
-        f'<video class="kartica-zanka" muted playsinline loop preload="none" tabindex="-1" aria-hidden="true" data-zanka-src="{o["zanka"]}"></video>'
+        + (f'<video class="kartica-zanka" muted playsinline loop preload="none" tabindex="-1" aria-hidden="true" data-zanka-src="{o["zanka"]}"></video>' if o["zanka"] else "") +
         f'<span class="kartica-cas">{o["trajanje"]}</span></span>'
         f'<span class="kartica-naslov serif">{html.escape(o["naslov"])}</span></a></li>'
     )
@@ -471,6 +484,10 @@ def objavi(zgoscene, strani, okvirji):
         cilj.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(Path(TU, rel), cilj)
     (objava / "_headers").write_text(GLAVE.format(csp=csp(zgoscene, okvirji)))
+    # imena vlogov za nadzor (ogledi): le oznaka in slovenski naslov
+    (objava / "vlogi").mkdir(parents=True, exist_ok=True)
+    (objava / "vlogi" / "seznam.json").write_text(json.dumps(
+        [{"oznaka": v["oznaka"], "naslov": v["naslov"]["sl"]} for v in vlogi_podatki()], ensure_ascii=False))
     neuporabljeni = sorted(str(p.relative_to(TU)) for p in Path(TU, "media").rglob("*")
                            if p.is_file() and str(p.relative_to(TU)) not in uporabljeni
                            and p.name != ".DS_Store" and not SPLETNI_VIDEO.match(str(p.relative_to(TU))))

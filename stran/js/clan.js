@@ -2,7 +2,8 @@
 // Google (navadna povezava na /api/google, ki preusmeri na Googlovo prijavo)
 // in e-naslov (/api/prijava pošlje povezavo za potrditev). /api/jaz pove,
 // kdo je prijavljen; /api/izpis izpiše. Po vrnitvi z zaledja (?prijava=…)
-// se pod glavo pokaže kratko sporočilo in naslov se počisti.
+// se pod glavo pokaže kratko sporočilo in naslov se počisti. Nastavitve
+// (jezik pošte, katera obvestila, izbris računa) gredo prek /api/jaz/nastavitve.
 export function clan() {
   const mesto = document.querySelector("[data-clan-mesto]");
   const okno = document.querySelector("[data-prijava]");
@@ -99,6 +100,60 @@ export function clan() {
     }
     gumb.disabled = false;
   });
+
+  // ---------------------------------------------------------------- nastavitve člana
+  const racun = document.querySelector("[data-racun]");
+  const racunObrazec = racun?.querySelector("[data-racun-obrazec]");
+  const racunSporocilo = racun?.querySelector("[data-racun-sporocilo]");
+  const zelje = racun?.querySelector("[data-racun-zelje]");
+  const povejRacun = (besedilo, napaka = false) => {
+    racunSporocilo.textContent = besedilo;
+    racunSporocilo.classList.toggle("racun-ok", !napaka);
+    racunSporocilo.hidden = false;
+  };
+  const izpolni = (n) => {
+    for (const r of racunObrazec.elements.jezik) r.checked = r.value === n.jezik;
+    racunObrazec.elements.obvestila.checked = n.obvestila;
+    for (const k of ["vlogi", "izdaje", "novice"]) racunObrazec.elements[k].checked = n[k];
+    zelje.disabled = !n.obvestila;
+  };
+  if (racun && racunObrazec) {
+    mesto.querySelector("[data-racun-odpri]")?.addEventListener("click", async () => {
+      podrobnosti.open = false;
+      racunSporocilo.hidden = true;
+      try {
+        const r = await fetch("/api/jaz/nastavitve", { headers: { Accept: "application/json" } });
+        if (!r.ok) throw new Error();
+        izpolni(await r.json());
+      } catch (e) { povejRacun(racunObrazec.dataset.napaka, true); }
+      racun.showModal();
+      racun.querySelector("#racun-naslov")?.focus({ preventScroll: true });
+    });
+    racun.querySelector("[data-racun-zapri]").addEventListener("click", () => racun.close());
+    racun.addEventListener("click", (e) => { if (e.target === racun) racun.close(); });
+    racunObrazec.elements.obvestila.addEventListener("change", (e) => { zelje.disabled = !e.target.checked; });
+    racunObrazec.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const f = racunObrazec.elements;
+      const telo = { jezik: f.jezik.value || undefined, obvestila: f.obvestila.checked, vlogi: f.vlogi.checked, izdaje: f.izdaje.checked, novice: f.novice.checked };
+      try {
+        const r = await fetch("/api/jaz/nastavitve", { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(telo) });
+        if (!r.ok) throw new Error();
+        izpolni(await r.json());
+        povejRacun(racunObrazec.dataset.shranjeno);
+      } catch (e2) { povejRacun(racunObrazec.dataset.napaka, true); }
+    });
+    racun.querySelector("[data-racun-izbrisi]").addEventListener("click", async () => {
+      if (!confirm(racunObrazec.dataset.izbrisiVprasanje)) return;
+      try {
+        const r = await fetch("/api/jaz/izbrisi", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+        if (!r.ok) throw new Error();
+        racun.close();
+        prikaziGosta();
+        pokaziSporocilo("izbrisan");
+      } catch (e) { povejRacun(racunObrazec.dataset.napaka, true); }
+    });
+  }
 
   izpis.addEventListener("click", async () => {
     try { await fetch("/api/izpis", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }); } catch (e) {}

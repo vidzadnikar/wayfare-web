@@ -4,6 +4,7 @@
 import { Napaka, json, preusmeri, telo, istiIzvor, varnaPot, domacaPot, jezikIz, ip, stranUrl, zahtevaj } from "../../zaledje/osnova.js";
 import { VELJAVEN_EMAIL, normalizirajEmail, clanPoEmailu, omeji, ustvariZeton } from "../../zaledje/clani.js";
 import { sestaviPotrditev, posljiPosto } from "../../zaledje/posta.js";
+import { prijavaDovoljena } from "../../zaledje/dogodki.js";
 import { obravnavaj } from "../../zaledje/strani.js";
 
 export const onRequestPost = obravnavaj(async ({ request, env }) => {
@@ -20,6 +21,7 @@ export const onRequestPost = obravnavaj(async ({ request, env }) => {
 
   const obstojec = await clanPoEmailu(env.DB, email);
   if (obstojec?.blokiran) return odgovor("poslano", 200);
+  if (!(await prijavaDovoljena(env.DB, obstojec))) return odgovor("zaprto", 403);
   const zeton = await ustvariZeton(env.DB, { email, jezik, nazaj });
   const povezava = `${stranUrl(env, request)}/api/potrdi?z=${zeton}`;
   await posljiPosto(env, env.DB, [{
