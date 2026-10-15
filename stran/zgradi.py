@@ -441,6 +441,14 @@ GLAVE = """/*
 # izvora, zato pod /media/ ni omejitve same-origin.
 /media/*
   ! Cross-Origin-Resource-Policy
+
+# Spremljevalec na telefonu (telefon/): mikrofon za glasovne zapiske, GPS za
+# kraj oznake, servisni delavec za delo brez povezave. Ostala stran tega ne sme.
+/telefon/*
+  ! Content-Security-Policy
+  ! Permissions-Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  Permissions-Policy: microphone=(self), geolocation=(self), camera=(), payment=(), usb=()
 """
 
 
@@ -474,7 +482,7 @@ def objavi(zgoscene, strani, okvirji):
     if manjkajo:
         raise SystemExit(f"Stran kaže na datoteke, ki jih ni: {manjkajo}")
     datoteke = [p.relative_to(TU) for p in strani]
-    for mapa in ("css", "js", "pisave"):
+    for mapa in ("css", "js", "pisave", "telefon"):
         datoteke += [p.relative_to(TU) for p in Path(TU, mapa).rglob("*") if p.is_file()]
     datoteke += [Path(u) for u in uporabljeni]
     for rel in datoteke:

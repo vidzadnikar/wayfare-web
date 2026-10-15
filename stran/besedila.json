@@ -36,7 +36,7 @@
   "k5_naslov": "Checked <em>before you publish.</em>",
   "k5_opis": "Over twenty-five checks — loudness, cuts, captions — with one-click fixes.",
   "k6_naslov": "Finished. <em>Ready to post.</em>",
-  "k6_opis": "Export in one click, with a publishing package ready to go.",
+  "k6_opis": "Publish straight to YouTube, TikTok and Instagram — title, description and tags written for you.",
   "ukaz_namig": "Tell Claude what to change…",
   "ukaz_besedilo": "Shorten clip fourteen",
   "ukaz_potrdilo": "Done — clip 14 is shorter",
@@ -178,7 +178,10 @@
   "sporocilo_zaprto": "Sign-ups are closed right now.",
   "sporocilo_izbrisan": "Your account has been deleted.",
   "zasebnost_7_naslov": "The app",
-  "zasebnost_7_besedilo": "Wayfare Studio works on your computer and sends nothing by itself. Only what you start goes online: music, transcription models and map data you download. If you use Claude, your messages, clip descriptions and the thumbnails Claude looks at go to Anthropic under your own API key, as described in Anthropic's terms. The clips themselves stay on your computer, and so does the key."
+  "zasebnost_7_besedilo": "Wayfare Studio works on your computer and sends nothing by itself. Only what you start goes online: music, transcription models and map data you download, place names you look up (OpenStreetMap), and videos you publish — those go straight to YouTube, TikTok or Instagram under your own account; the sign-in tokens stay on your computer. If you use Claude, your messages, clip descriptions and the thumbnails Claude looks at go to Anthropic under your own API key, as described in Anthropic's terms. The clips themselves stay on your computer, and so does the key. With “Offline” on (Privacy, in the ⋯ menu) the app goes online for nothing at all.",
+  "cilj_uvod": "Free, no subscription. Your clips stay on your computer — nothing is uploaded unless you publish.",
+  "zasebnost_8_naslov": "Companion on your phone",
+  "zasebnost_8_besedilo": "The Companion page keeps your marks, notes, places and voice notes only on your phone. They leave it only as a file you send yourself to your Mac; we never receive them."
  },
  "sl": {
   "lang": "sl",
@@ -217,7 +220,7 @@
   "k5_naslov": "Preverjeno, <em>preden objaviš.</em>",
   "k5_opis": "Več kot petindvajset preverjanj — glasnost, rezi, napisi — in popravki z enim klikom.",
   "k6_naslov": "Končano. <em>Pripravljeno za objavo.</em>",
-  "k6_opis": "Izvoz z enim klikom, s paketom za objavo.",
+  "k6_opis": "Objava naravnost na YouTube, TikTok in Instagram — naslov, opis in oznake so že napisani.",
   "ukaz_namig": "Povej Claudu, kaj naj spremeni …",
   "ukaz_besedilo": "Skrajšaj posnetek 14",
   "ukaz_potrdilo": "Narejeno — posnetek 14 je krajši",
@@ -359,6 +362,9 @@
   "sporocilo_zaprto": "Prijave so trenutno zaprte.",
   "sporocilo_izbrisan": "Tvoj račun je izbrisan.",
   "zasebnost_7_naslov": "Aplikacija",
-  "zasebnost_7_besedilo": "Wayfare Studio dela na tvojem računalniku in sam ne pošilja ničesar. Na splet gre le, kar začneš sam: prenosi glasbe, modelov za prepis in podatkov za zemljevide. Če uporabljaš Clauda, gredo tvoja sporočila, opisi posnetkov in sličice, ki si jih Claude ogleda, k Anthropicu s tvojim ključem API, po Anthropicovih pogojih. Posnetki sami ostanejo na računalniku, prav tako ključ."
+  "zasebnost_7_besedilo": "Wayfare Studio dela na tvojem računalniku in sam ne pošilja ničesar. Na splet gre le, kar začneš sam: prenosi glasbe, modelov za prepis in podatkov za zemljevide, imena krajev, ki jih poiščeš (OpenStreetMap), in videi, ki jih objaviš — ti gredo naravnost na YouTube, TikTok ali Instagram s tvojim računom; žetoni prijave ostanejo na tvojem računalniku. Če uporabljaš Clauda, gredo tvoja sporočila, opisi posnetkov in sličice, ki si jih Claude ogleda, k Anthropicu s tvojim ključem API, po Anthropicovih pogojih. Posnetki sami ostanejo na računalniku, prav tako ključ. Z vklopljenim »Brez spleta« (Zasebnost v meniju ⋯) aplikacija ne gre na splet za nič.",
+  "cilj_uvod": "Brezplačno, brez naročnine. Posnetki ostanejo na tvojem računalniku — nič se ne naloži, dokler ne objaviš.",
+  "zasebnost_8_naslov": "Spremljevalec na telefonu",
+  "zasebnost_8_besedilo": "Stran Spremljevalec hrani oznake, opombe, kraje in glasovne zapiske le na tvojem telefonu. Z njega gredo le kot datoteka, ki jo sam pošlješ na svoj Mac; mi je nikoli ne dobimo."
  }
 }

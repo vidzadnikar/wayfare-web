@@ -1,0 +1,14 @@
+{
+ "name": "Wayfare Spremljevalec",
+ "short_name": "Wayfare",
+ "description": "Mark moments and record voice notes on the go; edit at home in Wayfare Studio.",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#0f1014",
+ "theme_color": "#0f1014",
+ "icons": [
+  {"src": "ikona-192.png", "sizes": "192x192", "type": "image/png"},
+  {"src": "ikona-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+ ]
+}
