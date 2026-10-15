@@ -729,6 +729,26 @@
    "youtube": null
   },
   {
+   "oznaka": "rim-4",
+   "naslov": {
+    "en": "Rome — Day 4",
+    "sl": "Rim — 4. dan"
+   },
+   "kraj": {
+    "en": "Rome, Italy",
+    "sl": "Rim, Italija"
+   },
+   "datum": "2025-10-31",
+   "datum_do": null,
+   "trajanje": 348.567,
+   "sirina": 3840,
+   "visina": 2160,
+   "posnetkov": null,
+   "poglavja": [],
+   "jezik": "sl",
+   "youtube": "IES2JTfFNBM"
+  },
+  {
    "oznaka": "rim-3",
    "naslov": {
     "en": "Rome — Day 3",

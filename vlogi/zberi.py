@@ -122,6 +122,11 @@ VLOGI = [
          naslov=dict(en="Budapest", sl="Budimpešta"),
          kraj=dict(en="Budapest, Hungary", sl="Budimpešta, Madžarska"),
          datum=("2025-12-26", None), naslovna=35.8),
+    dict(oznaka="rim-4", izvor="Rim day 4.mov", projekt=None,
+         naslov=dict(en="Rome — Day 4", sl="Rim — 4. dan"),
+         kraj=dict(en="Rome, Italy", sl="Rim, Italija"),
+         datum=("2025-10-31", None), naslovna=60.0, youtube="IES2JTfFNBM",
+         zanka=(60.5, 204.5, 264.5)),
     # Rome day 3 je v filmu »Day 2 (part 2)«: isti dan kot 2. dan
     dict(oznaka="rim-3", izvor="Rim day 3.mov", projekt=None,
          naslov=dict(en="Rome — Day 3", sl="Rim — 3. dan"),
