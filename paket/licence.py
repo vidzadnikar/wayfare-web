@@ -71,6 +71,43 @@ def paketi(okolje: Path) -> list:
     return vrstice
 
 
+def pip_paketi(okolje: Path, razen=()) -> list:
+    """Paketi, ki jih je namestil pip (anthropic in njegove odvisnosti,
+    sherpa-onnx): conda-meta jih ne pozna, zato jih beremo iz METADATA."""
+    vrstice, videni = [], set()
+    normaliziraj = lambda ime: ime.lower().replace("_", "-")
+    razen = {normaliziraj(i) for i in razen}
+    # lib/python3.1 je povezava na python3.12: isti paket le enkrat.
+    for meta in sorted(okolje.glob("lib/python3*/site-packages/*.dist-info/METADATA")):
+        mapa = meta.parent
+        namestil = mapa / "INSTALLER"
+        if namestil.is_file() and namestil.read_text(encoding="utf-8").strip() != "pip":
+            continue
+        polja, url = {}, ""
+        for vrstica in meta.read_text(encoding="utf-8", errors="replace").splitlines():
+            if not vrstica.strip():
+                break                       # konec glave, naprej je opis
+            kljuc, _, vrednost = vrstica.partition(":")
+            vrednost = vrednost.strip()
+            if kljuc in ("Name", "Version", "License-Expression", "Home-page") and kljuc not in polja:
+                polja[kljuc] = vrednost
+            elif kljuc == "License" and "License" not in polja and len(vrednost) < 60:
+                polja["License"] = vrednost
+            elif kljuc == "Classifier" and vrednost.startswith("License ::") and "Classifier" not in polja:
+                polja["Classifier"] = vrednost.split("::")[-1].strip()
+            elif kljuc == "Project-URL" and not url and "," in vrednost:
+                url = vrednost.split(",", 1)[1].strip()
+        ime = polja.get("Name", mapa.name.split("-")[0])
+        if normaliziraj(ime) in razen | videni or ime in IZPUSCENI:
+            continue
+        videni.add(normaliziraj(ime))
+        licenca = (polja.get("License-Expression") or polja.get("License")
+                   or polja.get("Classifier") or "?")
+        vrstice.append((ime, polja.get("Version", ""), licenca,
+                        polja.get("Home-page") or url or f"https://pypi.org/project/{ime}/"))
+    return vrstice
+
+
 def zapisi(cilj: Path, vendor: Path, vir_kode: Path, razlicica: str):
     """Napiše LICENSES/ v paket. `vendor` je Wayfare/vendor, `vir_kode` Wayfare/."""
     cilj.mkdir(parents=True, exist_ok=True)
@@ -89,7 +126,9 @@ def zapisi(cilj: Path, vendor: Path, vir_kode: Path, razlicica: str):
         (cilj / "MIT-flag-icons.md").write_text(zastave.read_text(encoding="utf-8"),
                                                encoding="utf-8")
 
-    vse = paketi(vendor / "ffmpeg") + paketi(vendor / "python") + DRUGI
+    conda = paketi(vendor / "ffmpeg") + paketi(vendor / "python")
+    znani = {i for i, _, _, _ in conda + DRUGI}
+    vse = conda + pip_paketi(vendor / "python", razen=znani) + DRUGI
     sirina = max(len(f"{i} {v}".strip()) for i, v, _, _ in vse) + 2
     tabela = "\n".join(f"{(i + ' ' + v).strip():<{sirina}}{lic}\n{'':<{sirina}}{vir}"
                        for i, v, lic, vir in vse)
