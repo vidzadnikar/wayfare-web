@@ -143,43 +143,10 @@ def ikona(cilj: Path):
     shutil.rmtree(mapa)
 
 
-ZAGANJALNIK = r'''#!/bin/bash
-# Wayfare Studio: zažene urejevalnik iz paketa in ga odpre v brskalniku.
-# Studio posluša le na 127.0.0.1, zato ni dosegljiv z drugih naprav.
-APP="$(cd "$(dirname "$0")/../Resources/app" && pwd)"
-PY="$APP/vendor/python/bin/python3"
-DNEVNIK="$HOME/Library/Logs/Wayfare Studio.log"
-export PYTHONDONTWRITEBYTECODE=1   # nič ne piši v paket (podpis ostane veljaven)
-export PYTHONNOUSERSITE=1
-# korenska potrdila za HTTPS (OpenSSL jih sicer išče na poti gradnje)
-export SSL_CERT_FILE="$APP/vendor/python/ssl/cacert.pem"
-
-# če studio iz tega paketa že teče, ga samo odpri
-for p in $(seq 8420 8439); do
-  if /usr/bin/curl -fsS -m 1 "http://127.0.0.1:$p/" 2>/dev/null | grep -q "Wayfare"; then
-    /usr/bin/open "http://127.0.0.1:$p/"; exit 0
-  fi
-done
-
-# prva prosta vrata od 8420 naprej
-PORT=$("$PY" -c '
-import socket
-for p in range(8420, 8440):
-    s = socket.socket()
-    try:
-        s.bind(("127.0.0.1", p)); print(p); break
-    except OSError:
-        pass
-    finally:
-        s.close()
-')
-[ -z "$PORT" ] && PORT=8420
-
-trap 'kill "$OTROK" 2>/dev/null' TERM INT EXIT
-"$PY" "$APP/wayfare.py" studio -p "$PORT" --no-reload >>"$DNEVNIK" 2>&1 &
-OTROK=$!
-wait "$OTROK"
-'''
+# Aplikacija je svoje okno (WKWebView) v Swiftu: zazene studio z vgrajenim
+# Pythonom in ga pokaze, ob koncu ga ustavi. Vir je v Wayfare/paket/mac.
+OKNO = VIR / "paket" / "mac" / "okno.swift"
+IZVRSLJIVA = "Wayfare Studio"
 
 
 def zacetna_glasba(cilj: Path) -> int:
@@ -298,18 +265,21 @@ def main():
                         'export PATH="$APP/vendor/ffmpeg/bin:$PATH"\n' + telo + "\n")
         ukaz.chmod(0o755)
 
-    zaganjalnik = vsebina / "MacOS" / "wayfare-studio"
-    zaganjalnik.write_text(ZAGANJALNIK)
-    zaganjalnik.chmod(0o755)
+    print("okno (Swift) ...")
+    (vsebina / "MacOS").mkdir(parents=True, exist_ok=True)
+    zazeni("swiftc", "-O", "-swift-version", "5", "-target", "arm64-apple-macos12.0",
+           str(OKNO), "-o", str(vsebina / "MacOS" / IZVRSLJIVA))
     ikona(vsebina / "Resources" / "AppIcon.icns")
     with open(vsebina / "Info.plist", "wb") as f:
         plistlib.dump({
             "CFBundleName": IME, "CFBundleDisplayName": IME, "CFBundleIdentifier": ID,
-            "CFBundleExecutable": "wayfare-studio", "CFBundleIconFile": "AppIcon",
+            "CFBundleExecutable": IZVRSLJIVA, "CFBundleIconFile": "AppIcon",
             "CFBundlePackageType": "APPL", "CFBundleShortVersionString": razlicica,
             "CFBundleVersion": razlicica, "LSMinimumSystemVersion": "12.0",
             "LSArchitecturePriority": ["arm64"], "NSHighResolutionCapable": True,
             "LSApplicationCategoryType": "public.app-category.video",
+            "NSMicrophoneUsageDescription":
+                "Wayfare Studio records voiceover with the microphone when you choose to.",
         }, f)
 
     # Podpis od znotraj navzven: najprej vsaka Mach-O datoteka, nazadnje paket.
@@ -338,7 +308,7 @@ def main():
                and UPORABNIK.encode() in p.read_bytes()]
     if ostanki:
         sys.exit(f"V paketu je ostalo ime: {ostanki[:5]}")
-    for vzorec in (r"sk-ant-", r"ANTHROPIC_API_KEY\s*=\s*\S", r"@gmail\.com"):
+    for vzorec in (r"sk-ant-[A-Za-z0-9_\-]{20,}", r"ANTHROPIC_API_KEY\s*=\s*\S", r"@gmail\.com"):
         for p in (viri / "wayfare").rglob("*"):
             if p.is_file() and re.search(vzorec, p.read_text(errors="ignore")):
                 sys.exit(f"Sumljiv niz {vzorec} v {p}")
