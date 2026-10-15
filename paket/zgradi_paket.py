@@ -269,6 +269,11 @@ def main():
     (vsebina / "MacOS").mkdir(parents=True, exist_ok=True)
     zazeni("swiftc", "-O", "-swift-version", "5", "-target", "arm64-apple-macos12.0",
            str(OKNO), "-o", str(vsebina / "MacOS" / IZVRSLJIVA))
+    # Kaj je v posnetkih (Applov Vision): izrez s sledenjem in iskanje po vsebini.
+    print("analiza slike (Swift, Vision) ...")
+    (viri / "vendor" / "vid").mkdir(parents=True, exist_ok=True)
+    zazeni("swiftc", "-O", "-swift-version", "5", "-target", "arm64-apple-macos12.0",
+           str(VIR / "paket" / "mac" / "vid.swift"), "-o", str(viri / "vendor" / "vid" / "wayfare-vid"))
     ikona(vsebina / "Resources" / "AppIcon.icns")
     with open(vsebina / "Info.plist", "wb") as f:
         plistlib.dump({
