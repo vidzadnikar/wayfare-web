@@ -729,6 +729,26 @@
    "youtube": null
   },
   {
+   "oznaka": "rim-2",
+   "naslov": {
+    "en": "Rome — Day 2",
+    "sl": "Rim — 2. dan"
+   },
+   "kraj": {
+    "en": "Rome, Italy",
+    "sl": "Rim, Italija"
+   },
+   "datum": "2025-10-30",
+   "datum_do": null,
+   "trajanje": 242.367,
+   "sirina": 3840,
+   "visina": 2160,
+   "posnetkov": null,
+   "poglavja": [],
+   "jezik": "sl",
+   "youtube": "aPn50KNMeCk"
+  },
+  {
    "oznaka": "rim-1",
    "naslov": {
     "en": "Rome — Day 1",
