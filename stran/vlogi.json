@@ -827,6 +827,91 @@
    "poglavja": [],
    "jezik": "sl",
    "youtube": "F4BL7-oRi5s"
+  },
+  {
+   "oznaka": "barcelona",
+   "naslov": {
+    "en": "Barcelona — The Whole Trip",
+    "sl": "Barcelona — celo potovanje"
+   },
+   "kraj": {
+    "en": "Barcelona, Spain",
+    "sl": "Barcelona, Španija"
+   },
+   "datum": "2025-04-29",
+   "datum_do": "2025-05-04",
+   "trajanje": 364.35,
+   "sirina": 1080,
+   "visina": 1920,
+   "posnetkov": 96,
+   "poglavja": [
+    [
+     0.0,
+     "Uvod"
+    ],
+    [
+     13.1,
+     "Barcelona"
+    ],
+    [
+     35.8,
+     "Jutro"
+    ],
+    [
+     73.7,
+     "La Rambla"
+    ],
+    [
+     98.5,
+     "Mirador de Colom"
+    ],
+    [
+     118.1,
+     "Dopoldne"
+    ],
+    [
+     132.4,
+     "Sagrada Família"
+    ],
+    [
+     183.9,
+     "Park Güell"
+    ],
+    [
+     221.0,
+     "Večer"
+    ],
+    [
+     244.5,
+     "Naslednji dan — dopoldne"
+    ],
+    [
+     258.5,
+     "Montjuïc"
+    ],
+    [
+     270.5,
+     "Večer"
+    ],
+    [
+     295.4,
+     "Naslednji dan — dopoldne"
+    ],
+    [
+     305.9,
+     "Naslednji dan — noč"
+    ],
+    [
+     320.9,
+     "Naslednji dan — večer"
+    ],
+    [
+     343.6,
+     "Naslednji dan — popoldne"
+    ]
+   ],
+   "jezik": "sl",
+   "youtube": "3Yq7TriqnK8"
   }
  ],
  "kraji": [
@@ -840,6 +925,11 @@
    "kljuc": "Madrid, Spain",
    "lon": -3.704,
    "lat": 40.417
+  },
+  {
+   "kljuc": "Barcelona, Spain",
+   "lon": 2.173,
+   "lat": 41.385
   },
   {
    "kljuc": "Rifnik, Slovenia",

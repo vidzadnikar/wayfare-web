@@ -148,6 +148,12 @@ VLOGI = [
          kraj=dict(en="Rome, Italy", sl="Rim, Italija"),
          datum=("2025-10-29", None), naslovna=122.0, youtube="F4BL7-oRi5s",
          zanka=(10.5, 93.0, 121.5)),
+    # celo potovanje v enem vlogu, pokončno
+    dict(oznaka="barcelona", izvor="Barcelona/_izris/Barcelona vlog.mp4", projekt="Barcelona",
+         naslov=dict(en="Barcelona — The Whole Trip", sl="Barcelona — celo potovanje"),
+         kraj=dict(en="Barcelona, Spain", sl="Barcelona, Španija"),
+         datum=("2025-04-29", "2025-05-04"), naslovna=1, youtube="3Yq7TriqnK8",
+         zanka=(133.5, 185.0, 259.5)),
 ]
 
 # Kraji na globusu (zemljevid na domači strani): ključ je kraj v angleščini, kot v VLOGI.
@@ -156,6 +162,7 @@ VLOGI = [
 KRAJI = {
     "Milan, Italy":      dict(lon=9.19,   lat=45.464, stran="levo"),
     "Madrid, Spain":     dict(lon=-3.704, lat=40.417),
+    "Barcelona, Spain":  dict(lon=2.173,  lat=41.385),
     "Rifnik, Slovenia":  dict(lon=15.42,  lat=46.22,  stran="spodaj"),
     "Budapest, Hungary": dict(lon=19.04,  lat=47.498),
     "Malta":             dict(lon=14.51,  lat=35.9),
