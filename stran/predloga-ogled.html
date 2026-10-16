@@ -35,7 +35,7 @@
 {{glava}}
 
 <main id="vsebina" class="ogled-stran">
-  <div class="ogled">
+  <div class="ogled{{ogled_razred}}">
     <article class="ogled-glavno" aria-labelledby="ogled-naslov">
       <div class="ogled-oder" data-ogled-oder data-youtube="{{ogled_youtube_id}}" data-oznaka="{{ogled_oznaka}}" data-pokoncno="{{ogled_pokoncno}}" data-stanje="pripravljen">
         <img class="ogled-oder-ozadje" src="{{ogled_slika}}" alt="" aria-hidden="true">
@@ -77,8 +77,8 @@
       </section>
     </article>
 
-    <aside class="naprej" aria-labelledby="naprej-naslov">
-      <h2 id="naprej-naslov" class="serif">{{ogled_naprej}}</h2>
+    <aside class="naprej" aria-labelledby="naprej-naslov"{{ogled_naprej_skrito}}>
+      <h2 id="naprej-naslov" class="serif">{{ogled_serija}}</h2>
       <ul class="naprej-seznam">{{ogled_naprej_seznam}}</ul>
       <a class="gumb gumb-majhen gumb-tihi naprej-vsi" href="{{pot_vlogi}}">{{ogled_vsi}}</a>
     </aside>

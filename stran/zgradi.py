@@ -369,13 +369,11 @@ def opis_ogleda(v, jezik):
     return f"{kraj}. Filmed {zacetek} – {d2} {M[m2 - 1]} {l2}."
 
 
-def naprej_vlogi(v, vlogi, koliko=12):
-    """Kaj gledati naprej: naslednji dnevi istega potovanja, nato prejšnji,
-    nato druga potovanja (najnovejša prva)."""
-    isti = sorted((x for x in vlogi if x["kraj"]["en"] == v["kraj"]["en"]), key=lambda x: (x["datum"], x["oznaka"]))
-    i = next(k for k, x in enumerate(isti) if x["oznaka"] == v["oznaka"])
-    drugi = [x for x in vlogi if x["kraj"]["en"] != v["kraj"]["en"]]
-    return (isti[i + 1:] + isti[:i][::-1] + drugi)[:koliko]
+def naprej_vlogi(v, vlogi):
+    """Ob filmu le ostali filmi iste serije (istega potovanja), po vrsti dni;
+    povzetek (z obdobjem) pride na konec."""
+    isti = [x for x in vlogi if x["kraj"]["en"] == v["kraj"]["en"] and x["oznaka"] != v["oznaka"]]
+    return sorted(isti, key=lambda x: (x.get("datum_do") or x["datum"], x["oznaka"]))
 
 
 def ogled_stran(oznaka, jezik, b, p):
@@ -385,8 +383,9 @@ def ogled_stran(oznaka, jezik, b, p):
     media = p["koren"] + "media/vlogi/"
     o = opis_vloga(v, jezik, media)
     opis = opis_ogleda(v, jezik)
+    serija = naprej_vlogi(v, vlogi)
     naprej = "".join(kartica_html(x, opis_vloga(x, jezik, media), pot_ogleda(p, x["oznaka"], jezik), izberi=False, vrsta=True)
-                     for x in naprej_vlogi(v, vlogi))
+                     for x in serija)
     return {
         "ogled_naslov_strani": html.escape(f"{o['naslov']} — Wayfare Studio"),
         "ogled_opis_meta": html.escape(opis),
@@ -400,6 +399,10 @@ def ogled_stran(oznaka, jezik, b, p):
         "ogled_poglavja": poglavja_html(o["poglavja"]),
         "ogled_poglavja_skrito": "" if o["poglavja"] else "hidden",
         "ogled_naprej_seznam": naprej,
+        # naslov stranskega stolpca je ime serije (kraj); brez drugih filmov stolpca ni
+        "ogled_serija": html.escape(o["kraj"].split(",")[0]),
+        "ogled_naprej_skrito": "" if serija else " hidden",
+        "ogled_razred": "" if serija else " ogled-sam",
     }
 
 
