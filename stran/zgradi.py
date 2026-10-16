@@ -7,6 +7,7 @@ Strani:
     predloga.html        → index.html (angleščina, koren) in sl/index.html
     predloga-vlogi.html  → vlogi/index.html in sl/vlogi/index.html
     predloga-zasebnost.html → zasebnost/index.html in sl/zasebnost/index.html
+    predloga-ogled.html  → vlogi/<oznaka>/index.html in sl/vlogi/<oznaka>/index.html (vsak vlog)
 
 Besedila so v besedila.json; ključ {{x}} v predlogi se zamenja z vrednostjo.
 Vrednosti so zaupanja vredno besedilo z dovoljeno oznako (<em>, <br>).
@@ -243,9 +244,10 @@ def poti(stran, jezik):
         "pot_zasebnost": pot_zasebnost,
         "en_aktiven": 'aria-current="page"' if jezik == "en" else "",
         "sl_aktiven": 'aria-current="page"' if jezik == "sl" else "",
-        "vlogi_aktiven": ' aria-current="page"' if stran == "vlogi" else "",
+        "vlogi_aktiven": ' aria-current="page"' if stran == "vlogi" or stran.startswith("ogled:") else "",
         "zasebnost_aktiven": ' aria-current="page"' if stran == "zasebnost" else "",
         "_drug": drug,
+        "_ta": ta,
     }
 
 
@@ -323,12 +325,82 @@ def zemljevid_dom(jezik, b, p):
             continue
         od = min(v["datum"] for v in filmi)
         do = max(v.get("datum_do") or v["datum"] for v in filmi)
-        kartice = "".join(kartica_html(v, opis_vloga(v, jezik, media), f'{p["pot_vlogi"]}#{v["oznaka"]}', izberi=False) for v in filmi)
+        kartice = "".join(kartica_html(v, opis_vloga(v, jezik, media), pot_ogleda(p, v["oznaka"], jezik), izberi=False) for v in filmi)
         seznam.append(dict(ime=filmi[0]["kraj"][jezik].split(",")[0].strip(), lon=k["lon"], lat=k["lat"], stran=k.get("stran"),
                            od=od, opis=f"{mnozina(len(filmi), jezik, 'film')} · {obdobje(od, do, jezik)}", kartice=kartice))
     seznam.sort(key=lambda k: k["od"], reverse=True)
     podatki = {"kraji": seznam, "besedila": {"kolescek": b["zemljevid_namig_kolescek"]}}
     return {"zemljevid_json": json.dumps(podatki, ensure_ascii=False).replace("</", "<\\/")}
+
+
+def izhod_ogleda(oznaka, jezik):
+    return f"{'sl/' if jezik == 'sl' else ''}vlogi/{oznaka}/index.html"
+
+
+def pot_ogleda(p, oznaka, jezik):
+    """Relativna povezava s te strani na stran ogleda vloga."""
+    if p["koren"] == "/":  # stran 404: absolutne poti
+        return "/" + izhod_ogleda(oznaka, jezik).removesuffix("index.html")
+    return relmapa(p["_ta"], izhod_ogleda(oznaka, jezik), "./")
+
+
+MESECI_DOLGI = {"sl": ["januarja", "februarja", "marca", "aprila", "maja", "junija", "julija", "avgusta",
+                       "septembra", "oktobra", "novembra", "decembra"],
+                "en": ["January", "February", "March", "April", "May", "June", "July", "August",
+                       "September", "October", "November", "December"]}
+
+
+def opis_ogleda(v, jezik):
+    """En stavek pod naslovom: kraj in kdaj je posneto (brez vrstice metapodatkov)."""
+    M = MESECI_DOLGI[jezik]
+    l1, m1, d1 = map(int, v["datum"].split("-"))
+    do = v.get("datum_do")
+    kraj = v["kraj"][jezik]
+    if jezik == "sl":
+        if not do or do == v["datum"]:
+            return f"{kraj}. Posneto {d1}. {M[m1 - 1]} {l1}."
+        l2, m2, d2 = map(int, do.split("-"))
+        zacetek = f"{d1}. {M[m1 - 1]}" + (f" {l1}" if l1 != l2 else "")
+        return f"{kraj}. Posneto od {zacetek} do {d2}. {M[m2 - 1]} {l2}."
+    if not do or do == v["datum"]:
+        return f"{kraj}. Filmed on {d1} {M[m1 - 1]} {l1}."
+    l2, m2, d2 = map(int, do.split("-"))
+    zacetek = f"{d1} {M[m1 - 1]}" + (f" {l1}" if l1 != l2 else "")
+    return f"{kraj}. Filmed {zacetek} – {d2} {M[m2 - 1]} {l2}."
+
+
+def naprej_vlogi(v, vlogi, koliko=12):
+    """Kaj gledati naprej: naslednji dnevi istega potovanja, nato prejšnji,
+    nato druga potovanja (najnovejša prva)."""
+    isti = sorted((x for x in vlogi if x["kraj"]["en"] == v["kraj"]["en"]), key=lambda x: (x["datum"], x["oznaka"]))
+    i = next(k for k, x in enumerate(isti) if x["oznaka"] == v["oznaka"])
+    drugi = [x for x in vlogi if x["kraj"]["en"] != v["kraj"]["en"]]
+    return (isti[i + 1:] + isti[:i][::-1] + drugi)[:koliko]
+
+
+def ogled_stran(oznaka, jezik, b, p):
+    """Vrednosti za stran ogleda enega vloga (predloga-ogled.html)."""
+    vlogi = vlogi_podatki()
+    v = next(x for x in vlogi if x["oznaka"] == oznaka)
+    media = p["koren"] + "media/vlogi/"
+    o = opis_vloga(v, jezik, media)
+    opis = opis_ogleda(v, jezik)
+    naprej = "".join(kartica_html(x, opis_vloga(x, jezik, media), pot_ogleda(p, x["oznaka"], jezik), izberi=False, vrsta=True)
+                     for x in naprej_vlogi(v, vlogi))
+    return {
+        "ogled_naslov_strani": html.escape(f"{o['naslov']} — Wayfare Studio"),
+        "ogled_opis_meta": html.escape(opis),
+        "ogled_naslov": html.escape(o["naslov"]),
+        "ogled_opis": html.escape(opis),
+        "ogled_slika": o["slika"],
+        "ogled_youtube_id": o["youtube"],
+        "ogled_oznaka": oznaka,
+        "ogled_pokoncno": "true" if o["pokoncno"] else "false",
+        "ogled_trajanje": o["trajanje"],
+        "ogled_poglavja": poglavja_html(o["poglavja"]),
+        "ogled_poglavja_skrito": "" if o["poglavja"] else "hidden",
+        "ogled_naprej_seznam": naprej,
+    }
 
 
 def poglavja_html(poglavja):
@@ -355,12 +427,12 @@ def opis_vloga(v, jezik, media):
     )
 
 
-def kartica_html(v, o, href, izberi=True):
+def kartica_html(v, o, href, izberi=True, vrsta=False):
     """Kartica filma: naslovnica, nem predogled za kazalec, trajanje, naslov.
     Z `izberi` klik na zavihku Vlogi film naloži v predvajalnik (vlogi.js);
     na domači strani povezava pelje na zavihek."""
     return (
-        f'<li class="kartica{" kartica-pokoncna" if o["pokoncno"] else ""}" data-vlog="{o["oznaka"]}">'
+        f'<li class="kartica{" kartica-pokoncna" if o["pokoncno"] else ""}{" kartica-vrsta" if vrsta else ""}" data-vlog="{o["oznaka"]}">'
         f'<a class="kartica-povezava" href="{href}"{" data-izberi" if izberi else ""} aria-label="{html.escape(o["naslov"])}, {o["trajanje"]}">'
         f'<span class="kartica-slika">'
         + (f'<img class="kartica-ozadje" src="{o["slika"]}" alt="" aria-hidden="true" loading="lazy" decoding="async">' if o["pokoncno"] else "") +
@@ -375,14 +447,14 @@ def vlogi_dom(jezik, p, koliko=3):
     """Domača stran: najnovejši filmi s povezavo na zavihek Vlogi."""
     vlogi = vlogi_podatki()
     media = p["koren"] + "media/vlogi/"
-    kartice = [kartica_html(v, opis_vloga(v, jezik, media), f'{p["pot_vlogi"]}#{v["oznaka"]}', izberi=False)
+    kartice = [kartica_html(v, opis_vloga(v, jezik, media), pot_ogleda(p, v["oznaka"], jezik), izberi=False)
                for v in vlogi[:koliko]]
     return {"dom_kartice": "".join(kartice), "st_filmov": mnozina(len(vlogi), jezik, "film")}
 
 
 def vlogi_stran(jezik, b, p):
-    """Vrednosti za predlogo zavihka Vlogi: prvi film v predvajalniku, skupine po
-    krajih, podatki za skript in številke v uvodu."""
+    """Vrednosti za predlogo zavihka Vlogi: najnovejši film izpostavljen,
+    spodaj skupine po krajih. Vsaka kartica vodi na stran ogleda."""
     vlogi = vlogi_podatki()
     media = p["koren"] + "media/vlogi/"
     opisi = [opis_vloga(v, jezik, media) for v in vlogi]
@@ -393,34 +465,23 @@ def vlogi_stran(jezik, b, p):
         skupine.setdefault(o["kraj"], []).append((v, o))
     deli = []
     for i, (kraj, filmi) in enumerate(skupine.items(), 1):
-        kartice = [kartica_html(v, o, o["povezava"]) for v, o in filmi]
+        kartice = [kartica_html(v, o, pot_ogleda(p, v["oznaka"], jezik), izberi=False) for v, o in filmi]
         deli.append(
             f'<section class="skupina" aria-labelledby="skupina-{i}">'
             f'<h3 id="skupina-{i}" class="serif">{html.escape(kraj.split(",")[0])}</h3>'
             f'<ul class="kartice">{"".join(kartice)}</ul></section>'
         )
-
-    prvi = opisi[0]
-    podatki = {"vlogi": opisi, "besedila": {"zdaj": b["vlogi_zdaj"]}}
-    okvir = bool(prvi["youtube"])
+    prvi, v0 = opisi[0], vlogi[0]
     return {
         "skupine": "\n      ".join(deli),
-        "vlogi_json": json.dumps(podatki, ensure_ascii=False).replace("</", "<\\/"),
         "st_filmov": mnozina(len(vlogi), jezik, "film"),
         "st_potovanj": mnozina(len(skupine), jezik, "potovanje"),
         "og_slika": prvi["slika"],
         "prvi_naslov": html.escape(prvi["naslov"]),
+        "prvi_opis": html.escape(opis_ogleda(v0, jezik)),
         "prvi_slika": prvi["slika"],
-        "prvi_1080": prvi["v1080"],
-        "prvi_720": prvi["v720"],
-        "prvi_pokoncno": "true" if prvi["pokoncno"] else "false",
-        # prvi film je v predvajalniku že brez JS: okvir YouTuba ali <video>
-        "prvi_nacin": "youtube" if okvir else "video",
-        "prvi_video_skrito": " hidden" if okvir else "",
-        "prvi_okvir_src": f' src="{prvi["okvir"]}"' if okvir else "",
-        "prvi_okvir_skrito": "" if okvir else " hidden",
-        "prvi_poglavja": poglavja_html(prvi["poglavja"]),
-        "prvi_poglavja_skrito": "" if prvi["poglavja"] else "hidden",
+        "prvi_trajanje": prvi["trajanje"],
+        "prvi_pot": pot_ogleda(p, prvi["oznaka"], jezik),
     }
 
 
@@ -518,6 +579,9 @@ def main():
             for ime in ("glava", "noga", "obvestilo", "prijava")}
     paket = prenos()
     okvirji = any(v.get("youtube") for v in vlogi_podatki())
+    for v in vlogi_podatki():
+        STRANI[f"ogled:{v['oznaka']}"] = dict(predloga="predloga-ogled.html",
+                                               izhod={j: izhod_ogleda(v["oznaka"], j) for j in ("en", "sl")})
     vse_zgoscene, izhodi = set(), []
     for stran, s in STRANI.items():
         predloga = open(os.path.join(TU, s["predloga"]), encoding="utf-8").read()
@@ -526,6 +590,8 @@ def main():
             b = {**besedila[jezik], **{k: v for k, v in p.items() if not k.startswith("_")}}
             if stran == "vlogi":
                 b.update(vlogi_stran(jezik, b, p))
+            elif stran.startswith("ogled:"):
+                b.update(ogled_stran(stran.split(":", 1)[1], jezik, b, p))
             elif stran == "dom":
                 b.update(vlogi_dom(jezik, p))
                 b.update(zemljevid_dom(jezik, b, p))
@@ -552,7 +618,7 @@ def main():
                 html_ = html_.replace("{{" + kljuc + "}}", paket[kljuc])
             zgoscene = zgoscene_skript(html_)
             vse_zgoscene |= zgoscene
-            html_ = html_.replace("{{csp}}", csp(zgoscene, okvirji and stran == "vlogi"))
+            html_ = html_.replace("{{csp}}", csp(zgoscene, okvirji and stran.startswith("ogled:")))
             manjka = sorted(set(re.findall(r"\{\{(\w+)\}\}", html_)))
             if manjka:
                 raise SystemExit(f"{stran}/{jezik}: manjkajo besedila za {manjka}")
@@ -560,7 +626,9 @@ def main():
             pot.parent.mkdir(parents=True, exist_ok=True)
             pot.write_text(html_, encoding="utf-8")
             izhodi.append(pot)
-            print(f"{stran}/{jezik}: {pot.relative_to(TU)}")
+            if not stran.startswith("ogled:"):
+                print(f"{stran}/{jezik}: {pot.relative_to(TU)}")
+    print(f"ogled: {sum(1 for s in STRANI if s.startswith('ogled:'))} vlogov × 2 jezika")
     if "--brez-objave" not in sys.argv:
         objavi(vse_zgoscene, izhodi, okvirji)
 

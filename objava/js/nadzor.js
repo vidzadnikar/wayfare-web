@@ -1,6 +1,7 @@
 // Nadzor strani (/nadzor): vse podatke da /api/nadzor/clani v enem klicu.
 // Dejanja: člani (/api/nadzor/clan), zadržana obvestila (/api/nadzor/obvestilo),
-// vlogi z YouTuba (/api/nadzor/youtube), novica (/api/nadzor/novica), vrsta
+// vlogi z YouTuba (/api/nadzor/youtube), komentarji (/api/komentarji/izbrisi),
+// novica (/api/nadzor/novica), vrsta
 // (/api/nadzor/vrsta) in nastavitve (/api/nadzor/nastavitve). Izvoz je
 // navadna povezava. Imena vlogov pridejo iz /vlogi/seznam.json.
 const koren = document.querySelector("[data-nadzor]");
@@ -173,7 +174,7 @@ function narisiYoutube() {
     const [oznaka, namig] = OPIS_STANJA[y.stanje] || [y.stanje, ""];
     const dejanja = el("td");
     if (y.stanje === "caka" || y.stanje === "napaka") dejanja.append(el("button", { type: "button", class: "tabela-gumb tabela-gumb-rdec", onclick: () => youtubeDejanje(y, "izbrisi") }, "Izbriši"));
-    if (y.stanje === "dodan" && y.oznaka) dejanja.append(el("a", { class: "tabela-gumb", href: `/sl/vlogi/#${y.oznaka}` }, "Poglej"));
+    if (y.stanje === "dodan" && y.oznaka) dejanja.append(el("a", { class: "tabela-gumb", href: `/sl/vlogi/${y.oznaka}/` }, "Poglej"));
     return el("tr", {},
       el("td", { class: "naslov" }, el("a", { href: `https://youtu.be/${y.id}`, rel: "noopener", target: "_blank" }, y.naslov_sl)),
       el("td", {}, y.kraj_sl),
@@ -260,6 +261,29 @@ function narisiOgledi() {
   if (!vrstice.length) $("[data-ogledi] tbody").append(prazno(6, "Ogledov še ni. Šteti se začnejo, ko nekdo predvaja film na strani."));
 }
 
+// ---------------------------------------------------------------- komentarji
+function narisiKomentarje() {
+  const vrstice = (stanje.komentarji || []).map((k) => el("tr", {},
+    el("td", { class: "naslov" }, el("a", { href: `/sl/vlogi/${k.oznaka}/#komentar-${k.id}` }, imeVloga(k.oznaka))),
+    el("td", {}, k.kdo),
+    el("td", { class: "naslov komentar-celica" }, (k.odgovor_na ? "↳ " : "") + k.besedilo),
+    el("td", {}, String(k.vseckov)),
+    el("td", {}, datum(k.ustvarjeno_at)),
+    el("td", {}, el("button", { type: "button", class: "tabela-gumb tabela-gumb-rdec", onclick: () => izbrisiKomentar(k) }, "Izbriši")),
+  ));
+  $("[data-komentarji] tbody").replaceChildren(...vrstice);
+  if (!vrstice.length) $("[data-komentarji] tbody").append(prazno(6, "Komentarjev še ni."));
+}
+
+async function izbrisiKomentar(k) {
+  if (!confirm(`Izbrišem komentar »${k.besedilo.slice(0, 80)}«${k.odgovor_na ? "" : " in vse odgovore nanj"}?`)) return;
+  try {
+    await klic("/api/komentarji/izbrisi", { id: k.id });
+    povej("Komentar je izbrisan.");
+    await nalozi();
+  } catch (e) { povej(e.message, true); }
+}
+
 // ---------------------------------------------------------------- obvestila
 function vrsticaObvestila(o) {
   let stanjeO = "poslano", razred = "";
@@ -283,6 +307,8 @@ const IMENA_NASTAVITEV = {
   youtube_kanal: "Javni videi s kanala na stran sami",
   prijave_odprte: "Prijave odprte za nove člane",
   obvesti_me_novi_clan: "Obvesti me ob novem članu",
+  komentarji_odprti: "Komentarji odprti",
+  obvesti_me_komentar: "Obvesti me ob novem komentarju",
   posta_dnevno: "Dnevna meja pošte",
   besedilo_vlog_sl: "Besedilo obvestila o vlogu (SL)",
   besedilo_vlog_en: "Besedilo obvestila o vlogu (EN)",
@@ -344,6 +370,7 @@ async function nalozi() {
   $("[data-clani] tbody").replaceChildren(...clani.map(vrsticaClana));
   if (!clani.length) $("[data-clani] tbody").append(prazno(11, "Še nihče."));
   narisiOgledi();
+  narisiKomentarje();
   $("[data-obvestila] tbody").replaceChildren(...obvestila.map(vrsticaObvestila));
   if (!obvestila.length) $("[data-obvestila] tbody").append(prazno(6, "Še nič."));
   if (!nastavitve.contains(document.activeElement)) narisiNastavitve();

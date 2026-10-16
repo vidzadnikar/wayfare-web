@@ -103,6 +103,16 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
     </div>
   </section>
 
+  <section class="nadzor-odsek" aria-labelledby="komentarji-naslov">
+    <h2 id="komentarji-naslov" class="serif">Komentarji</h2>
+    <div class="tabela-ovoj">
+      <table class="tabela" data-komentarji>
+        <thead><tr><th>Vlog</th><th>Kdo</th><th>Komentar</th><th>Všečkov</th><th>Kdaj</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
   <section class="nadzor-odsek" aria-labelledby="novica-naslov">
     <h2 id="novica-naslov" class="serif">Novica</h2>
     <form class="novica" data-novica>

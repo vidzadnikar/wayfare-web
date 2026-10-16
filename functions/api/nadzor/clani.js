@@ -11,7 +11,7 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
   const admin = await zahtevajAdmina(env, request);
   const db = env.DB;
   const pred14 = new Date(Date.now() - 13 * 86400e3).toISOString().slice(0, 10);
-  const [clani, obvestila, youtube, ogledi, poClanih, obiski] = await Promise.all([
+  const [clani, obvestila, youtube, ogledi, poClanih, obiski, komentarji] = await Promise.all([
     db.prepare(
       `SELECT c.id, c.email, c.ime, c.slika_url, c.vir, c.jezik, c.potrjen_at, c.odjavljen_at, c.blokiran, c.ustvarjen_at,
               c.zadnji_obisk_at, c.obiskov, c.zeli_vlogi, c.zeli_izdaje, c.zeli_novice,
@@ -34,11 +34,16 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
        FROM ogledi o JOIN clani c ON c.id = o.clan_id GROUP BY o.oznaka, c.id ORDER BY zadnji DESC LIMIT 300`,
     ).all(),
     db.prepare("SELECT dan, kljuc, stevilo FROM statistika WHERE dan >= ? ORDER BY dan").bind(pred14).all(),
+    db.prepare(
+      `SELECT k.id, k.oznaka, k.odgovor_na, k.besedilo, k.ustvarjeno_at, COALESCE(c.ime, c.email) AS kdo,
+              (SELECT COUNT(*) FROM komentarji_vsecki v WHERE v.komentar_id = k.id) AS vseckov
+       FROM komentarji k JOIN clani c ON c.id = k.clan_id ORDER BY k.ustvarjeno_at DESC LIMIT 50`,
+    ).all(),
   ]);
   return json({
     admin: { id: admin.id, email: admin.email },
     clani: clani.results, obvestila: obvestila.results, youtube: youtube.results,
-    ogledi: ogledi.results, ogledi_clanov: poClanih.results, obiski: obiski.results,
+    ogledi: ogledi.results, ogledi_clanov: poClanih.results, obiski: obiski.results, komentarji: komentarji.results,
     nastavitve: { vrednosti: await preberiNastavitve(db), opisi: Object.fromEntries(Object.entries(NASTAVITVE).map(([k, n]) => [k, { vrsta: n.vrsta, opis: n.opis, najmanj: n.najmanj, najvec: n.najvec }])) },
     vrsta: { caka: await stanjeVrste(db), dnevno: await dnevnoStanje(env, db) },
   });

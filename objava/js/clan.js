@@ -50,11 +50,17 @@ export function clan() {
     gumbPrijava.hidden = true;
     podrobnosti.hidden = false;
   }
+  // drugi deli strani (komentarji) izvejo za prijavo ali izpis prek dogodka
+  const javi = (c) => document.dispatchEvent(new CustomEvent("wayfare:clan", { detail: c }));
+  let prijavljen = null;
   async function osvezi() {
+    let c = null;
     try {
       const r = await fetch("/api/jaz", { headers: { Accept: "application/json" }, credentials: "same-origin" });
-      if (r.ok) prikaziClana(await r.json()); else prikaziGosta();
-    } catch (e) { prikaziGosta(); }
+      if (r.ok) c = await r.json();
+    } catch (e) { c = null; }
+    if (c) prikaziClana(c); else prikaziGosta();
+    if (!!c !== prijavljen) { prijavljen = !!c; javi(c); }
   }
   osvezi();
 
@@ -150,6 +156,8 @@ export function clan() {
         if (!r.ok) throw new Error();
         racun.close();
         prikaziGosta();
+        prijavljen = false;
+        javi(null);
         pokaziSporocilo("izbrisan");
       } catch (e) { povejRacun(racunObrazec.dataset.napaka, true); }
     });
@@ -159,6 +167,8 @@ export function clan() {
     try { await fetch("/api/izpis", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }); } catch (e) {}
     podrobnosti.open = false;
     prikaziGosta();
+    prijavljen = false;
+    javi(null);
     pokaziSporocilo("izpis");
   });
   document.addEventListener("click", (e) => { if (podrobnosti.open && !podrobnosti.contains(e.target)) podrobnosti.open = false; });

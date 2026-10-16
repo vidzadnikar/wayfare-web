@@ -9,6 +9,8 @@ export const NASTAVITVE = {
   youtube_kanal: { vrsta: "da_ne", privzeto: true, opis: "Stran sama doda javne videe s tvojega kanala, objavljene po vklopu. Neobjavljene vloge dodaš z obrazcem zgoraj." },
   prijave_odprte: { vrsta: "da_ne", privzeto: true, opis: "Novi obiskovalci se lahko prijavijo. Če je izklopljeno, se prijavijo le obstoječi člani." },
   obvesti_me_novi_clan: { vrsta: "da_ne", privzeto: true, opis: "Ko se prijavi nov član, dobiš e-pošto z njegovim imenom in naslovom." },
+  komentarji_odprti: { vrsta: "da_ne", privzeto: true, opis: "Prijavljeni člani lahko pišejo komentarje pod vlogi. Če je izklopljeno, obstoječi komentarji ostanejo vidni." },
+  obvesti_me_komentar: { vrsta: "da_ne", privzeto: true, opis: "Ko nekdo napiše komentar ali odgovor, dobiš e-pošto z besedilom in povezavo." },
   posta_dnevno: { vrsta: "stevilo", privzeto: 300, najmanj: 1, najvec: 300, opis: "Največ pošt na dan. Brevo brezplačno dovoli 300; kar je čez, gre naslednji dan." },
   besedilo_vlog_sl: { vrsta: "besedilo", privzeto: "Nov film s potovanja je na strani.", najvec: 300, opis: "Stavek v obvestilu o novem vlogu (slovensko)." },
   besedilo_vlog_en: { vrsta: "besedilo", privzeto: "A new travel film is up on the site.", najvec: 300, opis: "Stavek v obvestilu o novem vlogu (angleško)." },

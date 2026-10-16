@@ -233,3 +233,20 @@ dan objave na YouTubu, če ga v nadzoru ne vpišeš. Ko ga kdaj prevzameš v
 `VLOGI` v `vlogi/zberi.py` (z izvorom v ~/Video), dobi zanko in točen datum.
 `stran/prenos.json` hrani podatke o zadnjem paketu, da Action zgradi stran
 brez .dmg.
+
+## Stran ogleda in komentarji (od 16. 10. 2026)
+
+Vsak vlog ima svojo stran `vlogi/<oznaka>/` (in `sl/vlogi/<oznaka>/`), ki jo
+zgradi `stran/zgradi.py` iz `predloga-ogled.html`: velik predvajalnik (YouTube
+se naloži šele ob kliku), naslov, en stavek s krajem in datumom, Deli in
+Odpri na YouTubu, poglavja, komentarji in desno seznam Naprej (naslednji
+dnevi istega potovanja, nato druga potovanja). Zavihek Vlogi ima zgoraj
+najnovejši film, kartice povsod vodijo na strani ogleda; stare povezave
+`vlogi/#oznaka` preusmeri `js/vlogi.js`.
+
+Komentarji (`js/komentarji.js`, zaledje `functions/api/komentarji*`, tabeli
+`komentarji` in `komentarji_vsecki`, migracija 0003): bere vsak, piše le
+prijavljen član (ob prvem komentarju vpiše ime, če ga nima), odgovori en
+nivo globoko, všečki, urejanje in brisanje svojih, admin briše vse (tudi v
+nadzoru, razdelek Komentarji). Časi v besedilu (1:23) skočijo v film.
+Nastavitvi: »Komentarji odprti« in »Obvesti me ob novem komentarju«.

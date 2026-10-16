@@ -207,6 +207,22 @@ export function sestaviNoviClan({ clan, stranUrl }) {
   };
 }
 
+// Pošta adminu: nov komentar ali odgovor pod vlogom.
+export function sestaviKomentarAdminu({ ime, vlog, besedilo, odgovor, url, koren }) {
+  const naslov = odgovor ? "Nov odgovor." : "Nov komentar.";
+  const uvod = `${odgovor ? "Nov odgovor" : "Nov komentar"} pod vlogom »${vlog}«, piše ${ime || "član"}:`;
+  return {
+    zadeva: `${odgovor ? "Odgovor" : "Komentar"}: ${vlog}`,
+    html: ovoj({
+      jezik: "sl", koren: String(koren || "").replace(/\/$/, ""), naslov, predogled: besedilo.slice(0, 140),
+      odstavki: [pobegni(uvod), ...odstavkiIz(besedilo).map(odstavekHtml)],
+      gumb: { besedilo: "Odpri komentar", url },
+      noga: "To pošto dobiš, ker je v nadzoru vklopljeno »Obvesti me ob novem komentarju«.",
+    }),
+    besedilo: [naslov, "", uvod, "", besedilo, "", `Komentar: ${url}`].join("\n"),
+  };
+}
+
 // Odjavni žeton je podpis (ne zapis v bazi), zato povezava v stari pošti velja
 // vedno; z menjavo e-naslova ali SESSION_SECRET neha veljati.
 export const odjavaZeton = async (env, clan) => `${clan.id}.${await podpisi(env.SESSION_SECRET, `odjava:${clan.id}:${clan.email}`)}`;

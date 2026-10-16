@@ -65,7 +65,7 @@ def postavka_vloga(v):
             "sl": "Nov film s potovanja je na strani.",
             "en": "A new travel film is up on the site.",
         },
-        "url": {"sl": f"{STRAN_URL}/sl/vlogi/#{o}", "en": f"{STRAN_URL}/vlogi/#{o}"},
+        "url": {"sl": f"{STRAN_URL}/sl/vlogi/{o}/", "en": f"{STRAN_URL}/vlogi/{o}/"},
     }
 
 
