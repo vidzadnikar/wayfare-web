@@ -3,32 +3,38 @@
  "izdaje": [
   {
    "razlicica": "0.2.0",
-   "objavljeno": false,
-   "datum": null,
+   "objavljeno": true,
+   "datum": "2026-10-18",
    "sl": {
-    "uvod": "Claude je zdaj v aplikaciji, 3D pot pa je dobila prave modele in tvoje slike.",
+    "uvod": "Claude je zdaj v aplikaciji, tudi z naročnino Claude, 3D pot pa je dobila prave modele in tvoje slike.",
     "spremembe": [
      "Plošča Claude v studiu: poveš, kaj želiš, Claude uredi montažo z orodji aplikacije, vsak korak vrneš s ⌘Z.",
+     "Claude dela z naročnino Claude (Pro ali Max) prek Claude Code na računalniku, brez ključa API, ali s ključem API.",
      "Preprost način z jezikom brez žargona in enim gumbom za izvoz.",
-     "Prvi zagon brez trenja: posnetke povlečeš v okno ali jih uvoziš naravnost s kartice.",
+     "Prvi zagon brez trenja: na Macu svoje okno namesto zavihka v brskalniku, posnetke povlečeš vanj ali jih uvoziš naravnost s kartice.",
      "Izrez s sledenjem, umiritev tresočih posnetkov in iskanje po vsebini posnetkov.",
      "Objava naravnost na YouTube, TikTok in Instagram, potovanje po dnevih in spremljevalec na telefonu.",
      "3D pot s pravimi modeli vozil, kipi krajev in potmi po cestah, tirih in med letališči; mirna kamera, sence, let v loku in noč.",
      "3D pot s tvojimi slikami krajev in obrazi potnikov z imeni.",
-     "Pregled ne posvetli več noči in temnih prostorov, kadri si sledijo po krajevni uri."
+     "Pregled ne posvetli več noči in temnih prostorov, kadri si sledijo po krajevni uri.",
+     "Odziv iz aplikacije: v meniju ⋯ ali ob koncu izvoza poveš, kaj popraviti ali dodati.",
+     "Časovnica ob drsenju obdrži imena sledi, 3D pot ima zamegljeno steklo tudi v oknu na Macu."
     ]
    },
    "en": {
-    "uvod": "Claude now lives inside the app, and the 3D route got real models and your own photos.",
+    "uvod": "Claude now lives inside the app, also with your Claude subscription, and the 3D route got real models and your own photos.",
     "spremembe": [
      "Claude panel in the studio: say what you want, Claude edits with the app's own tools, and you undo any step with ⌘Z.",
+     "Claude works with your Claude subscription (Pro or Max) through Claude Code on your computer, no API key needed, or with an API key.",
      "Simple mode with plain language and a single export button.",
-     "Frictionless first run: drag clips into the window or import them straight from a card.",
+     "Frictionless first run: on the Mac its own window instead of a browser tab; drag clips into it or import them straight from a card.",
      "Tracking crop, stabilisation for shaky clips and search by what's in your clips.",
      "Publish straight to YouTube, TikTok and Instagram, trips organised by day, and a phone companion.",
      "3D route with real vehicle models, landmark statues and routes along roads, rail and between airports; a calm camera, shadows, arcing flights and night.",
      "3D route with your own place photos and travellers' faces with names.",
-     "Review no longer brightens night and dark interiors, and shots follow the local clock."
+     "Review no longer brightens night and dark interiors, and shots follow the local clock.",
+     "Feedback from the app: tell us what to fix or add from the ⋯ menu or when an export finishes.",
+     "The timeline keeps track names while you scroll, and the 3D route's frosted glass now works in the Mac window too."
     ]
    }
   },
