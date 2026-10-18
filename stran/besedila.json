@@ -279,7 +279,8 @@
   "novosti_github": "All files for this release on GitHub",
   "noga_novosti": "What’s new",
   "noga_odziv": "Feedback",
-  "zasebnost_analitika": "The site also counts page views with Cloudflare Web Analytics, without cookies and without identifying visitors: we only see totals (how many views, which pages, from which country), never who you are."
+  "zasebnost_analitika": "The site also counts page views with Cloudflare Web Analytics, without cookies and without identifying visitors: we only see totals (how many views, which pages, from which country), never who you are.",
+  "zemljevid_namig_dotik": "Spin with your finger, zoom with a pinch or the buttons. Tap a place to see its films."
  },
  "sl": {
   "lang": "sl",
@@ -523,7 +524,7 @@
   "hero_opomba_windows": "Zastonj, za 64-bitni Windows 10 ali novejši. Na voljo tudi za <a href=\"{{prenos_href}}\">macOS</a> in <a href=\"{{prenos_android_href}}\">Android</a>.",
   "hero_opomba_android": "Zastonj, za Android 8 ali novejši. Na voljo tudi za <a href=\"{{prenos_href}}\">macOS</a> in <a href=\"{{prenos_windows_href}}\">Windows</a>.",
   "hero_opomba_mobilno": "Wayfare Studio je za Mac, Windows in Android. Na iPhonu in iPadu si pošlji to stran in jo odpri na računalniku.",
-  "zid_naslov": "{{st_filmov}}.<br><em>Vsi zmontirani v Wayfaru.</em>",
+  "zid_naslov": "{{st_filmov}}.<br><em>Vsi zmontirani v&nbsp;Wayfaru.</em>",
   "zid_uvod": "{{st_potovanj}}, vse iz posnetkov s telefona. Klikni film in ga poglej.",
   "zid_ustavi": "Ustavi premikanje",
   "zid_nadaljuj": "Nadaljuj premikanje",
@@ -561,6 +562,7 @@
   "novosti_github": "Vse datoteke te različice na GitHubu",
   "noga_novosti": "Novosti",
   "noga_odziv": "Odziv",
-  "zasebnost_analitika": "Stran šteje oglede tudi s Cloudflare Web Analytics, brez piškotkov in brez prepoznavanja obiskovalcev: vidimo le skupne številke (koliko ogledov, katere strani, iz katere države), nikoli kdo si."
+  "zasebnost_analitika": "Stran šteje oglede tudi s Cloudflare Web Analytics, brez piškotkov in brez prepoznavanja obiskovalcev: vidimo le skupne številke (koliko ogledov, katere strani, iz katere države), nikoli kdo si.",
+  "zemljevid_namig_dotik": "Zavrti s prstom, približaj s ščipom ali z gumboma. Tapni kraj in pokažejo se filmi od tam."
  }
 }

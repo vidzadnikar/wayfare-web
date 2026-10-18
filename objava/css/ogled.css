@@ -57,7 +57,9 @@
 }
 
 /* -------------------------------------------------- naslov, stavek, dejanja, poglavja */
-.ogled-podatki { display: grid; gap: var(--s4); padding-top: var(--s6); justify-items: start; }
+.ogled-podatki { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s4); padding-top: var(--s6); justify-items: start; }
+/* poglavja čez vso širino stolpca, sicer bi jih justify-items: start razširil na vso dolžino in stran bi bila preširoka */
+.ogled-podatki > .poglavja { justify-self: stretch; min-width: 0; }
 .ogled-podatki h1 { font-size: clamp(36px, 3.6vw, 56px); line-height: 1.02; max-width: 22ch; }
 .ogled-opis { color: var(--muted); font-size: 17px; max-width: 60ch; }
 .ogled-dejanja { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s1); }

@@ -916,3 +916,21 @@ html:not(.js) .clan-mesto { display: none; }
 @keyframes uvod-gor { from { opacity: 0; transform: translateY(16px); } }
 @keyframes beseda-gor { from { transform: translateY(110%); } }
 @media (prefers-reduced-motion: reduce) { .uvod-css [data-uvod], .uvod-css [data-naslov-uvod] .beseda > span { animation: none; } }
+
+/* -------------------------------------------------- telefon (pregled 18. 10.) */
+@media (max-width: 640px) and (orientation: portrait) {
+  /* uvod: besedilo niže in tesneje, da ga 3D znak zgoraj ne prekrije */
+  .hero-besedilo { gap: var(--s4); padding-bottom: calc(var(--s6) + env(safe-area-inset-bottom, 0px)); }
+  .hero h1 { font-size: clamp(38px, 11.6vw, 52px); }
+  /* prenos: manj praznine pred nogo */
+  .cilj { padding-bottom: var(--s8); }
+}
+/* kino: manj praznega prostora nad in pod filmom (pri zmanjšanem gibanju je višina že samodejna) */
+@media (max-width: 640px) and (orientation: portrait) and (prefers-reduced-motion: no-preference) { .kino-pin { height: 78svh; } }
+/* odprt meni na telefonu zakrije vso stran, da pod njim ne viri vsebina */
+@media (max-width: 899px) {
+  .glava[data-meni] { height: 100svh; overflow-y: auto; }
+}
+/* namig ob globusu: za miško ali za prst */
+.samo-dotik { display: none; }
+@media (hover: none), (pointer: coarse) { .samo-miska { display: none; } .samo-dotik { display: inline; } }

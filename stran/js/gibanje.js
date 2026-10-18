@@ -76,9 +76,10 @@ export function besede(el) {
     const vozlisca = [...tmp.childNodes];
     for (const v of vozlisca) {
       const ovoj = v.nodeType === 1 ? v.cloneNode(false) : null;
-      for (const b of v.textContent.split(/(\s+)/)) {
+      // nedeljivi presledek (&nbsp;) drži besedi skupaj, zato ga ne deli
+      for (const b of v.textContent.split(/([^\S\u00a0]+)/)) {
         if (!b) continue;
-        if (/^\s+$/.test(b)) { el.appendChild(document.createTextNode(" ")); continue; }
+        if (/^[^\S\u00a0]+$/.test(b)) { el.appendChild(document.createTextNode(" ")); continue; }
         const zunaj = document.createElement("span");
         zunaj.className = "beseda";
         zunaj.setAttribute("aria-hidden", "true");
