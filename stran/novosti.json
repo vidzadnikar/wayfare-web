@@ -1,0 +1,59 @@
+{
+ "opomba": "Izdaje Wayfare Studia za stran Novosti (zgradi.py). Najnovejša na vrhu. Izdaja z \"objavljeno\": false je osnutek in je na strani ni; ob izdaji nastavi true in datum.",
+ "izdaje": [
+  {
+   "razlicica": "0.2.0",
+   "objavljeno": false,
+   "datum": null,
+   "sl": {
+    "uvod": "Claude je zdaj v aplikaciji, 3D pot pa je dobila prave modele in tvoje slike.",
+    "spremembe": [
+     "Plošča Claude v studiu: poveš, kaj želiš, Claude uredi montažo z orodji aplikacije, vsak korak vrneš s ⌘Z.",
+     "Preprost način z jezikom brez žargona in enim gumbom za izvoz.",
+     "Prvi zagon brez trenja: posnetke povlečeš v okno ali jih uvoziš naravnost s kartice.",
+     "Izrez s sledenjem, umiritev tresočih posnetkov in iskanje po vsebini posnetkov.",
+     "Objava naravnost na YouTube, TikTok in Instagram, potovanje po dnevih in spremljevalec na telefonu.",
+     "3D pot s pravimi modeli vozil, kipi krajev in potmi po cestah, tirih in med letališči; mirna kamera, sence, let v loku in noč.",
+     "3D pot s tvojimi slikami krajev in obrazi potnikov z imeni.",
+     "Pregled ne posvetli več noči in temnih prostorov, kadri si sledijo po krajevni uri."
+    ]
+   },
+   "en": {
+    "uvod": "Claude now lives inside the app, and the 3D route got real models and your own photos.",
+    "spremembe": [
+     "Claude panel in the studio: say what you want, Claude edits with the app's own tools, and you undo any step with ⌘Z.",
+     "Simple mode with plain language and a single export button.",
+     "Frictionless first run: drag clips into the window or import them straight from a card.",
+     "Tracking crop, stabilisation for shaky clips and search by what's in your clips.",
+     "Publish straight to YouTube, TikTok and Instagram, trips organised by day, and a phone companion.",
+     "3D route with real vehicle models, landmark statues and routes along roads, rail and between airports; a calm camera, shadows, arcing flights and night.",
+     "3D route with your own place photos and travellers' faces with names.",
+     "Review no longer brightens night and dark interiors, and shots follow the local clock."
+    ]
+   }
+  },
+  {
+   "razlicica": "0.1.0",
+   "objavljeno": true,
+   "datum": "2026-10-12",
+   "sl": {
+    "uvod": "Prva javna različica. Dan pozneje sta v isto izdajo prišla še Windows in Android.",
+    "spremembe": [
+     "Wayfare Studio za Mac z Apple silicon (macOS 12 ali novejši).",
+     "Različica za 64-bitni Windows 10 ali novejši z namestitvenim programom.",
+     "Različica za Android 8 ali novejši: studio z zavihki Montaža, Material in Lastnosti, predogled nad časovnico.",
+     "Na Androidu gre končan film naravnost v galerijo (Movies/Wayfare), deliš ga z gumbom Deli."
+    ]
+   },
+   "en": {
+    "uvod": "The first public release. A day later, Windows and Android joined the same release.",
+    "spremembe": [
+     "Wayfare Studio for Macs with Apple silicon (macOS 12 or later).",
+     "A version for 64-bit Windows 10 or later, with an installer.",
+     "A version for Android 8 or later: the studio with Edit, Media and Properties tabs and the preview above the timeline.",
+     "On Android the finished film goes straight to the gallery (Movies/Wayfare) and you share it with the Share button."
+    ]
+   }
+  }
+ ]
+}

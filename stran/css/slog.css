@@ -873,3 +873,18 @@ html:not(.js) .clan-mesto { display: none; }
 .naprava[data-priporoceno] .naprava-ime { color: var(--bg); }
 .naprava[data-priporoceno] .naprava-opis { color: #4a4c55; }
 @media (max-width: 760px) { .naprave { grid-template-columns: 1fr; } }
+
+/* -------------------------------------------------- novosti (izdaje aplikacije) */
+.novosti { max-width: 980px; }
+.izdaje { list-style: none; margin: var(--s5) 0 0; padding: 0; display: grid; }
+.izdaja { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 7fr); align-items: start; gap: var(--s4) var(--s7); padding: var(--s7) 0; border-top: 1px solid var(--border); }
+.izdaja-razlicica { font-size: clamp(40px, 5vw, 72px); font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: var(--s3); }
+.izdaja-zadnja .izdaja-razlicica::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 6px var(--accent-dim); }
+.izdaja-telo { display: grid; gap: var(--s4); align-content: start; }
+.izdaja-uvod { color: var(--fg); font-size: 18px; }
+.izdaja-spremembe { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--s3); }
+.izdaja-spremembe li { position: relative; padding-left: var(--s5); color: var(--muted); }
+.izdaja-spremembe li::before { content: ""; position: absolute; left: 2px; top: 0.7em; width: 6px; height: 6px; border-radius: 50%; background: var(--subtle); }
+.izdaja-povezava { justify-self: start; color: var(--fg); font-size: 15px; text-underline-offset: 3px; }
+.izdaja-povezava:hover { color: var(--accent); }
+@media (max-width: 760px) { .izdaja { grid-template-columns: 1fr; } }

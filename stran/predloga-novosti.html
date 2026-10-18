@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{novosti_naslov_strani}}</title>
+<meta name="description" content="{{novosti_opis}}">
+<link rel="alternate" hreflang="en" href="{{url_en}}">
+<link rel="alternate" hreflang="sl" href="{{url_sl}}">
+<meta property="og:image" content="{{koren}}media/promo-naslovna.jpg">
+<link rel="icon" href="{{koren}}media/logo.svg" type="image/svg+xml">
+<meta http-equiv="Content-Security-Policy" content="{{csp}}">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preload" href="{{koren}}pisave/instrument-sans-latin-11aa49.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{koren}}css/pisave.css">
+<link rel="stylesheet" href="{{koren}}css/slog.css">
+<script>document.documentElement.classList.add("js");{{preusmeritev}}</script>
+</head>
+<body>
+<!-- Ta datoteka je zgrajena iz predloga-novosti.html, deli/ in besedila.json (python3 zgradi.py). Ne urejaj je ročno. -->
+<div class="svet" aria-hidden="true">
+  <span class="svet-luc svet-luc-1" data-luc></span>
+  <span class="svet-luc svet-luc-2" data-luc></span>
+  <span class="svet-luc svet-luc-3" data-luc></span>
+  <span class="svet-kazalec" data-kazalec></span>
+</div>
+<a class="preskoci" href="#vsebina">{{preskoci}}</a>
+
+{{glava}}
+
+<main id="vsebina" class="besedilo-stran">
+  <article class="besedilo novosti" aria-labelledby="novosti-naslov">
+    <h1 id="novosti-naslov" class="serif" data-naslov-uvod>{{novosti_naslov}}</h1>
+    <p class="uvodnik" data-uvod>{{novosti_uvod}}</p>
+    <ol class="izdaje">{{izdaje}}</ol>
+  </article>
+</main>
+
+{{obvestilo}}
+{{prijava}}
+
+{{noga}}
+
+<!-- knjižnice so na lastnem strežniku (gsap 3.15.0, lenis 1.3.26), brez CDN -->
+<script src="{{koren}}js/knjiznice/gsap.min.js" defer></script>
+<script src="{{koren}}js/knjiznice/ScrollTrigger.min.js" defer></script>
+<script src="{{koren}}js/knjiznice/lenis.min.js" defer></script>
+<script type="module" src="{{koren}}js/besedilo.js"></script>
+</body>
+</html>

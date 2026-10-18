@@ -14,6 +14,13 @@
 <meta http-equiv="Content-Security-Policy" content="{{csp}}">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="preload" href="{{koren}}pisave/instrument-sans-latin-11aa49.woff2" as="font" type="font/woff2" crossorigin>
+<!-- import map mora biti pred vsakim nalaganjem modulov (tudi modulepreload) -->
+<script type="importmap">
+{ "imports": {
+  "three": "./{{koren}}js/knjiznice/three/three.module.min.js",
+  "three/addons/": "./{{koren}}js/knjiznice/three/addons/"
+} }
+</script>
 <link rel="stylesheet" href="{{koren}}css/pisave.css">
 <link rel="stylesheet" href="{{koren}}css/slog.css">
 <script>document.documentElement.classList.add("js");{{preusmeritev}}</script>
@@ -251,12 +258,6 @@
 <script src="{{koren}}js/knjiznice/gsap.min.js" defer></script>
 <script src="{{koren}}js/knjiznice/ScrollTrigger.min.js" defer></script>
 <script src="{{koren}}js/knjiznice/lenis.min.js" defer></script>
-<script type="importmap">
-{ "imports": {
-  "three": "./{{koren}}js/knjiznice/three/three.module.min.js",
-  "three/addons/": "./{{koren}}js/knjiznice/three/addons/"
-} }
-</script>
 <script type="module" src="{{koren}}js/glavno.js"></script>
 </body>
 </html>

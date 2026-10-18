@@ -42,6 +42,7 @@ STRANI = {
     "dom":   dict(predloga="predloga.html", izhod={"en": "index.html", "sl": "sl/index.html"}),
     "vlogi": dict(predloga="predloga-vlogi.html", izhod={"en": "vlogi/index.html", "sl": "sl/vlogi/index.html"}),
     "zasebnost": dict(predloga="predloga-zasebnost.html", izhod={"en": "zasebnost/index.html", "sl": "sl/zasebnost/index.html"}),
+    "novosti": dict(predloga="predloga-novosti.html", izhod={"en": "novosti/index.html", "sl": "sl/novosti/index.html"}),
     "napaka": dict(predloga="predloga-404.html", izhod={"en": "404.html", "sl": "sl/404.html"}),
 }
 
@@ -95,6 +96,13 @@ def trak(mesta):
 # piškotkov; z enablejsapi gumbi poglavij ukazujejo predvajalniku (vlogi.js).
 YOUTUBE = "https://www.youtube-nocookie.com"
 
+# Štetje obiskov s Cloudflare Web Analytics (brez piškotkov). Vklopi se v
+# nadzorni plošči Cloudflare Pages (projekt → Metrics → Web Analytics), ki
+# skript vstavi sam; tu mu CSP to dovoli in stran o zasebnosti to pove.
+ANALITIKA = False
+ANALITIKA_SKRIPT = "https://static.cloudflareinsights.com"
+ANALITIKA_POVEZAVA = "https://cloudflareinsights.com"
+
 
 def youtube_okvir(oznaka):
     return f"{YOUTUBE}/embed/{oznaka}?enablejsapi=1&rel=0&playsinline=1"
@@ -112,9 +120,9 @@ def csp(zgoscene, okvirji=False):
     skripte = " ".join(f"'sha256-{z}'" for z in sorted(zgoscene))
     okvir = YOUTUBE if okvirji else "'none'"
     return ("default-src 'self'; "
-            f"script-src 'self' 'wasm-unsafe-eval' {skripte}; "
+            f"script-src 'self' 'wasm-unsafe-eval' {skripte}{' ' + ANALITIKA_SKRIPT if ANALITIKA else ''}; "
             "style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; "
-            "media-src 'self'; font-src 'self'; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; "
+            f"media-src 'self'; font-src 'self'; connect-src 'self' blob:{' ' + ANALITIKA_POVEZAVA if ANALITIKA else ''}; object-src 'none'; base-uri 'self'; "
             f"form-action 'self'; frame-src {okvir}; worker-src 'none'; manifest-src 'self'")
 
 
@@ -233,14 +241,17 @@ def poti(stran, jezik):
     en, sl = STRANI[stran]["izhod"]["en"], STRANI[stran]["izhod"]["sl"]
     vlogi = STRANI["vlogi"]["izhod"][jezik]
     zasebnost = STRANI["zasebnost"]["izhod"][jezik]
+    novosti = STRANI["novosti"]["izhod"][jezik]
     if stran == "napaka":
         absolutna = lambda do: "/" + do.removesuffix("index.html")
         koren, pot_dom = "/", absolutna(dom)
         url_en, url_sl, pot_vlogi, pot_zasebnost = absolutna(en), absolutna(sl), absolutna(vlogi), absolutna(zasebnost)
+        pot_novosti = absolutna(novosti)
     else:
         koren, pot_dom = relmapa(ta, "index.html"), relmapa(ta, dom)
         url_en, url_sl = relmapa(ta, en, "./"), relmapa(ta, sl, "./")
         pot_vlogi, pot_zasebnost = relmapa(ta, vlogi, "./"), relmapa(ta, zasebnost, "./")
+        pot_novosti = relmapa(ta, novosti, "./")
     return {
         "lang": jezik,
         "koren": koren,
@@ -249,10 +260,12 @@ def poti(stran, jezik):
         "url_sl": url_sl,
         "pot_vlogi": pot_vlogi,
         "pot_zasebnost": pot_zasebnost,
+        "pot_novosti": pot_novosti,
         "en_aktiven": 'aria-current="page"' if jezik == "en" else "",
         "sl_aktiven": 'aria-current="page"' if jezik == "sl" else "",
         "vlogi_aktiven": ' aria-current="page"' if stran == "vlogi" or stran.startswith("ogled:") else "",
         "zasebnost_aktiven": ' aria-current="page"' if stran == "zasebnost" else "",
+        "novosti_aktiven": ' aria-current="page"' if stran == "novosti" else "",
         "_drug": drug,
         "_ta": ta,
     }
@@ -541,6 +554,30 @@ def vlogi_stran(jezik, b, p):
     }
 
 
+# ---------------------------------------------------------------- novosti
+
+def novosti_stran(jezik, b):
+    """Izdaje Wayfare Studia iz novosti.json, najnovejša na vrhu. Osnutek
+    (objavljeno: false) na strani ni. Datum je v stavku, ne v vrstici zase."""
+    izdaje = [i for i in json.load(open(Path(TU, "novosti.json"), encoding="utf-8"))["izdaje"] if i.get("objavljeno")]
+    M = MESECI_DOLGI[jezik]
+    deli = []
+    for n, i in enumerate(izdaje):
+        l, m, d = map(int, i["datum"].split("-"))
+        kdaj = f"Izšla {d}. {M[m - 1]} {l}." if jezik == "sl" else f"Released on {d} {M[m - 1]} {l}."
+        t = i[jezik]
+        spremembe = "".join(f"<li>{html.escape(x)}</li>" for x in t["spremembe"])
+        deli.append(
+            f'<li class="izdaja{" izdaja-zadnja" if n == 0 else ""}">'
+            f'<h2 class="serif izdaja-razlicica">{i["razlicica"]}</h2>'
+            f'<div class="izdaja-telo"><p class="izdaja-uvod">{kdaj} {html.escape(t["uvod"])}</p>'
+            f'<ul class="izdaja-spremembe">{spremembe}</ul>'
+            f'<a class="izdaja-povezava" href="https://github.com/vidzadnikar/wayfare-web/releases/tag/v{i["razlicica"]}">{b["novosti_github"]}</a>'
+            f'</div></li>'
+        )
+    return {"izdaje": "".join(deli)}
+
+
 # ---------------------------------------------------------------- deljenje in iskalniki
 
 def url_strani(izhod):
@@ -550,6 +587,28 @@ def url_strani(izhod):
 def iso_trajanje(sekunde):
     s = int(round(sekunde))
     return f"PT{s // 60}M{s % 60}S"
+
+
+def moduli(ime, videni=None):
+    """Statični uvozi modula v js/ (rekurzivno), za <link rel="modulepreload">:
+    brskalnik vse module naloži hkrati, namesto da jih odkriva enega za drugim."""
+    videni = videni if videni is not None else []
+    if ime in videni:
+        return videni
+    videni.append(ime)
+    besedilo = Path(TU, "js", ime).read_text(encoding="utf-8")
+    for m in re.findall(r'^import\s[^;]*?from\s+"\./([\w-]+\.js)"|^import\s+"\./([\w-]+\.js)"', besedilo, re.M):
+        moduli(m[0] or m[1], videni)
+    return videni
+
+
+def predhodno_moduli(html_):
+    m = re.search(r'<script type="module" src="([^"]*)js/([\w-]+\.js)"></script>', html_)
+    if not m:
+        return html_
+    povezave = "\n".join(f'<link rel="modulepreload" href="{m.group(1)}js/{x}">' for x in moduli(m.group(2)))
+    slog = re.findall(r'<link rel="stylesheet"[^>]*>', html_)[-1]
+    return html_.replace(slog, slog + "\n" + povezave, 1)
 
 
 def meta(html_, stran, jezik, b):
@@ -734,6 +793,9 @@ def objavi(zgoscene, strani, okvirji):
     (objava / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /nadzor\n\nSitemap: {STRAN_URL}/sitemap.xml\n")
     (objava / "manifest.webmanifest").write_text(json.dumps(MANIFEST, ensure_ascii=False, indent=1))
     shutil.copy2(Path(TU, "favicon.ico"), objava / "favicon.ico")
+    # datoteka, s katero Google Search Console preveri lastništvo strani
+    for f in Path(TU).glob("google*.html"):
+        shutil.copy2(f, objava / f.name)
     # imena vlogov za nadzor (ogledi): le oznaka in slovenski naslov
     (objava / "vlogi").mkdir(parents=True, exist_ok=True)
     (objava / "vlogi" / "seznam.json").write_text(json.dumps(
@@ -773,10 +835,14 @@ def main():
         for jezik in ("en", "sl"):
             p = poti(stran, jezik)
             b = {**besedila[jezik], **{k: v for k, v in p.items() if not k.startswith("_")}}
+            if ANALITIKA:
+                b["zasebnost_6_besedilo"] += " " + b["zasebnost_analitika"]
             if stran == "vlogi":
                 b.update(vlogi_stran(jezik, b, p))
             elif stran.startswith("ogled:"):
                 b.update(ogled_stran(stran.split(":", 1)[1], jezik, b, p))
+            elif stran == "novosti":
+                b.update(novosti_stran(jezik, b))
             elif stran == "dom":
                 b.update(vlogi_dom(jezik, p))
                 b.update(zemljevid_dom(jezik, b, p))
@@ -802,6 +868,7 @@ def main():
                           "prenos_android_ime", "prenos_android_velikost", "prenos_windows_mb", "prenos_android_mb"):
                 html_ = html_.replace("{{" + kljuc + "}}", paket[kljuc])
             html_ = meta(html_, stran, jezik, b)
+            html_ = predhodno_moduli(html_)
             zgoscene = zgoscene_skript(html_)
             vse_zgoscene |= zgoscene
             html_ = html_.replace("{{csp}}", csp(zgoscene, okvirji and stran.startswith("ogled:")))

@@ -82,3 +82,4 @@ a.tabela-gumb { text-decoration: none; display: inline-block; }
 .nadzor form .nadzor-akcije { justify-content: flex-start; }
 .nadzor-odsek[hidden] { display: none; }
 .tabela td.komentar-celica { max-width: 420px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.nadzor-stran .glava .nadzor-kdo { grid-column: -2; justify-self: end; }

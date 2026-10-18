@@ -26,7 +26,7 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
 <body class="zaledje nadzor-stran">
 <div class="svet" aria-hidden="true"><span class="svet-luc svet-luc-1"></span><span class="svet-luc svet-luc-2"></span><span class="svet-luc svet-luc-3"></span></div>
 <header class="glava">
-  <a class="znamka" href="/sl/"><img src="/media/logo.svg" alt="" width="26" height="26"><span><b>wayfare</b> studio</span></a>
+  <a class="znamka" href="/sl/"><img src="/media/logo.svg" alt="" width="26" height="26"><span>Wayfare</span></a>
   <span class="nadzor-kdo drobno">${pobegni(clan.email)}</span>
 </header>
 <main id="vsebina" class="nadzor" data-nadzor>

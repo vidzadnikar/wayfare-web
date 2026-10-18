@@ -24,6 +24,14 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://wayfarestudio.pages.dev/zasebnost/"/>
     <xhtml:link rel="alternate" hreflang="sl" href="https://wayfarestudio.pages.dev/sl/zasebnost/"/>
   </url>
+  <url><loc>https://wayfarestudio.pages.dev/novosti/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://wayfarestudio.pages.dev/novosti/"/>
+    <xhtml:link rel="alternate" hreflang="sl" href="https://wayfarestudio.pages.dev/sl/novosti/"/>
+  </url>
+  <url><loc>https://wayfarestudio.pages.dev/sl/novosti/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://wayfarestudio.pages.dev/novosti/"/>
+    <xhtml:link rel="alternate" hreflang="sl" href="https://wayfarestudio.pages.dev/sl/novosti/"/>
+  </url>
   <url><loc>https://wayfarestudio.pages.dev/vlogi/milano-4/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://wayfarestudio.pages.dev/vlogi/milano-4/"/>
     <xhtml:link rel="alternate" hreflang="sl" href="https://wayfarestudio.pages.dev/sl/vlogi/milano-4/"/>

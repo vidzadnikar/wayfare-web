@@ -244,7 +244,14 @@
   "naprava_windows": "64-bit Windows 10 or later, {{prenos_windows_mb}}",
   "naprava_android": "Android 8 or later, {{prenos_android_mb}}",
   "nav_vprasanja": "FAQ",
-  "nav_meni": "Menu"
+  "nav_meni": "Menu",
+  "novosti_naslov_strani": "Wayfare Studio — What’s new",
+  "novosti_opis": "Every Wayfare Studio release and what it brings.",
+  "novosti_naslov": "What’s <em>new.</em>",
+  "novosti_uvod": "Every Wayfare Studio release and what it brings. The newest is at the top; all files are on GitHub.",
+  "novosti_github": "All files for this release on GitHub",
+  "noga_novosti": "What’s new",
+  "zasebnost_analitika": "The site also counts page views with Cloudflare Web Analytics, without cookies and without identifying visitors: we only see totals (how many views, which pages, from which country), never who you are."
  },
  "sl": {
   "lang": "sl",
@@ -491,6 +498,13 @@
   "naprava_windows": "64-bitni Windows 10 ali novejši, {{prenos_windows_mb}}",
   "naprava_android": "Android 8 ali novejši, {{prenos_android_mb}}",
   "nav_vprasanja": "Vprašanja",
-  "nav_meni": "Meni"
+  "nav_meni": "Meni",
+  "novosti_naslov_strani": "Wayfare Studio — Novosti",
+  "novosti_opis": "Vsaka različica Wayfare Studia in kaj prinese.",
+  "novosti_naslov": "Kaj je <em>novega.</em>",
+  "novosti_uvod": "Vsaka različica Wayfare Studia in kaj prinese. Najnovejša je na vrhu, vse datoteke so na GitHubu.",
+  "novosti_github": "Vse datoteke te različice na GitHubu",
+  "noga_novosti": "Novosti",
+  "zasebnost_analitika": "Stran šteje oglede tudi s Cloudflare Web Analytics, brez piškotkov in brez prepoznavanja obiskovalcev: vidimo le skupne številke (koliko ogledov, katere strani, iz katere države), nikoli kdo si."
  }
 }

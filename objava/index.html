@@ -27,8 +27,22 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-C/HbM9P81CJhKmgqex7kHe8zaADx8+aja4CCTHcaopE=' 'sha256-o0Yc4uDke0rpRa0nkjTA2HTCozckGKg0LV96ywCE6e8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; media-src 'self'; font-src 'self'; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; worker-src 'none'; manifest-src 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="preload" href="pisave/instrument-sans-latin-11aa49.woff2" as="font" type="font/woff2" crossorigin>
+<!-- import map mora biti pred vsakim nalaganjem modulov (tudi modulepreload) -->
+<script type="importmap">
+{ "imports": {
+  "three": "./js/knjiznice/three/three.module.min.js",
+  "three/addons/": "./js/knjiznice/three/addons/"
+} }
+</script>
 <link rel="stylesheet" href="css/pisave.css">
 <link rel="stylesheet" href="css/slog.css">
+<link rel="modulepreload" href="js/glavno.js">
+<link rel="modulepreload" href="js/gibanje.js">
+<link rel="modulepreload" href="js/sestavljanje.js">
+<link rel="modulepreload" href="js/prenos.js">
+<link rel="modulepreload" href="js/kartice.js">
+<link rel="modulepreload" href="js/zid.js">
+<link rel="modulepreload" href="js/clan.js">
 <script>document.documentElement.classList.add("js");try{var j=localStorage.getItem("wayfare-jezik");if(!j&&/^sl\b/i.test(navigator.language||""))j="sl";if(j==="sl")location.replace("sl/"+location.hash);}catch(e){}</script>
 </head>
 <body>
@@ -424,6 +438,7 @@
     <li><a href="vlogi/">Vlogs</a></li>
     <li><a href="#claude">Claude</a></li>
     <li><a href="#vprasanja">FAQ</a></li>
+    <li><a href="novosti/">What’s new</a></li>
     <li><a href="zasebnost/">Privacy</a></li>
   </ul></nav>
   <p class="drobno">Map data © OpenStreetMap contributors · Natural Earth · Contains modified Copernicus Sentinel data (2021). City footage: Pexels. App footage from the maker’s own trips.</p>
@@ -434,12 +449,6 @@
 <script src="js/knjiznice/gsap.min.js" defer></script>
 <script src="js/knjiznice/ScrollTrigger.min.js" defer></script>
 <script src="js/knjiznice/lenis.min.js" defer></script>
-<script type="importmap">
-{ "imports": {
-  "three": "./js/knjiznice/three/three.module.min.js",
-  "three/addons/": "./js/knjiznice/three/addons/"
-} }
-</script>
 <script type="module" src="js/glavno.js"></script>
 </body>
 </html>

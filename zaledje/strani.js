@@ -78,7 +78,7 @@ export function stran({ jezik = "en", naslov, besedilo = "", telo = "", naslovSt
 </head>
 <body class="zaledje">
 <div class="svet" aria-hidden="true"><span class="svet-luc svet-luc-1"></span><span class="svet-luc svet-luc-2"></span><span class="svet-luc svet-luc-3"></span></div>
-<header class="glava"><a class="znamka" href="${jezik === "sl" ? "/sl/" : "/"}"><img src="/media/logo.svg" alt="" width="26" height="26"><span><b>wayfare</b> studio</span></a></header>
+<header class="glava"><a class="znamka" href="${jezik === "sl" ? "/sl/" : "/"}"><img src="/media/logo.svg" alt="" width="26" height="26"><span>Wayfare</span></a></header>
 <main id="vsebina" class="napaka-stran">
   <section class="napaka">
     <h1 class="serif">${naslov}</h1>
