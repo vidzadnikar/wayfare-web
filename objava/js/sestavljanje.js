@@ -52,7 +52,7 @@ const OZKO = {
 
 // sredini zvočne sledi A1 in okna z glasbo; sled V1
 const A1 = { x: 0.5315, y: 0.8755 };
-const GLASBA = { x: 0.19219, y: 0.16481, w: 0.61458, h: 1436 / 2160 };
+const GLASBA = { x: 0.19219, y: 0.16481, w: 2364 / 3840, h: 1446 / 2160 };
 const V1 = { y: 0.784, h: 0.047 };
 const TIHO = 0.42;
 
