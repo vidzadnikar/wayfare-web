@@ -75,7 +75,7 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
 
   <section class="nadzor-odsek" aria-labelledby="youtube-naslov">
     <h2 id="youtube-naslov" class="serif">Nov vlog z YouTuba</h2>
-    <p class="nadzor-opis">Prilepi povezavo do videa. Naslov in kraj se izpolnita sama iz naslova na YouTubu. Ko klikneš Dodaj, je vlog v nekaj minutah na strani in člani dobijo obvestilo.</p>
+    <p class="nadzor-opis">Prilepi povezavo do videa. Naslov in kraj se izpolnita sama iz naslova na YouTubu. Ko <span class="samo-miska">klikneš</span><span class="samo-dotik">tapneš</span> Dodaj, je vlog v nekaj minutah na strani in člani dobijo obvestilo.</p>
     <form class="novica" data-youtube>
       <div class="novica-mreza">
         <label class="novica-cela">Povezava YouTube<input name="url" type="url" required placeholder="https://youtu.be/…" autocomplete="off" data-youtube-url></label>
