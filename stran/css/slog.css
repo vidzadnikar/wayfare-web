@@ -323,10 +323,15 @@ p { text-wrap: pretty; }
 .gibanje .poglavje[data-stran="sredina"] { justify-content: center; align-items: flex-start; padding-top: calc(72px + var(--s6)); text-align: center; }
 .gibanje .poglavje[data-stran="sredina"] .napis { justify-items: center; max-width: 720px; width: auto; }
 .gibanje .napis { width: min(30vw, 420px); text-shadow: 0 2px 24px rgba(11, 12, 15, 0.8); isolation: isolate; }
-/* mehka temna senca pod napisom: svet teče naprej pod njim, besedilo ostane berljivo */
+/* mehka temna senca pod napisom: svet teče naprej pod njim, besedilo ostane
+   berljivo. Rahla zameglitev umiri ikone okna pod drobnim besedilom; maska
+   senco in zameglitev proti robu enakomerno izniči. */
 .gibanje .napis::before {
   content: ""; position: absolute; inset: -45% -35%; z-index: -1; pointer-events: none;
-  background: radial-gradient(closest-side, rgba(11, 12, 15, 0.9), rgba(11, 12, 15, 0.65) 55%, rgba(11, 12, 15, 0));
+  background: rgba(11, 12, 15, 0.9);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  -webkit-mask-image: radial-gradient(closest-side, #000 52%, rgba(0, 0, 0, 0.7) 72%, transparent);
+  mask-image: radial-gradient(closest-side, #000 52%, rgba(0, 0, 0, 0.7) 72%, transparent);
 }
 .gibanje .napis-pin {
   display: block; position: absolute; left: -30px; top: 0.55em;
