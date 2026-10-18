@@ -71,6 +71,8 @@ body::after {
 }
 @media (prefers-reduced-transparency: reduce) { body::after { display: none; } }
 img, video { display: block; max-width: 100%; height: auto; }
+/* polja in gumbi v pisavi strani (brskalnik jim sicer da sistemsko) */
+button, input, textarea, select { font: inherit; color: inherit; letter-spacing: inherit; }
 a { color: inherit; }
 h1, h2, h3, p, figure { margin: 0; }
 h1, h2 { text-wrap: balance; }
