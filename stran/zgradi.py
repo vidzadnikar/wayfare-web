@@ -27,8 +27,11 @@ import html
 import json
 import os
 import re
+import shutil
+import subprocess
 import sys
 from pathlib import Path
+from urllib.parse import urljoin
 
 TU = os.path.dirname(os.path.abspath(__file__))
 
@@ -55,7 +58,11 @@ SKILL_UKAZ = ["npx skills add", "vidzadnikar/wayfare-skills", "--skill vlog", "-
 # Mesta v traku med herojem in aplikacijo, v domačem jeziku (enako v obeh
 # različicah strani). Isti kraji so v videu v ozadju heroja.
 MESTA = ["Lisboa", "Paris", "Praha", "Venezia", "Ljubljana", "Amsterdam", "Roma", "Barcelona", "Wien", "Madrid", "Milano"]
-HERO_VIDEO = "hero-mesta"  # media/<ime>-1080.mp4, <ime>-720.mp4, <ime>.jpg
+HERO_VIDEO = "hero-mesta"  # media/<ime>-1080.mp4, <ime>-720.mp4, <ime>-pokoncno.mp4 (telefon), <ime>.jpg
+
+# Naslov objavljene strani: iz njega so absolutne povezave za deljenje (og:image,
+# og:url), canonical, hreflang in zemljevid strani. WAYFARE_STRAN_URL ga zamenja.
+STRAN_URL = os.environ.get("WAYFARE_STRAN_URL", "https://wayfarestudio.pages.dev").rstrip("/")
 
 
 # Razglednice ob cilju: sličice iz posnetkov v videu heroja (media/razglednice/)
@@ -105,7 +112,7 @@ def csp(zgoscene, okvirji=False):
     skripte = " ".join(f"'sha256-{z}'" for z in sorted(zgoscene))
     okvir = YOUTUBE if okvirji else "'none'"
     return ("default-src 'self'; "
-            f"script-src 'self' {skripte}; "
+            f"script-src 'self' 'wasm-unsafe-eval' {skripte}; "
             "style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; "
             "media-src 'self'; font-src 'self'; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; "
             f"form-action 'self'; frame-src {okvir}; worker-src 'none'; manifest-src 'self'")
@@ -351,7 +358,15 @@ MESECI_DOLGI = {"sl": ["januarja", "februarja", "marca", "aprila", "maja", "juni
 
 
 def opis_ogleda(v, jezik):
-    """En stavek pod naslovom: kraj in kdaj je posneto (brez vrstice metapodatkov)."""
+    """Kraj, kdaj je posneto in iz koliko posnetkov je film (brez vrstice metapodatkov)."""
+    stavek = _opis_ogleda(v, jezik)
+    n = v.get("posnetkov")
+    if n:
+        stavek += f" Zmontirano iz {n} posnetkov." if jezik == "sl" else f" Edited from {n} clips."
+    return stavek
+
+
+def _opis_ogleda(v, jezik):
     M = MESECI_DOLGI[jezik]
     l1, m1, d1 = map(int, v["datum"].split("-"))
     do = v.get("datum_do")
@@ -384,7 +399,8 @@ def ogled_stran(oznaka, jezik, b, p):
     o = opis_vloga(v, jezik, media)
     opis = opis_ogleda(v, jezik)
     serija = naprej_vlogi(v, vlogi)
-    naprej = "".join(kartica_html(x, opis_vloga(x, jezik, media), pot_ogleda(p, x["oznaka"], jezik), izberi=False, vrsta=True)
+    naprej = "".join(kartica_html(x, opis_vloga(x, jezik, media), pot_ogleda(p, x["oznaka"], jezik), izberi=False, vrsta=True,
+                                  velikosti="(min-width: 900px) 180px, 100vw")
                      for x in serija)
     return {
         "ogled_naslov_strani": html.escape(f"{o['naslov']} — Wayfare Studio"),
@@ -430,29 +446,66 @@ def opis_vloga(v, jezik, media):
     )
 
 
-def kartica_html(v, o, href, izberi=True, vrsta=False):
+# Kartice kažejo majhno sličico (media/vlogi/male/<oznaka>.webp, 640 px), velika
+# naslovnica (1280 px) je le za zaslone z gosto mrežo pik. male_slike() jih naredi,
+# kjer manjkajo (ffmpeg); brez ffmpeg ostane velika naslovnica.
+FFMPEG = [Path("~/Claude/claude/Wayfare/vendor/ffmpeg/bin/ffmpeg").expanduser(), shutil.which("ffmpeg")]
+
+
+def male_slike():
+    ff = next((str(f) for f in FFMPEG if f and Path(f).is_file()), None)
+    for jpg in Path(TU, "media", "vlogi").glob("*.jpg"):
+        cilj = Path(TU, "media", "vlogi", "male", jpg.stem + ".webp")
+        if cilj.is_file() or not ff:
+            continue
+        cilj.parent.mkdir(exist_ok=True)
+        subprocess.run([ff, "-v", "error", "-y", "-i", str(jpg), "-vf", "scale=640:-2", "-c:v", "libwebp",
+                        "-quality", "74", str(cilj)], check=False)
+
+
+def slika_kartice(o, sirina, visina, velikosti):
+    mala = o["slika"].replace("media/vlogi/", "media/vlogi/male/").removesuffix(".jpg") + ".webp"
+    if not Path(TU, "media", "vlogi", "male", o["oznaka"] + ".webp").is_file():
+        return f'<img src="{o["slika"]}" alt="" width="{sirina}" height="{visina}" loading="lazy" decoding="async">', o["slika"]
+    return (f'<img src="{mala}" srcset="{mala} 640w, {o["slika"]} 1280w" sizes="{velikosti}" alt="" '
+            f'width="{sirina}" height="{visina}" loading="lazy" decoding="async">'), mala
+
+
+def kartica_html(v, o, href, izberi=True, vrsta=False, velikosti="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw", skrita=False):
     """Kartica filma: naslovnica, nem predogled za kazalec, trajanje, naslov.
-    Z `izberi` klik na zavihku Vlogi film naloži v predvajalnik (vlogi.js);
-    na domači strani povezava pelje na zavihek."""
+    Ime povezave je naslov in trajanje (trajanje za bralnike za naslovom, vidna
+    kapsula je zanje skrita), da se ujema z vidnim besedilom. `skrita` je
+    kopija za neskončni zid: povezava ni v vrstnem redu tipke Tab."""
+    img, mala = slika_kartice(o, v["sirina"], v["visina"], velikosti)
+    tab = ' tabindex="-1"' if skrita else ""
     return (
         f'<li class="kartica{" kartica-pokoncna" if o["pokoncno"] else ""}{" kartica-vrsta" if vrsta else ""}" data-vlog="{o["oznaka"]}">'
-        f'<a class="kartica-povezava" href="{href}"{" data-izberi" if izberi else ""} aria-label="{html.escape(o["naslov"])}, {o["trajanje"]}">'
+        f'<a class="kartica-povezava" href="{href}"{" data-izberi" if izberi else ""}{tab}>'
         f'<span class="kartica-slika">'
-        + (f'<img class="kartica-ozadje" src="{o["slika"]}" alt="" aria-hidden="true" loading="lazy" decoding="async">' if o["pokoncno"] else "") +
-        f'<img src="{o["slika"]}" alt="" width="{v["sirina"]}" height="{v["visina"]}" loading="lazy" decoding="async">'
+        + (f'<img class="kartica-ozadje" src="{mala}" alt="" aria-hidden="true" loading="lazy" decoding="async">' if o["pokoncno"] else "") +
+        img
         + (f'<video class="kartica-zanka" muted playsinline loop preload="none" tabindex="-1" aria-hidden="true" data-zanka-src="{o["zanka"]}"></video>' if o["zanka"] else "") +
-        f'<span class="kartica-cas">{o["trajanje"]}</span></span>'
-        f'<span class="kartica-naslov serif">{html.escape(o["naslov"])}</span></a></li>'
+        f'<span class="kartica-cas" aria-hidden="true">{o["trajanje"]}</span></span>'
+        f'<span class="kartica-naslov serif">{html.escape(o["naslov"])}<span class="skrito">, {o["trajanje"]}</span></span></a></li>'
     )
 
 
-def vlogi_dom(jezik, p, koliko=3):
-    """Domača stran: najnovejši filmi s povezavo na zavihek Vlogi."""
+def vlogi_dom(jezik, p):
+    """Domača stran: zid vseh filmov v dveh vrstah (zid.js). Vsaka vrsta je
+    dvakrat, druga kopija je le za neskončen tek (skrita bralnikom in tipki Tab)."""
     vlogi = vlogi_podatki()
     media = p["koren"] + "media/vlogi/"
-    kartice = [kartica_html(v, opis_vloga(v, jezik, media), pot_ogleda(p, v["oznaka"], jezik), izberi=False)
-               for v in vlogi[:koliko]]
-    return {"dom_kartice": "".join(kartice), "st_filmov": mnozina(len(vlogi), jezik, "film")}
+    pol = (len(vlogi) + 1) // 2
+    vrste = []
+    for smer, del_ in ((1, vlogi[:pol]), (-1, vlogi[pol:])):
+        def niz(skrita):
+            return "".join(kartica_html(v, opis_vloga(v, jezik, media), pot_ogleda(p, v["oznaka"], jezik), izberi=False,
+                                        velikosti="340px", skrita=skrita) for v in del_)
+        vrste.append(f'      <div class="zid-vrsta" data-smer="{smer}"><ul class="zid-niz">{niz(False)}</ul>'
+                     f'<ul class="zid-niz" aria-hidden="true" inert>{niz(True)}</ul></div>')
+    krajev = len({v["kraj"]["en"] for v in vlogi})
+    return {"zid": "\n".join(vrste), "st_filmov": mnozina(len(vlogi), jezik, "film"),
+            "st_potovanj": mnozina(krajev, jezik, "potovanje")}
 
 
 def vlogi_stran(jezik, b, p):
@@ -488,6 +541,110 @@ def vlogi_stran(jezik, b, p):
     }
 
 
+# ---------------------------------------------------------------- deljenje in iskalniki
+
+def url_strani(izhod):
+    return f"{STRAN_URL}/{izhod.removesuffix('index.html')}"
+
+
+def iso_trajanje(sekunde):
+    s = int(round(sekunde))
+    return f"PT{s // 60}M{s % 60}S"
+
+
+def meta(html_, stran, jezik, b):
+    """Absolutne povezave za deljenje in iskalnike, ikone in strukturirani podatki.
+
+    og:image, hreflang in canonical morajo biti polni naslovi (WhatsApp,
+    Messenger in Google relativnih ne razumejo). Vstavi se za <link rel="icon">."""
+    izhod = STRANI[stran]["izhod"][jezik]
+    url = url_strani(izhod)
+    en, sl = (url_strani(STRANI[stran]["izhod"][j]) for j in ("en", "sl"))
+    html_ = re.sub(r'<link rel="alternate" hreflang="en" href="[^"]*">', f'<link rel="alternate" hreflang="en" href="{en}">', html_)
+    html_ = re.sub(r'<link rel="alternate" hreflang="sl" href="[^"]*">',
+                   f'<link rel="alternate" hreflang="sl" href="{sl}">\n<link rel="alternate" hreflang="x-default" href="{en}">', html_)
+    m = re.search(r'<meta property="og:image" content="([^"]*)">', html_)
+    slika = urljoin(url, m.group(1)) if m else f"{STRAN_URL}/media/promo-naslovna.jpg"
+    if m:
+        html_ = html_.replace(m.group(0), f'<meta property="og:image" content="{slika}">')
+    else:
+        html_ = html_.replace('<meta name="description"', f'<meta property="og:image" content="{slika}">\n<meta name="description"', 1)
+    naslov = re.search(r"<title>(.*?)</title>", html_, re.S).group(1)
+    opis = re.search(r'<meta name="description" content="([^"]*)">', html_).group(1)
+    sirina, visina = (1920, 1080) if slika.endswith("promo-naslovna.jpg") else (1280, 720)
+    dodatno = []
+    if "og:title" not in html_:
+        dodatno += [f'<meta property="og:title" content="{naslov}">', f'<meta property="og:description" content="{opis}">']
+    if "og:type" not in html_:
+        dodatno.append('<meta property="og:type" content="website">')
+    dodatno += [
+        f'<meta property="og:url" content="{url}">',
+        '<meta property="og:site_name" content="Wayfare Studio">',
+        f'<meta property="og:locale" content="{"sl_SI" if jezik == "sl" else "en_US"}">',
+        f'<meta property="og:image:width" content="{sirina}">',
+        f'<meta property="og:image:height" content="{visina}">',
+        '<meta name="twitter:card" content="summary_large_image">',
+    ]
+    if stran == "napaka":
+        dodatno.append('<meta name="robots" content="noindex">')
+    else:
+        dodatno.append(f'<link rel="canonical" href="{url}">')
+    dodatno += [
+        '<link rel="apple-touch-icon" href="/media/apple-touch-icon.png">',
+        '<link rel="manifest" href="/manifest.webmanifest">',
+        '<meta name="theme-color" content="#0b0c0f">',
+    ]
+    podatki = strukturirani(stran, jezik, b, url, slika, opis)
+    if podatki:
+        dodatno.append('<script type="application/ld+json">' + json.dumps(podatki, ensure_ascii=False).replace("</", "<\\/") + "</script>")
+    ikona = re.search(r'<link rel="icon"[^>]*>', html_).group(0)
+    return html_.replace(ikona, ikona + "\n" + "\n".join(dodatno), 1)
+
+
+def strukturirani(stran, jezik, b, url, slika, opis):
+    """schema.org: aplikacija na domači strani, video na strani ogleda."""
+    if stran == "dom":
+        paket = prenos()
+        return {
+            "@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Wayfare Studio",
+            "applicationCategory": "MultimediaApplication", "operatingSystem": "macOS 12+, Windows 10+, Android 8+",
+            "softwareVersion": paket["razlicica"], "description": opis, "url": url, "image": slika,
+            "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"},
+        }
+    if stran.startswith("ogled:"):
+        v = next(x for x in vlogi_podatki() if x["oznaka"] == stran.split(":", 1)[1])
+        return {
+            "@context": "https://schema.org", "@type": "VideoObject", "name": v["naslov"][jezik], "description": opis,
+            "thumbnailUrl": [slika], "uploadDate": v.get("datum_do") or v["datum"], "duration": iso_trajanje(v["trajanje"]),
+            "embedUrl": f"https://www.youtube.com/embed/{v['youtube']}", "inLanguage": v.get("jezik", "sl"), "url": url,
+        }
+    return None
+
+
+def zemljevid_strani():
+    """sitemap.xml: vse strani v obeh jezikih z jezikovnimi različicami (brez 404)."""
+    vrstice = ['<?xml version="1.0" encoding="UTF-8"?>',
+               '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
+    for stran, s_ in STRANI.items():
+        if stran == "napaka":
+            continue
+        for jezik in ("en", "sl"):
+            vrstice.append(f"  <url><loc>{url_strani(s_['izhod'][jezik])}</loc>")
+            for j in ("en", "sl"):
+                vrstice.append(f'    <xhtml:link rel="alternate" hreflang="{j}" href="{url_strani(s_["izhod"][j])}"/>')
+            vrstice.append("  </url>")
+    vrstice.append("</urlset>")
+    return "\n".join(vrstice) + "\n"
+
+
+MANIFEST = {
+    "name": "Wayfare Studio", "short_name": "Wayfare", "start_url": "/", "display": "browser",
+    "background_color": "#0b0c0f", "theme_color": "#0b0c0f",
+    "icons": [{"src": "/media/ikona-192.png", "sizes": "192x192", "type": "image/png"},
+              {"src": "/media/ikona-512.png", "sizes": "512x512", "type": "image/png"}],
+}
+
+
 # ---------------------------------------------------------------- gradnja
 
 GLAVE = """/*
@@ -502,9 +659,22 @@ GLAVE = """/*
   Cross-Origin-Resource-Policy: same-origin
 
 # Slike v e-pošti (logo, naslovnice vlogov) nalaga odjemalec pošte z drugega
-# izvora, zato pod /media/ ni omejitve same-origin.
+# izvora, zato pod /media/ ni omejitve same-origin. Mediji se hranijo teden dni
+# (zamenjan medij dobi novo ime ali počaka teden); pisave imajo v imenu zgoščeno
+# vrednost, knjižnice različico v komentarju predloge, zato se hranijo dlje.
+# HTML, css/ in js/ ostanejo brez hranjenja (vsaka objava takoj velja).
 /media/*
   ! Cross-Origin-Resource-Policy
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/pisave/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/js/knjiznice/*
+  Cache-Control: public, max-age=2592000
+
+/model/*
+  Cache-Control: public, max-age=2592000
 
 # Spremljevalec na telefonu (telefon/): mikrofon za glasovne zapiske, GPS za
 # kraj oznake, servisni delavec za delo brez povezave. Ostala stran tega ne sme.
@@ -538,10 +708,14 @@ def objavi(zgoscene, strani, okvirji):
     uporabljeni = set()
     for t in besedila:
         uporabljeni |= set(re.findall(r"(media/[\w./-]+?\.(?:mp4|jpg|jpeg|png|webp|svg))", t))
+    # majhne sličice kartic (tudi za kartice na globusu, ki so v JSON s poševnicami)
+    uporabljeni |= {str(p.relative_to(TU)) for p in Path(TU, "media", "vlogi", "male").glob("*.webp")
+                    if any(v["oznaka"] == p.stem for v in vlogi_podatki())}
     uporabljeni = {u for u in uporabljeni if not SPLETNI_VIDEO.match(u)}
     uporabljeni.add("model/wayfare-znak-kosi.glb")
     uporabljeni.add("media/zemljevid/meje.json")  # črte globusa (zemljevid.js jih naloži s fetch)
     uporabljeni.add("media/posta/logo.png")  # glava e-pošte (zaledje/posta.js)
+    uporabljeni |= {"media/ikona-192.png", "media/ikona-512.png"}  # manifest.webmanifest
     manjkajo = [u for u in sorted(uporabljeni) if not Path(TU, u).is_file()]
     if manjkajo:
         raise SystemExit(f"Stran kaže na datoteke, ki jih ni: {manjkajo}")
@@ -556,6 +730,10 @@ def objavi(zgoscene, strani, okvirji):
         cilj.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(Path(TU, rel), cilj)
     (objava / "_headers").write_text(GLAVE.format(csp=csp(zgoscene, okvirji)))
+    (objava / "sitemap.xml").write_text(zemljevid_strani(), encoding="utf-8")
+    (objava / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /nadzor\n\nSitemap: {STRAN_URL}/sitemap.xml\n")
+    (objava / "manifest.webmanifest").write_text(json.dumps(MANIFEST, ensure_ascii=False, indent=1))
+    shutil.copy2(Path(TU, "favicon.ico"), objava / "favicon.ico")
     # imena vlogov za nadzor (ogledi): le oznaka in slovenski naslov
     (objava / "vlogi").mkdir(parents=True, exist_ok=True)
     (objava / "vlogi" / "seznam.json").write_text(json.dumps(
@@ -581,6 +759,10 @@ def main():
     deli = {ime: open(os.path.join(TU, "deli", f"{ime}.html"), encoding="utf-8").read().rstrip("\n")
             for ime in ("glava", "noga", "obvestilo", "prijava")}
     paket = prenos()
+    # velikost brez pike spredaj (" · 312 MB" → "312 MB") za stavke na karticah naprav
+    paket["prenos_windows_mb"] = paket["prenos_windows_velikost"].strip(" ·") or "Windows"
+    paket["prenos_android_mb"] = paket["prenos_android_velikost"].strip(" ·") or "Android"
+    male_slike()
     okvirji = any(v.get("youtube") for v in vlogi_podatki())
     for v in vlogi_podatki():
         STRANI[f"ogled:{v['oznaka']}"] = dict(predloga="predloga-ogled.html",
@@ -617,8 +799,9 @@ def main():
             html_ = html_.replace("{{prenos_href}}", paket["url"])
             for kljuc in ("prenos_ime", "prenos_velikost", "razlicica", "prenos_windows_href",
                           "prenos_windows_ime", "prenos_windows_velikost", "prenos_android_href",
-                          "prenos_android_ime", "prenos_android_velikost"):
+                          "prenos_android_ime", "prenos_android_velikost", "prenos_windows_mb", "prenos_android_mb"):
                 html_ = html_.replace("{{" + kljuc + "}}", paket[kljuc])
+            html_ = meta(html_, stran, jezik, b)
             zgoscene = zgoscene_skript(html_)
             vse_zgoscene |= zgoscene
             html_ = html_.replace("{{csp}}", csp(zgoscene, okvirji and stran.startswith("ogled:")))

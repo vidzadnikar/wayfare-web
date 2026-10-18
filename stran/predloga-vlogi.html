@@ -13,7 +13,6 @@
 <link rel="icon" href="{{koren}}media/logo.svg" type="image/svg+xml">
 <meta http-equiv="Content-Security-Policy" content="{{csp}}">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<link rel="preload" href="{{koren}}pisave/instrument-serif-latin-03435c.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{{koren}}pisave/instrument-sans-latin-11aa49.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{{koren}}css/pisave.css">
 <link rel="stylesheet" href="{{koren}}css/slog.css">
@@ -39,11 +38,11 @@
   </section>
 
   <section class="izpostavljeno" aria-labelledby="izpostavljeno-naslov" data-uvod>
-    <a class="izpostavljeno-povezava" href="{{prvi_pot}}" aria-labelledby="izpostavljeno-naslov">
+    <a class="izpostavljeno-povezava" href="{{prvi_pot}}">
       <span class="izpostavljeno-okvir">
         <img src="{{prvi_slika}}" alt="" fetchpriority="high">
         <span class="izpostavljeno-ikona" aria-hidden="true"></span>
-        <span class="kartica-cas">{{prvi_trajanje}}</span>
+        <span class="kartica-cas" aria-hidden="true">{{prvi_trajanje}}</span>
       </span>
       <span class="izpostavljeno-besedilo">
         <span id="izpostavljeno-naslov" class="serif izpostavljeno-naslov">{{prvi_naslov}}</span>

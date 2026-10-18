@@ -1,32 +1,41 @@
 import { zazeniDrsenje, prikaziNaslove, promoPredvajalnik, znak, besede, mirno, svet } from "./gibanje.js";
 import { sestavljanje } from "./sestavljanje.js";
 import { prenos } from "./prenos.js";
-import { zankeKartic, prihodKartic } from "./kartice.js";
-import { zemljevid } from "./zemljevid.js";
+import { zankeKartic, nagibKartic } from "./kartice.js";
+import { zid } from "./zid.js";
 import { clan } from "./clan.js";
 
 const { gsap, ScrollTrigger, lenis } = zazeniDrsenje();
 if (!mirno) document.documentElement.classList.add("gibanje");
 const koren = document.querySelector('link[rel="icon"]').getAttribute("href").replace("media/logo.svg", "");
 
-// 3D znak desno nad mestom: razmakne se pri kazalcu, z vlečenjem se vrti
-znak(document.querySelector("[data-znak]"), {
-  model: koren + "model/wayfare-znak-kosi.glb",
-  notranjost: { barva: 0x64e2d6, sij: 1.6 },
-  velikost: (w, h) => (w / h < 0.8 ? 0.6 : 0.42),
-  zamik: (w, h) => (w / h < 0.8 ? [0, 0.24] : [0.22, 0.1]),
-});
+// 3D znak desno nad mestom: razmakne se pri kazalcu, z vlečenjem se vrti.
+// Naloži se šele, ko je stran prikazana (po dogodku load, ko je brskalnik
+// prost), da naslov in gumb ne čakata na three.js in model.
+function naloziZnak() {
+  znak(document.querySelector("[data-znak]"), {
+    model: koren + "model/wayfare-znak-kosi.glb",
+    notranjost: { barva: 0x64e2d6, sij: 1.6 },
+    velikost: (w, h) => (w / h < 0.8 ? 0.6 : 0.42),
+    zamik: (w, h) => (w / h < 0.8 ? [0, 0.24] : [0.22, 0.1]),
+  });
+}
+const prosto = (fn) => ("requestIdleCallback" in window ? requestIdleCallback(fn, { timeout: 1500 }) : setTimeout(fn, 300));
+if (document.readyState === "complete") prosto(naloziZnak);
+else addEventListener("load", () => prosto(naloziZnak), { once: true });
 
-// uvod: video se odpre iz središča kot zaslonka (maska --iris), nato naslov po besedah
+// uvod: video se odpre iz središča kot zaslonka (maska --iris), nato naslov po
+// besedah. Krajše kot prej (zaslonka 1,4 s namesto 2,2 s), da je naslov prej
+// berljiv, posebej na telefonu (potrjeno 18. 10. 2026).
 const naslov = document.querySelector("[data-naslov-uvod]");
 const deli = besede(naslov);
 if (!mirno) {
   gsap.timeline({ defaults: { ease: "expo.inOut" } })
-    .fromTo("[data-hero-medij]", { "--iris": "1%" }, { "--iris": "260%", duration: 2.2 }, 0)
-    .fromTo(".hero-ozadje", { scale: 1.18 }, { scale: 1.04, duration: 2.6, ease: "expo.out" }, 0)
-    .fromTo("[data-uvod]", { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 1.1, ease: "expo.out", stagger: 0.08 }, 1.0)
-    .set(naslov, { autoAlpha: 1 }, 0.9)
-    .from(deli, { yPercent: 110, duration: 1.2, ease: "expo.out", stagger: 0.05 }, 0.9);
+    .fromTo("[data-hero-medij]", { "--iris": "1%" }, { "--iris": "260%", duration: 1.4 }, 0)
+    .fromTo(".hero-ozadje", { scale: 1.18 }, { scale: 1.04, duration: 1.8, ease: "expo.out" }, 0)
+    .fromTo("[data-uvod]", { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 1.0, ease: "expo.out", stagger: 0.07 }, 0.55)
+    .set(naslov, { autoAlpha: 1 }, 0.4)
+    .from(deli, { yPercent: 110, duration: 1.0, ease: "expo.out", stagger: 0.045 }, 0.4);
 
   // ko hero odide: besedilo odplava hitreje od mesta, znak se dvigne in
   // pomanjša, video se počasi približa (globina z drsenjem)
@@ -37,6 +46,13 @@ if (!mirno) {
 
   trakMest();
   sestavljanje({ gsap, ScrollTrigger });
+
+  // okno vmesnika je nagnjeno nazaj in se zravna, ko pride na zaslon (kot v
+  // predlogu Studio); kamera sestavljanja ima svoje transforme, zato se nagne okno
+  gsap.fromTo("[data-okno]", { rotationX: 26, transformOrigin: "50% 100%" }, {
+    rotationX: 0, ease: "none",
+    scrollTrigger: { trigger: "[data-sestavljanje]", start: "top bottom", end: "top 25%", scrub: 0.6 },
+  });
 
   // kino: med prihodom na zaslon se platno dvigne iz nagiba in zraste —
   // brez pripenjanja, stran ves čas teče naprej
@@ -111,12 +127,26 @@ function trakMest() {
 prikaziNaslove("[data-naslov]", { gsap });
 promoPredvajalnik(document.querySelector("[data-promo]"));
 
-// filmi s poti: najnovejše kartice z zavihka Vlogi
-zankeKartic(document.querySelectorAll(".dom-vlogi [data-vlog]"));
-prihodKartic(".dom-vlogi .kartica", { gsap, ScrollTrigger });
+// zid vseh filmov: vrsti tečeta v nasprotnih smereh, nad kartico teče predogled
+zid(document.querySelector("[data-zid]"), { gsap, ScrollTrigger });
+zankeKartic(document.querySelectorAll("[data-zid] .zid-niz:not([aria-hidden]) [data-vlog]"));
+nagibKartic(document.querySelectorAll("[data-zid] .zid-niz:not([aria-hidden]) .kartica-povezava"));
 
-// kje smo bili: globus s kraji, klik pokaže filme od tam
-zemljevid(document.querySelector("[data-zemljevid]"), { gsap, koren });
+// kje smo bili: globus s kraji, klik pokaže filme od tam. Modul (in three.js)
+// se naloži šele, ko se odsek približa zaslonu, da uvod ne čaka nanj.
+const obmocjeGlobusa = document.querySelector("[data-zemljevid]");
+if (obmocjeGlobusa) {
+  let nalozen = false;
+  const nalozi = () => {
+    if (nalozen) return;
+    nalozen = true;
+    import("./zemljevid.js").then(({ zemljevid }) => zemljevid(obmocjeGlobusa, { gsap, koren }));
+  };
+  // ScrollTrigger ujame tudi skok na sidro in vrnitev sredi strani, opazovalec pa drsenje brez Lenis
+  ScrollTrigger.create({ trigger: obmocjeGlobusa, start: "top bottom+=900", end: "max", once: true, onEnter: nalozi });
+  const blizu = new IntersectionObserver(([v]) => { if (v.isIntersecting) { blizu.disconnect(); nalozi(); } }, { rootMargin: "900px 0px" });
+  blizu.observe(obmocjeGlobusa);
+}
 
 // Claude: zavihka namestitve (vtičnik je privzet, ker ne rabi Node.js).
 // Brez JS sta vidni obe poti; tu se skrije neizbrana.
@@ -140,6 +170,14 @@ zavihki.forEach((z, i) => {
   });
 });
 izberiZavihek(0);
+
+// pogovor s Claudom: prošnja, nato koraki s kljukicami eden za drugim
+if (!mirno) {
+  gsap.from("[data-pogovor]", { y: 32, autoAlpha: 0, duration: 1.0, ease: "expo.out",
+    scrollTrigger: { trigger: "[data-pogovor]", start: "top 85%", toggleActions: "play none none none" } });
+  gsap.from("[data-pogovor] [data-korak]", { y: 10, autoAlpha: 0, duration: 0.6, ease: "power3.out", stagger: 0.45, delay: 0.35,
+    scrollTrigger: { trigger: "[data-pogovor]", start: "top 75%", toggleActions: "play none none none" } });
+}
 
 // terminal pride od spodaj, nato njegove vrstice po vrsti
 if (!mirno) {

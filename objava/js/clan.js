@@ -57,7 +57,7 @@ export function clan() {
     let c = null;
     try {
       const r = await fetch("/api/jaz", { headers: { Accept: "application/json" }, credentials: "same-origin" });
-      if (r.ok) c = await r.json();
+      if (r.ok) { const j = await r.json(); c = j.prijavljen ? j : null; }
     } catch (e) { c = null; }
     if (c) prikaziClana(c); else prikaziGosta();
     if (!!c !== prijavljen) { prijavljen = !!c; javi(c); }

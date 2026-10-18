@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /nadzor
+
+Sitemap: https://wayfarestudio.pages.dev/sitemap.xml

@@ -29,12 +29,19 @@ export function prenos() {
   let naprava = "mac";
   zaznajNapravo().then((n) => {
     naprava = n;
+    // kartica naprave za ta sistem je poudarjena (prenos na domači strani)
+    const kljuc = n === "mac-intel" ? "mac" : n;
+    for (const k of document.querySelectorAll("[data-naprava]")) k.toggleAttribute("data-priporoceno", k.dataset.naprava === kljuc);
+    // stavek pod gumbom v uvodu pove, za kaj je ta prenos in kaj je še na voljo
+    const opomba = document.querySelector("[data-prenos-opomba]");
+    const predloga = document.querySelector(`template[data-opomba="${n}"]`);
+    if (opomba && predloga) opomba.replaceChildren(predloga.content.cloneNode(true));
     // na Windows in Androidu gumbi za prenos kazejo na paket za ta sistem
     if (n !== "windows" && n !== "android") return;
     for (const gumb of document.querySelectorAll(`[data-prenos-${n}]`)) {
       gumb.href = gumb.dataset[n === "windows" ? "prenosWindows" : "prenosAndroid"];
       const besedilo = gumb.dataset[n === "windows" ? "besediloWindows" : "besediloAndroid"];
-      if (besedilo) gumb.textContent = besedilo;
+      if (besedilo) (gumb.querySelector("[data-prenos-besedilo]") || gumb).textContent = besedilo;
     }
   });
   let prej = null;

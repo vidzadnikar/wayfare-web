@@ -5,7 +5,7 @@
 // stran ogleda.
 import { zazeniDrsenje, prikaziNaslove, besede, mirno, svet } from "./gibanje.js";
 import { prenos } from "./prenos.js";
-import { zankeKartic, prihodKartic } from "./kartice.js";
+import { zankeKartic, prihodKartic, nagibKartic } from "./kartice.js";
 import { clan } from "./clan.js";
 
 // #rim-2 → rim-2/ (le za vlog, ki je na strani)
@@ -18,6 +18,7 @@ const { gsap, ScrollTrigger } = zazeniDrsenje();
 if (!mirno) document.documentElement.classList.add("gibanje");
 
 zankeKartic([...document.querySelectorAll("[data-vlog]")]);
+nagibKartic(document.querySelectorAll(".kartica-povezava"));
 
 if (!mirno) {
   const h1 = document.querySelector("[data-naslov-uvod]");

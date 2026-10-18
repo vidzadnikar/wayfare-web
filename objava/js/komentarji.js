@@ -218,8 +218,8 @@ export function komentarji(koren, { skoci } = {}) {
     const tekst = el("div", { class: "komentar-besedilo" });
     tekst.append(besedilo(k.besedilo));
 
-    const vsec = el("button", { class: "komentar-dejanje komentar-vsec", type: "button", "aria-pressed": String(!!k.vsec_mi), "aria-label": b.vsec, title: b.vsec },
-      svg(SRCE), el("span", { class: "komentar-vsec-stevilo", text: k.vseckov ? String(k.vseckov) : "" }));
+    const vsec = el("button", { class: "komentar-dejanje komentar-vsec", type: "button", "aria-pressed": String(!!k.vsec_mi), title: b.vsec },
+      svg(SRCE), el("span", { class: "skrito", text: b.vsec + " " }), el("span", { class: "komentar-vsec-stevilo", text: k.vseckov ? String(k.vseckov) : "" }));
     vsec.addEventListener("click", () => vseckaj(k, vsec));
     const dejanja = el("div", { class: "komentar-dejanja" }, vsec);
     const mestoOdgovora = el("div", { class: "komentar-odgovor-mesto" });

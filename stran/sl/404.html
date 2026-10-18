@@ -4,14 +4,28 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Wayfare Studio — Strani ni</title>
+<meta property="og:image" content="https://wayfarestudio.pages.dev/media/promo-naslovna.jpg">
 <meta name="description" content="Te strani ni.">
 <meta name="robots" content="noindex">
-<link rel="alternate" hreflang="en" href="/404.html">
-<link rel="alternate" hreflang="sl" href="/sl/404.html">
+<link rel="alternate" hreflang="en" href="https://wayfarestudio.pages.dev/404.html">
+<link rel="alternate" hreflang="sl" href="https://wayfarestudio.pages.dev/sl/404.html">
+<link rel="alternate" hreflang="x-default" href="https://wayfarestudio.pages.dev/404.html">
 <link rel="icon" href="/media/logo.svg" type="image/svg+xml">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-WZRJfWvsnNCPcxzZwvyhovnZGqhZaC+8gPGPRbx6wTk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; media-src 'self'; font-src 'self'; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; worker-src 'none'; manifest-src 'self'">
+<meta property="og:title" content="Wayfare Studio — Strani ni">
+<meta property="og:description" content="Te strani ni.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://wayfarestudio.pages.dev/sl/404.html">
+<meta property="og:site_name" content="Wayfare Studio">
+<meta property="og:locale" content="sl_SI">
+<meta property="og:image:width" content="1920">
+<meta property="og:image:height" content="1080">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="noindex">
+<link rel="apple-touch-icon" href="/media/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0b0c0f">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-WZRJfWvsnNCPcxzZwvyhovnZGqhZaC+8gPGPRbx6wTk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; media-src 'self'; font-src 'self'; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; worker-src 'none'; manifest-src 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<link rel="preload" href="/pisave/instrument-serif-latin-03435c.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/pisave/instrument-sans-latin-11aa49.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/pisave.css">
 <link rel="stylesheet" href="/css/slog.css">
@@ -28,43 +42,47 @@
 </div>
 <a class="preskoci" href="#vsebina">Preskoči na vsebino</a>
 
-<header class="glava" data-uvod>
-  <a class="znamka" href="/sl/#vrh" aria-label="Wayfare Studio, na vrh strani">
+<header class="glava" data-uvod data-glava>
+  <a class="znamka" href="/sl/#vrh" aria-label="Wayfare, na vrh strani">
     <img src="/media/logo.svg" alt="" width="26" height="26">
-    <span><b>wayfare</b> studio</span>
+    <span>Wayfare</span>
   </a>
-  <nav class="glava-nav" aria-label="Glavna navigacija">
+  <nav class="glava-nav" id="glava-nav" aria-label="Glavna navigacija">
     <ul>
       <li><a href="/sl/#aplikacija">Aplikacija</a></li>
       <li><a href="/sl/#film">Film</a></li>
       <li data-nav="vlogi"><a href="/sl/vlogi/">Vlogi</a></li>
       <li><a href="/sl/#claude">Claude</a></li>
+      <li><a href="/sl/#vprasanja">Vprašanja</a></li>
     </ul>
   </nav>
-  <nav class="jezik" aria-label="Jezik">
-    <a href="/404.html" hreflang="en" lang="en" data-jezik="en" >EN</a>
-    <a href="/sl/404.html" hreflang="sl" lang="sl" data-jezik="sl" aria-current="page">SL</a>
-  </nav>
-  <div class="clan-mesto" data-clan-mesto>
-    <button class="gumb gumb-majhen gumb-tihi clan-prijava" type="button" data-prijava-odpri>
-      <svg class="clan-ikona" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20.5c0-3.6 3.6-6 8-6s8 2.4 8 6"/></svg>
-      <span>Prijava</span>
-    </button>
-    <details class="clan" data-clan hidden>
-      <summary class="clan-gumb" aria-label="Tvoj račun">
-        <img class="clan-slika" alt="" width="28" height="28" referrerpolicy="no-referrer" data-clan-slika hidden>
-        <span class="clan-zacetnica" aria-hidden="true" data-clan-zacetnica></span>
-        <span class="clan-ime" data-clan-ime></span>
-      </summary>
-      <div class="clan-meni">
-        <p class="clan-email" data-clan-email></p>
-        <a class="clan-povezava" href="/nadzor" data-clan-nadzor hidden>Nadzor</a>
-        <button class="clan-povezava" type="button" data-racun-odpri>Nastavitve</button>
-        <button class="clan-povezava" type="button" data-izpis>Izpis</button>
-      </div>
-    </details>
+  <div class="glava-desno" id="glava-desno">
+    <nav class="jezik" aria-label="Jezik">
+      <a href="/404.html" hreflang="en" lang="en" data-jezik="en" >EN</a>
+      <a href="/sl/404.html" hreflang="sl" lang="sl" data-jezik="sl" aria-current="page">SL</a>
+    </nav>
+    <div class="clan-mesto" data-clan-mesto>
+      <button class="gumb gumb-majhen gumb-tihi clan-prijava" type="button" data-prijava-odpri>
+        <svg class="clan-ikona" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20.5c0-3.6 3.6-6 8-6s8 2.4 8 6"/></svg>
+        <span>Prijava</span>
+      </button>
+      <details class="clan" data-clan hidden>
+        <summary class="clan-gumb" aria-label="Tvoj račun">
+          <img class="clan-slika" alt="" width="28" height="28" referrerpolicy="no-referrer" data-clan-slika hidden>
+          <span class="clan-zacetnica" aria-hidden="true" data-clan-zacetnica></span>
+          <span class="clan-ime" data-clan-ime></span>
+        </summary>
+        <div class="clan-meni">
+          <p class="clan-email" data-clan-email></p>
+          <a class="clan-povezava" href="/nadzor" data-clan-nadzor hidden>Nadzor</a>
+          <button class="clan-povezava" type="button" data-racun-odpri>Nastavitve</button>
+          <button class="clan-povezava" type="button" data-izpis>Izpis</button>
+        </div>
+      </details>
+    </div>
+    <a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos data-prenos-windows="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-Setup-0.1.0.exe" data-prenos-android="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.apk">Prenos</a>
   </div>
-  <a class="gumb gumb-majhen" href="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.dmg" download data-prenos data-prenos-windows="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-Setup-0.1.0.exe" data-prenos-android="https://github.com/vidzadnikar/wayfare-web/releases/download/v0.1.0/Wayfare-Studio-0.1.0.apk">Prenos</a>
+  <button class="meni-gumb" type="button" aria-expanded="false" aria-controls="glava-nav glava-desno" aria-label="Meni" data-meni-gumb><span class="meni-crte" aria-hidden="true"></span></button>
 </header>
 
 <main id="vsebina" class="napaka-stran">
@@ -83,7 +101,7 @@
   <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio se prenaša</p>
   <ol class="obvestilo-koraki"><li>Odpri preneseno datoteko in povleci Wayfare Studio v mapo Aplikacije.</li><li>Prvič: odpri aplikacijo. Mac jo ustavi z opozorilom, da je ne more preveriti (aplikacija še ni notarizirana pri Applu). Pojdi v Sistemske nastavitve → Zasebnost in varnost, na dnu klikni »Vseeno odpri« in potrdi. Od takrat se odpira normalno. Na starejšem macOS zadošča desni klik → Odpri.</li><li>Wayfare Studio se odpre v svojem oknu. Povleci posnetke vanj — projekt naredi sam.</li></ol>
   <p class="drobno">Če Mac pravi, da je aplikacija poškodovana, v Terminalu zaženi: <code>xattr -dr com.apple.quarantine "/Applications/Wayfare Studio.app"</code></p>
-  <p class="drobno">Wayfare-Studio-0.1.0.dmg · 434 MB</p>
+  <p class="drobno">Wayfare-Studio-0.1.0.dmg · 440 MB</p>
 </template>
 <template id="obvestilo-intel">
   <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Ta Mac morda ni podprt</p>
@@ -166,12 +184,13 @@
    data-nadzor="Za nadzor se najprej prijavi z Googlom." data-izpis="Izpisan si." data-blokiran="Ta račun nima dostopa."></p>
 
 <footer class="noga">
-  <span class="znamka"><img src="/media/logo.svg" alt="" width="20" height="20"><span><b>wayfare</b> studio</span></span>
+  <span class="znamka"><img src="/media/logo.svg" alt="" width="22" height="22"><span>Wayfare</span></span>
   <nav class="noga-nav" aria-label="Stran"><ul>
     <li><a href="/sl/#aplikacija">Aplikacija</a></li>
     <li><a href="/sl/#film">Film</a></li>
     <li><a href="/sl/vlogi/">Vlogi</a></li>
     <li><a href="/sl/#claude">Claude</a></li>
+    <li><a href="/sl/#vprasanja">Vprašanja</a></li>
     <li><a href="/sl/zasebnost/">Zasebnost</a></li>
   </ul></nav>
   <p class="drobno">Map data © OpenStreetMap contributors · Natural Earth · Vsebuje spremenjene podatke Copernicus Sentinel (2021). Posnetki mest: Pexels. Posnetki v aplikaciji so z avtorjevih potovanj.</p>

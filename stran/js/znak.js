@@ -6,12 +6,13 @@
 //   sekund mehko vrne v mirovanje.
 // - Ob nalaganju kosi priletijo skupaj v znak.
 //
-// Model (model/wayfare-znak-kosi.glb, iz logo-3d/razbij_znak.py):
+// Model (model/wayfare-znak-kosi.glb, iz logo-3d/razbij_znak.py, stisnjen z meshopt):
 //   Razbitje/Znak  cel znak, viden, dokler se nič ne premika
 //   Razbitje/Kosi  kosi; prostor skupine: x desno, y gor, z proti gledalcu
 
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 
 const PRIVZETO = {
   notranjost: null,       // null = barvna notranjost iz modela; { barva, sij } = svetleča
@@ -46,7 +47,8 @@ export async function ustvariZnak(nastavitve) {
   luci(scena);
   const kamera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
 
-  const gltf = await new GLTFLoader().loadAsync(o.model);
+  // model je stisnjen z meshopt (gltf-transform meshopt --level high): 0,6 MB namesto 1,8 MB
+  const gltf = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(o.model);
   const koren = gltf.scene;
   const cel = koren.getObjectByName("Znak");
   const skupina = koren.getObjectByName("Kosi");

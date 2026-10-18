@@ -11,12 +11,11 @@ export function zazeniDrsenje() {
   const { gsap, ScrollTrigger, Lenis } = window;
   gsap.registerPlugin(ScrollTrigger);
   document.documentElement.classList.add("js");
+  glava();
   if (mirno || !Lenis) return { lenis: null, gsap, ScrollTrigger };
-  // wheelMultiplier/touchMultiplier < 1: en zasuk koleščka premakne stran manj (mirnejše drsenje)
-  const lenis = new Lenis({
-    duration: 1.35, easing: (t) => 1 - Math.pow(1 - t, 4), smoothWheel: true,
-    wheelMultiplier: 0.7, touchMultiplier: 0.85,
-  });
+  // gladko, a odzivno: lerp sledi koleščku hitreje kot prej (trajanje 1,35 s,
+  // kolešček 0,7), zato stran ne zaostaja za roko (potrjeno 18. 10. 2026)
+  const lenis = new Lenis({ lerp: 0.12, smoothWheel: true, wheelMultiplier: 0.95, touchMultiplier: 1 });
   lenis.on("scroll", ScrollTrigger.update);
   gsap.ticker.add((t) => lenis.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
@@ -27,6 +26,7 @@ export function zazeniDrsenje() {
     const cilj = document.querySelector(a.getAttribute("href"));
     if (!cilj) return;
     e.preventDefault();
+    zapriMeni();
     lenis.resize(); // višina strani se po nalaganju medijev spremeni; brez tega skok obstane prej
     lenis.scrollTo(cilj, { offset: 0 });
     history.replaceState(null, "", a.getAttribute("href"));
@@ -35,6 +35,29 @@ export function zazeniDrsenje() {
   document.fonts?.ready.then(() => { lenis.resize(); ScrollTrigger.refresh(); });
   addEventListener("load", () => { lenis.resize(); ScrollTrigger.refresh(); });
   return { lenis, gsap, ScrollTrigger };
+}
+
+// Glava: na vrhu prosojna, po prvem drsenju steklena. Pod 900 px gumb Meni
+// odpre navigacijo, jezik, račun in prenos pod glavo; Escape ali klik na
+// povezavo ga zapre.
+let zapriMeni = () => {};
+function glava() {
+  const g = document.querySelector("[data-glava]");
+  if (!g) return;
+  const gumb = g.querySelector("[data-meni-gumb]");
+  const polna = () => g.toggleAttribute("data-polna", scrollY > 24);
+  addEventListener("scroll", polna, { passive: true });
+  polna();
+  if (!gumb) return;
+  zapriMeni = () => { g.removeAttribute("data-meni"); gumb.setAttribute("aria-expanded", "false"); };
+  gumb.addEventListener("click", () => {
+    const odpri = !g.hasAttribute("data-meni");
+    g.toggleAttribute("data-meni", odpri);
+    gumb.setAttribute("aria-expanded", String(odpri));
+  });
+  g.addEventListener("click", (e) => { if (e.target.closest(".glava-nav a")) zapriMeni(); });
+  addEventListener("keydown", (e) => { if (e.key === "Escape" && g.hasAttribute("data-meni")) { zapriMeni(); gumb.focus(); } });
+  matchMedia("(min-width: 900px)").addEventListener("change", (m) => { if (m.matches) zapriMeni(); });
 }
 
 // Naslov razbije na besede za zamaknjen prikaz. Bralniki zaslona dobijo cel

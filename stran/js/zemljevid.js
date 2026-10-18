@@ -8,7 +8,7 @@
 // <script type="application/json" id="zemljevid-podatki"> iz zgradi.py; relief in
 // črte so v media/zemljevid/. Zažene se šele, ko se odsek približa oknu.
 import * as THREE from "three";
-import { zankeKartic } from "./kartice.js";
+import { zankeKartic, nagibKartic } from "./kartice.js";
 
 export function zemljevid(obmocje, { gsap, koren }) {
   if (!obmocje) return;
@@ -25,6 +25,7 @@ export function zemljevid(obmocje, { gsap, koren }) {
     const naslov = filmi.querySelector("[data-filmi-naslov]"), opis = filmi.querySelector("[data-filmi-opis]"), seznam = filmi.querySelector("[data-filmi-kartice]");
     naslov.textContent = kraj.ime; opis.textContent = kraj.opis; seznam.innerHTML = kraj.kartice;
     zankeKartic(seznam.querySelectorAll("[data-vlog]"));
+    nagibKartic(seznam.querySelectorAll(".kartica-povezava"));
     gsap.fromTo([naslov, opis, ...seznam.children], { autoAlpha: 0, y: 14 },
       { autoAlpha: 1, y: 0, duration: mirno ? 0 : 0.7, stagger: mirno ? 0 : 0.06, ease: "expo.out", overwrite: true });
   }

@@ -9,7 +9,7 @@
 // (infoDelivery); ukaza sta seekTo in playVideo.
 import { zazeniDrsenje, prikaziNaslove, mirno, svet } from "./gibanje.js";
 import { prenos } from "./prenos.js";
-import { zankeKartic } from "./kartice.js";
+import { zankeKartic, nagibKartic } from "./kartice.js";
 import { clan } from "./clan.js";
 import { komentarji } from "./komentarji.js";
 
@@ -121,6 +121,7 @@ deli.addEventListener("click", async () => {
 // ---------------------------------------------------------------- komentarji, seznam Naprej
 komentarji(document.querySelector("[data-komentarji]"), { skoci });
 zankeKartic([...document.querySelectorAll(".naprej [data-vlog]")]);
+nagibKartic(document.querySelectorAll(".naprej .kartica-povezava"));
 
 if (!mirno) {
   gsap.fromTo("[data-uvod]", { autoAlpha: 0, y: -8 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: "expo.out" });

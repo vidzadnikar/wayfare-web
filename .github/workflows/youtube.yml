@@ -38,6 +38,11 @@ jobs:
         if: steps.preveri.outputs.cakajo != '0'
         with:
           fetch-depth: 0
+      # ffmpeg naredi majhno sličico novega vloga (media/vlogi/male/, zgradi.py);
+      # brez njega kartica pokaže veliko naslovnico
+      - name: ffmpeg za sličice
+        if: steps.preveri.outputs.cakajo != '0'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends ffmpeg
       - name: Dodaj, objavi, obvesti
         if: steps.preveri.outputs.cakajo != '0'
         run: |

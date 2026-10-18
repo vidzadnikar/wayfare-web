@@ -14,7 +14,8 @@ export const onRequestGet = obravnavaj(async ({ request, env, waitUntil }) => {
   const clan = await clanIzSeje(env, request);
   const stej = prestej(env.DB, clan ? "obisk_clan" : "obisk_gost");
   if (typeof waitUntil === "function") waitUntil(stej); else await stej;
-  if (!clan) return json({ prijavljen: false }, 401);
+  // gost dobi 200, ne 401: sicer brskalnik na vsaki strani zabeleži napako
+  if (!clan) return json({ prijavljen: false });
   await zabeleziObisk(env.DB, clan.id);
   return json({
     prijavljen: true, ime: clan.ime, email: clan.email, slika: clan.slika_url, jezik: clan.jezik,
