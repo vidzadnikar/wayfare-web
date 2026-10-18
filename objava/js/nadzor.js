@@ -1,6 +1,7 @@
 // Nadzor strani (/nadzor): vse podatke da /api/nadzor/clani v enem klicu.
 // Dejanja: člani (/api/nadzor/clan), zadržana obvestila (/api/nadzor/obvestilo),
 // vlogi z YouTuba (/api/nadzor/youtube), komentarji (/api/komentarji/izbrisi),
+// odzivi (/api/nadzor/odziv),
 // novica (/api/nadzor/novica), vrsta
 // (/api/nadzor/vrsta) in nastavitve (/api/nadzor/nastavitve). Izvoz je
 // navadna povezava. Imena vlogov pridejo iz /vlogi/seznam.json.
@@ -104,8 +105,11 @@ function narisiPregled() {
   const danes = new Date().toISOString().slice(0, 10);
   const obiskDanes = (k) => obiski.find((o) => o.dan === danes && o.kljuc === k)?.stevilo || 0;
   const vsehOgledov = ogledi.reduce((s, o) => s + o.ogledov, 0);
+  const odzivi = stanje.odzivi || [];
+  const neresenih = odzivi.filter((o) => !o.resen_at).length;
   $("[data-ploscice]").replaceChildren(
     ploscica(aktivnih, "aktivnih članov", `${clani.length} skupaj`),
+    ploscica(neresenih, "nerešenih odzivov", `${odzivi.length} skupaj`),
     ploscica(obiskDanes("obisk_gost") + obiskDanes("obisk_clan"), "nalaganj strani danes", `${obiskDanes("obisk_clan")} od članov`),
     ploscica(vsehOgledov, "ogledov vlogov", `${ogledi.length} različnih filmov`),
     ploscica(`${vrsta.dnevno.poslanih}/${vrsta.dnevno.meja}`, "pošt danes", vrsta.caka ? `${vrsta.caka} čaka v vrsti` : "vrsta je prazna"),
@@ -261,6 +265,38 @@ function narisiOgledi() {
   if (!vrstice.length) $("[data-ogledi] tbody").append(prazno(6, "Ogledov še ni. Šteti se začnejo, ko nekdo predvaja film na strani."));
 }
 
+// ---------------------------------------------------------------- odzivi
+const VRSTE_ODZIVA = { napaka: "Napaka", predlog: "Predlog", pohvala: "Pohvala" };
+
+function narisiOdzive() {
+  const vrstice = (stanje.odzivi || []).map((o) => {
+    const kdo = o.email ? el("a", { href: `mailto:${o.email}` }, o.ime ? `${o.ime} (${o.email})` : o.email) : (o.ime || "—");
+    const odKod = [o.vir === "app" ? "aplikacija" : "stran", o.razlicica, o.sistem, o.jezik?.toUpperCase()].filter(Boolean).join(" · ");
+    return el("tr", {},
+      el("td", { class: "naslov" }, VRSTE_ODZIVA[o.vrsta] || o.vrsta),
+      el("td", { class: "naslov komentar-celica" }, o.besedilo),
+      el("td", {}, kdo),
+      el("td", {}, odKod),
+      el("td", {}, datum(o.ustvarjeno_at)),
+      el("td", { class: o.resen_at ? "stanje-odjavljen" : "stanje-aktiven" }, o.resen_at ? `rešeno ${datum(o.resen_at)}` : "odprto"),
+      el("td", {},
+        el("button", { type: "button", class: "tabela-gumb", onclick: () => dejanjeOdziva(o, o.resen_at ? "odpri" : "resen") }, o.resen_at ? "Odpri znova" : "Rešeno"), " ",
+        el("button", { type: "button", class: "tabela-gumb tabela-gumb-rdec", onclick: () => dejanjeOdziva(o, "izbrisi") }, "Izbriši")),
+    );
+  });
+  $("[data-odzivi] tbody").replaceChildren(...vrstice);
+  if (!vrstice.length) $("[data-odzivi] tbody").append(prazno(7, "Odzivov še ni."));
+}
+
+async function dejanjeOdziva(o, dejanje) {
+  if (dejanje === "izbrisi" && !confirm(`Izbrišem odziv »${o.besedilo.slice(0, 80)}«?`)) return;
+  try {
+    await klic("/api/nadzor/odziv", { id: o.id, dejanje });
+    povej({ resen: "Odziv je rešen.", odpri: "Odziv je spet odprt.", izbrisi: "Odziv je izbrisan." }[dejanje]);
+    await nalozi();
+  } catch (e) { povej(e.message, true); }
+}
+
 // ---------------------------------------------------------------- komentarji
 function narisiKomentarje() {
   const vrstice = (stanje.komentarji || []).map((k) => el("tr", {},
@@ -309,6 +345,8 @@ const IMENA_NASTAVITEV = {
   obvesti_me_novi_clan: "Obvesti me ob novem članu",
   komentarji_odprti: "Komentarji odprti",
   obvesti_me_komentar: "Obvesti me ob novem komentarju",
+  odzivi_odprti: "Odzivi odprti",
+  obvesti_me_odziv: "Obvesti me ob novem odzivu",
   posta_dnevno: "Dnevna meja pošte",
   besedilo_vlog_sl: "Besedilo obvestila o vlogu (SL)",
   besedilo_vlog_en: "Besedilo obvestila o vlogu (EN)",
@@ -369,6 +407,7 @@ async function nalozi() {
   narisiYoutube();
   $("[data-clani] tbody").replaceChildren(...clani.map(vrsticaClana));
   if (!clani.length) $("[data-clani] tbody").append(prazno(11, "Še nihče."));
+  narisiOdzive();
   narisiOgledi();
   narisiKomentarje();
   $("[data-obvestila] tbody").replaceChildren(...obvestila.map(vrsticaObvestila));

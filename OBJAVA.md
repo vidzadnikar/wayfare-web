@@ -250,3 +250,28 @@ prijavljen član (ob prvem komentarju vpiše ime, če ga nima), odgovori en
 nivo globoko, všečki, urejanje in brisanje svojih, admin briše vse (tudi v
 nadzoru, razdelek Komentarji). Časi v besedilu (1:23) skočijo v film.
 Nastavitvi: »Komentarji odprti« in »Obvesti me ob novem komentarju«.
+
+## Odzivi testerjev (od 18. 10. 2026)
+
+Stran `odziv/` (in `sl/odziv/`, predloga `stran/predloga-odziv.html`, skripta
+`js/odziv.js`) ima obrazec: vrsta (napaka, ideja, pohvala), besedilo in
+neobvezen e-naslov za odgovor. Povezava je v nogi in v vprašanju 7. Brez
+skripte obrazec pošlje strežnik in preusmeri na `#hvala` ali `#napaka`.
+
+Zaledje `functions/api/odziv.js` (pomočniki `zaledje/odzivi.js`, tabela
+`odzivi`, migracija 0004) sprejme odziv s strani in iz aplikacije (meni ⋯ →
+Pošlji odziv, `wayfare/odziv.py`). Prijava ni potrebna; omejitev je 10 odzivov
+na uro z enega naslova IP, polje `spletna_stran` je past za robote. Aplikacija
+odpre obrazec s `?iz=app&v=<različica>&os=<sistem>`, kadar je vklopljeno »Brez
+spleta«.
+
+V nadzoru je razdelek Odzivi (nerešeni zgoraj, Rešeno, Izbriši, izvoz
+`/api/nadzor/izvoz?kaj=odzivi`) in ploščica »nerešenih odzivov«. Nastavitvi:
+»Odzivi odprti« in »Obvesti me ob novem odzivu« (pošta adminu z Reply-To na
+testerjev e-naslov). Izbris računa odzive obdrži, a jim odstrani člana in
+e-naslov.
+
+Ob objavi najprej na oddaljeni bazi uveljavi migracijo (0004, skupaj z 0005
+iz varnostnih popravkov), šele nato pushaj:
+
+    npx wrangler d1 migrations apply wayfare-clani --remote

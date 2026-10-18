@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{odziv_naslov_strani}}</title>
+<meta name="description" content="{{odziv_opis}}">
+<link rel="alternate" hreflang="en" href="{{url_en}}">
+<link rel="alternate" hreflang="sl" href="{{url_sl}}">
+<link rel="icon" href="{{koren}}media/logo.svg" type="image/svg+xml">
+<meta http-equiv="Content-Security-Policy" content="{{csp}}">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preload" href="{{koren}}pisave/instrument-sans-latin-11aa49.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{koren}}css/pisave.css">
+<link rel="stylesheet" href="{{koren}}css/slog.css">
+<script>document.documentElement.classList.add("js");{{preusmeritev}}</script>
+</head>
+<body>
+<!-- Ta datoteka je zgrajena iz predloga-odziv.html, deli/ in besedila.json (python3 zgradi.py). Ne urejaj je ročno. -->
+<div class="svet" aria-hidden="true">
+  <span class="svet-luc svet-luc-1" data-luc></span>
+  <span class="svet-luc svet-luc-2" data-luc></span>
+  <span class="svet-luc svet-luc-3" data-luc></span>
+  <span class="svet-kazalec" data-kazalec></span>
+</div>
+<a class="preskoci" href="#vsebina">{{preskoci}}</a>
+
+{{glava}}
+
+<main id="vsebina" class="besedilo-stran">
+  <article class="besedilo odziv" aria-labelledby="odziv-naslov">
+    <h1 id="odziv-naslov" class="serif" data-naslov-uvod>{{odziv_naslov}}</h1>
+    <p class="uvodnik" data-uvod>{{odziv_uvod}}</p>
+    <!-- Brez skripte obrazec pošlje strežnik in preusmeri na #hvala ali #napaka (pokaže ju :target). -->
+    <div class="odziv-hvala" id="hvala" tabindex="-1" data-odziv-hvala>
+      <h2 class="serif">{{odziv_hvala_naslov}}</h2>
+      <p>{{odziv_hvala_besedilo}}</p>
+      <p><a class="gumb gumb-tihi" href="{{dom}}">{{odziv_domov}}</a></p>
+    </div>
+    <p class="odziv-napaka-blok prijava-napaka" id="napaka">{{odziv_napaka_splosno}}</p>
+    <form class="odziv-obrazec" method="post" action="/api/odziv" data-odziv data-uvod
+          data-splosno="{{odziv_napaka_splosno}}" data-besedilo="{{odziv_napaka_besedilo}}" data-predolgo="{{odziv_napaka_besedilo}}"
+          data-email="{{odziv_napaka_email}}" data-omejitev="{{odziv_napaka_omejitev}}" data-zaprto="{{odziv_napaka_zaprto}}" data-vrsta="{{odziv_napaka_vrsta}}">
+      <input type="hidden" name="jezik" value="{{lang}}">
+      <input type="hidden" name="vir" value="stran" data-odziv-vir>
+      <input type="hidden" name="razlicica" value="" data-odziv-razlicica>
+      <input type="hidden" name="sistem" value="" data-odziv-sistem>
+      <fieldset class="racun-skupina odziv-vrste">
+        <legend>{{odziv_vrsta}}</legend>
+        <label class="racun-izbira"><input type="radio" name="vrsta" value="napaka" required> {{odziv_vrsta_napaka}}</label>
+        <label class="racun-izbira"><input type="radio" name="vrsta" value="predlog" checked> {{odziv_vrsta_predlog}}</label>
+        <label class="racun-izbira"><input type="radio" name="vrsta" value="pohvala"> {{odziv_vrsta_pohvala}}</label>
+      </fieldset>
+      <label class="odziv-oznaka" for="odziv-besedilo">{{odziv_besedilo_oznaka}}</label>
+      <textarea class="prijava-polje odziv-besedilo" id="odziv-besedilo" name="besedilo" required minlength="3" maxlength="4000" rows="7" placeholder="{{odziv_besedilo_namig}}"></textarea>
+      <label class="odziv-oznaka" for="odziv-email">{{odziv_email_oznaka}}</label>
+      <input class="prijava-polje" id="odziv-email" type="email" name="email" maxlength="200" autocomplete="email" inputmode="email" placeholder="{{odziv_email_namig}}">
+      <div class="odziv-past" aria-hidden="true"><label>Website <input name="spletna_stran" tabindex="-1" autocomplete="off"></label></div>
+      <p class="prijava-napaka" role="alert" data-odziv-napaka hidden></p>
+      <div><button class="gumb" type="submit">{{odziv_poslji}}</button></div>
+      <p class="drobno">{{odziv_zasebnost}} <a href="{{pot_zasebnost}}">{{prijava_zasebnost_povezava}}</a>.</p>
+    </form>
+  </article>
+</main>
+
+{{obvestilo}}
+{{prijava}}
+
+{{noga}}
+
+<!-- knjižnice so na lastnem strežniku (gsap 3.15.0, lenis 1.3.26), brez CDN -->
+<script src="{{koren}}js/knjiznice/gsap.min.js" defer></script>
+<script src="{{koren}}js/knjiznice/ScrollTrigger.min.js" defer></script>
+<script src="{{koren}}js/knjiznice/lenis.min.js" defer></script>
+<script type="module" src="{{koren}}js/odziv.js"></script>
+</body>
+</html>

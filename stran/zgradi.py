@@ -7,6 +7,7 @@ Strani:
     predloga.html        → index.html (angleščina, koren) in sl/index.html
     predloga-vlogi.html  → vlogi/index.html in sl/vlogi/index.html
     predloga-zasebnost.html → zasebnost/index.html in sl/zasebnost/index.html
+    predloga-odziv.html  → odziv/index.html in sl/odziv/index.html (obrazec za odziv testerjev)
     predloga-ogled.html  → vlogi/<oznaka>/index.html in sl/vlogi/<oznaka>/index.html (vsak vlog)
 
 Besedila so v besedila.json; ključ {{x}} v predlogi se zamenja z vrednostjo.
@@ -43,6 +44,7 @@ STRANI = {
     "vlogi": dict(predloga="predloga-vlogi.html", izhod={"en": "vlogi/index.html", "sl": "sl/vlogi/index.html"}),
     "zasebnost": dict(predloga="predloga-zasebnost.html", izhod={"en": "zasebnost/index.html", "sl": "sl/zasebnost/index.html"}),
     "novosti": dict(predloga="predloga-novosti.html", izhod={"en": "novosti/index.html", "sl": "sl/novosti/index.html"}),
+    "odziv": dict(predloga="predloga-odziv.html", izhod={"en": "odziv/index.html", "sl": "sl/odziv/index.html"}),
     "napaka": dict(predloga="predloga-404.html", izhod={"en": "404.html", "sl": "sl/404.html"}),
 }
 
@@ -242,16 +244,17 @@ def poti(stran, jezik):
     vlogi = STRANI["vlogi"]["izhod"][jezik]
     zasebnost = STRANI["zasebnost"]["izhod"][jezik]
     novosti = STRANI["novosti"]["izhod"][jezik]
+    odziv = STRANI["odziv"]["izhod"][jezik]
     if stran == "napaka":
         absolutna = lambda do: "/" + do.removesuffix("index.html")
         koren, pot_dom = "/", absolutna(dom)
         url_en, url_sl, pot_vlogi, pot_zasebnost = absolutna(en), absolutna(sl), absolutna(vlogi), absolutna(zasebnost)
-        pot_novosti = absolutna(novosti)
+        pot_novosti, pot_odziv = absolutna(novosti), absolutna(odziv)
     else:
         koren, pot_dom = relmapa(ta, "index.html"), relmapa(ta, dom)
         url_en, url_sl = relmapa(ta, en, "./"), relmapa(ta, sl, "./")
         pot_vlogi, pot_zasebnost = relmapa(ta, vlogi, "./"), relmapa(ta, zasebnost, "./")
-        pot_novosti = relmapa(ta, novosti, "./")
+        pot_novosti, pot_odziv = relmapa(ta, novosti, "./"), relmapa(ta, odziv, "./")
     return {
         "lang": jezik,
         "koren": koren,
@@ -261,11 +264,13 @@ def poti(stran, jezik):
         "pot_vlogi": pot_vlogi,
         "pot_zasebnost": pot_zasebnost,
         "pot_novosti": pot_novosti,
+        "pot_odziv": pot_odziv,
         "en_aktiven": 'aria-current="page"' if jezik == "en" else "",
         "sl_aktiven": 'aria-current="page"' if jezik == "sl" else "",
         "vlogi_aktiven": ' aria-current="page"' if stran == "vlogi" or stran.startswith("ogled:") else "",
         "zasebnost_aktiven": ' aria-current="page"' if stran == "zasebnost" else "",
         "novosti_aktiven": ' aria-current="page"' if stran == "novosti" else "",
+        "odziv_aktiven": ' aria-current="page"' if stran == "odziv" else "",
         "_drug": drug,
         "_ta": ta,
     }

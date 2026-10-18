@@ -792,6 +792,21 @@ html:not(.js) .clan-mesto { display: none; }
 .besedilo a { color: var(--fg); }
 .besedilo code { font: 500 13px/1.5 var(--mono); color: var(--fg); background: rgba(242, 242, 243, 0.08); padding: 2px 6px; border-radius: var(--radius-sm); }
 
+/* Odziv testerjev (odziv/): obrazec, zahvala, napaka. Brez skripte strežnik
+   preusmeri na #hvala ali #napaka, ki ju pokaže :target. */
+.odziv-obrazec { display: grid; gap: var(--s4); }
+.odziv-obrazec[hidden] { display: none; }
+.odziv-vrste { margin-bottom: var(--s2); }
+.odziv-oznaka { color: var(--fg); font-size: 15px; margin-bottom: calc(-1 * var(--s2)); }
+.odziv-besedilo { height: auto; min-height: 176px; padding: var(--s3) var(--s4); border-radius: var(--radius-lg); line-height: 1.5; resize: vertical; }
+.odziv-obrazec .drobno a { color: var(--muted); }
+.odziv-past { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.odziv-hvala, .odziv-napaka-blok { display: none; }
+.odziv-hvala:target, .odziv-hvala.vidno { display: grid; gap: var(--s4); }
+.odziv-hvala:focus { outline: none; }
+.odziv-hvala:target ~ .odziv-obrazec { display: none; }
+.odziv-napaka-blok:target { display: block; }
+
 /* Nastavitve člana (okno iz menija z imenom) */
 .racun-obrazec { gap: var(--s5); }
 .racun-skupina { border: 0; margin: 0; padding: 0; display: grid; gap: var(--s2); }
