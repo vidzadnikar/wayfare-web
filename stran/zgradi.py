@@ -99,7 +99,7 @@ YOUTUBE = "https://www.youtube-nocookie.com"
 # Štetje obiskov s Cloudflare Web Analytics (brez piškotkov). Vklopi se v
 # nadzorni plošči Cloudflare Pages (projekt → Metrics → Web Analytics), ki
 # skript vstavi sam; tu mu CSP to dovoli in stran o zasebnosti to pove.
-ANALITIKA = False
+ANALITIKA = True  # vklopljeno v Cloudflare Pages 18. 10. 2026 (velja od naslednje objave)
 ANALITIKA_SKRIPT = "https://static.cloudflareinsights.com"
 ANALITIKA_POVEZAVA = "https://cloudflareinsights.com"
 
