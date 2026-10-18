@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="{{koren}}css/vlogi.css">
 <script>document.documentElement.classList.add("js");{{preusmeritev}}</script>
 </head>
-<body>
+<body class="uvod-css">
 <!-- Ta datoteka je zgrajena iz predloga-vlogi.html, deli/ in besedila.json (python3 zgradi.py). Ne urejaj je ročno. -->
 <div class="svet" aria-hidden="true">
   <span class="svet-luc svet-luc-1" data-luc></span>
@@ -33,11 +33,11 @@
 
 <main id="vsebina" class="vlogi-stran">
   <section class="vlogi-uvod" id="vrh" aria-labelledby="vlogi-naslov">
-    <h1 id="vlogi-naslov" class="serif" data-naslov-uvod>{{vlogi_naslov}}</h1>
-    <p class="uvodnik" data-uvod>{{vlogi_uvod}}</p>
+    <h1 id="vlogi-naslov" class="serif" data-naslov-uvod data-razbito="1" aria-label="{{vlogi_naslov_besedilo}}">{{vlogi_naslov_razbit}}</h1>
+    <p class="uvodnik" data-uvod style="--j:1">{{vlogi_uvod}}</p>
   </section>
 
-  <section class="izpostavljeno" aria-labelledby="izpostavljeno-naslov" data-uvod>
+  <section class="izpostavljeno" aria-labelledby="izpostavljeno-naslov" data-uvod style="--j:2">
     <a class="izpostavljeno-povezava" href="{{prvi_pot}}">
       <span class="izpostavljeno-okvir">
         <img src="{{prvi_slika}}" alt="" fetchpriority="high">

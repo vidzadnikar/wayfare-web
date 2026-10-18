@@ -905,3 +905,14 @@ html:not(.js) .clan-mesto { display: none; }
 .izdaja-povezava { justify-self: start; color: var(--fg); font-size: 15px; text-underline-offset: 3px; }
 .izdaja-povezava:hover { color: var(--accent); }
 @media (max-width: 760px) { .izdaja { grid-template-columns: 1fr; } }
+
+/* -------------------------------------------------- stran Vlogi: uvod v CSS
+   Enako gibanje kot prej z GSAP (besede naslova 1,1 s, od 0,1 s z zamikom 0,05 s;
+   glava, opis in izpostavljeni film 1 s, od 0,3 s z zamikom 0,09 s; krivulja
+   expo.out), le da steče ob prvem izrisu in ne čaka na knjižnice. */
+.uvod-css [data-uvod], .uvod-css [data-naslov-uvod] { visibility: visible; }
+.uvod-css [data-uvod] { animation: uvod-gor 1s cubic-bezier(0.16, 1, 0.3, 1) calc(0.3s + var(--j, 0) * 0.09s) both; }
+.uvod-css [data-naslov-uvod] .beseda > span { animation: beseda-gor 1.1s cubic-bezier(0.16, 1, 0.3, 1) calc(0.1s + var(--i, 0) * 0.05s) both; }
+@keyframes uvod-gor { from { opacity: 0; transform: translateY(16px); } }
+@keyframes beseda-gor { from { transform: translateY(110%); } }
+@media (prefers-reduced-motion: reduce) { .uvod-css [data-uvod], .uvod-css [data-naslov-uvod] .beseda > span { animation: none; } }

@@ -36,7 +36,7 @@
 <link rel="modulepreload" href="../js/clan.js">
 <script>document.documentElement.classList.add("js");try{var j=localStorage.getItem("wayfare-jezik");if(!j&&/^sl\b/i.test(navigator.language||""))j="sl";if(j==="sl")location.replace("../sl/vlogi/"+location.hash);}catch(e){}</script>
 </head>
-<body>
+<body class="uvod-css">
 <!-- Ta datoteka je zgrajena iz predloga-vlogi.html, deli/ in besedila.json (python3 zgradi.py). Ne urejaj je ročno. -->
 <div class="svet" aria-hidden="true">
   <span class="svet-luc svet-luc-1" data-luc></span>
@@ -91,11 +91,11 @@
 
 <main id="vsebina" class="vlogi-stran">
   <section class="vlogi-uvod" id="vrh" aria-labelledby="vlogi-naslov">
-    <h1 id="vlogi-naslov" class="serif" data-naslov-uvod>Every trip, <em>as it happened.</em></h1>
-    <p class="uvodnik" data-uvod>Phone clips in, finished film out. 23 films from 6 trips, all cut by Claude in Wayfare Studio from the maker’s own clips. The films are in Slovenian.</p>
+    <h1 id="vlogi-naslov" class="serif" data-naslov-uvod data-razbito="1" aria-label="Every trip, as it happened."><span class="beseda" aria-hidden="true"><span style="--i:0">Every</span></span> <span class="beseda" aria-hidden="true"><span style="--i:1">trip,</span></span> <span class="beseda" aria-hidden="true"><span style="--i:2"><em>as</em></span></span> <span class="beseda" aria-hidden="true"><span style="--i:3"><em>it</em></span></span> <span class="beseda" aria-hidden="true"><span style="--i:4"><em>happened.</em></span></span></h1>
+    <p class="uvodnik" data-uvod style="--j:1">Phone clips in, finished film out. 23 films from 6 trips, all cut by Claude in Wayfare Studio from the maker’s own clips. The films are in Slovenian.</p>
   </section>
 
-  <section class="izpostavljeno" aria-labelledby="izpostavljeno-naslov" data-uvod>
+  <section class="izpostavljeno" aria-labelledby="izpostavljeno-naslov" data-uvod style="--j:2">
     <a class="izpostavljeno-povezava" href="milano-4/">
       <span class="izpostavljeno-okvir">
         <img src="../media/vlogi/milano-4.jpg" alt="" fetchpriority="high">

@@ -3,7 +3,7 @@
 // kjer so predvajalnik, poglavja in komentarji (ogled.js). Nad kartico teče
 // nem predogled. Stare povezave s #oznako (pošta, zaznamki) preusmeri na
 // stran ogleda.
-import { zazeniDrsenje, prikaziNaslove, besede, mirno, svet } from "./gibanje.js";
+import { zazeniDrsenje, prikaziNaslove, mirno, svet } from "./gibanje.js";
 import { prenos } from "./prenos.js";
 import { zankeKartic, prihodKartic, nagibKartic } from "./kartice.js";
 import { clan } from "./clan.js";
@@ -20,13 +20,9 @@ if (!mirno) document.documentElement.classList.add("gibanje");
 zankeKartic([...document.querySelectorAll("[data-vlog]")]);
 nagibKartic(document.querySelectorAll(".kartica-povezava"));
 
+// uvod (naslov po besedah, opis, izpostavljeni film) je v CSS (.uvod-css v
+// slog.css), da steče ob prvem izrisu in ne čaka na knjižnice
 if (!mirno) {
-  const h1 = document.querySelector("[data-naslov-uvod]");
-  const deli = besede(h1);
-  gsap.timeline({ defaults: { ease: "expo.out" } })
-    .set(h1, { autoAlpha: 1 }, 0)
-    .from(deli, { yPercent: 110, duration: 1.1, stagger: 0.05 }, 0.1)
-    .fromTo("[data-uvod]", { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 1.0, stagger: 0.09 }, 0.3);
   prihodKartic(".skupina h3, .kartica", { gsap, ScrollTrigger });
   svet({ gsap });
 }

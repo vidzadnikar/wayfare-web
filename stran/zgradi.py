@@ -526,6 +526,24 @@ def vlogi_dom(jezik, p):
             "st_potovanj": mnozina(krajev, jezik, "potovanje")}
 
 
+def razbij_naslov(vrednost):
+    """Naslov razbit na besede že pri gradnji, enako kot besede() v gibanje.js:
+    vsaka beseda v <span class="beseda"> z zaporedno številko --i (zamik v CSS),
+    <em> ostane okoli besede, <br> ostane. Vrne (HTML, golo besedilo za aria-label)."""
+    i = 0
+    vrstice = []
+    for vrstica in re.split(r"<br\s*/?>", vrednost):
+        deli = []
+        for em, besedilo in re.findall(r"<em>(.*?)</em>|([^<]+)", vrstica):
+            for beseda in (em or besedilo).split():
+                notri = f"<em>{beseda}</em>" if em else beseda
+                deli.append(f'<span class="beseda" aria-hidden="true"><span style="--i:{i}">{notri}</span></span>')
+                i += 1
+        vrstice.append(" ".join(deli))
+    golo = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", vrednost)).strip()
+    return "<br>".join(vrstice), html.escape(golo)
+
+
 def vlogi_stran(jezik, b, p):
     """Vrednosti za predlogo zavihka Vlogi: najnovejši film izpostavljen,
     spodaj skupine po krajih. Vsaka kartica vodi na stran ogleda."""
@@ -546,7 +564,10 @@ def vlogi_stran(jezik, b, p):
             f'<ul class="kartice">{"".join(kartice)}</ul></section>'
         )
     prvi, v0 = opisi[0], vlogi[0]
+    razbit, golo = razbij_naslov(b["vlogi_naslov"])
     return {
+        "vlogi_naslov_razbit": razbit,
+        "vlogi_naslov_besedilo": golo,
         "skupine": "\n      ".join(deli),
         "st_filmov": mnozina(len(vlogi), jezik, "film"),
         "st_potovanj": mnozina(len(skupine), jezik, "potovanje"),
