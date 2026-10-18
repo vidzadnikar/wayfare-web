@@ -217,14 +217,15 @@ export async function ustvariZnak(nastavitve) {
   const cilj = new THREE.Vector3();
   const v2 = new THREE.Vector2();
 
-  function prikazi(kosiVidni) {
-    if (kosiVidni === razstavljen) return;
+  function prikazi(kosiVidni, vedno = false) {
+    if (kosiVidni === razstavljen && !vedno) return;
     razstavljen = kosiVidni;
     cel.visible = !kosiVidni;
     skupina.visible = kosiVidni;
   }
-  prikazi(casUvoda === 0);
-  if (casUvoda !== 0) { cel.visible = true; skupina.visible = false; razstavljen = false; }
+  // začetno stanje nastavi vedno: model pride z obema skupinama vidnima, zato bi
+  // brez tega med uvodom za letečimi kosi ves čas stal še cel znak
+  prikazi(casUvoda === 0, true);
 
   function simuliraj(dt) {
     cas += dt;

@@ -725,7 +725,8 @@ GLAVE = """/*
 # Slike v e-pošti (logo, naslovnice vlogov) nalaga odjemalec pošte z drugega
 # izvora, zato pod /media/ ni omejitve same-origin. Mediji se hranijo teden dni
 # (zamenjan medij dobi novo ime ali počaka teden); pisave imajo v imenu zgoščeno
-# vrednost, knjižnice različico v komentarju predloge, zato se hranijo dlje.
+# vrednost, zato se hranijo leto dni; knjižnice teden, 3D model dan (ob zamenjavi
+# brez novega imena obiskovalec dobi novo različico najkasneje takrat).
 # HTML, css/ in js/ ostanejo brez hranjenja (vsaka objava takoj velja).
 /media/*
   ! Cross-Origin-Resource-Policy
@@ -735,10 +736,10 @@ GLAVE = """/*
   Cache-Control: public, max-age=31536000, immutable
 
 /js/knjiznice/*
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
 
 /model/*
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=86400, stale-while-revalidate=86400
 
 # Spremljevalec na telefonu (telefon/): mikrofon za glasovne zapiske, GPS za
 # kraj oznake, servisni delavec za delo brez povezave. Ostala stran tega ne sme.
