@@ -64,5 +64,5 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
     email, ime: trditve.name || trditve.given_name || null, slika: trditve.picture || null, vir: "google", jezik,
   });
   await poPrijavi(env, request, clan, !obstojec);
-  return preusmeri(`${nazaj}?prijava=google`, { piskotki: [pobrisi, await sejaPiskotek(env, request, clan.id)] });
+  return preusmeri(`${nazaj}?prijava=google`, { piskotki: [pobrisi, await sejaPiskotek(env, request, clan)] });
 }, { html: true });

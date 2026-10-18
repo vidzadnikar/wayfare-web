@@ -1,7 +1,9 @@
 // Nadzor: blokiraj, odblokiraj ali izbriši člana. Blokiran član ne more
-// v sejo in ne dobi pošte; njegovi čakajoči zapisi v vrsti se izbrišejo.
+// v sejo in ne dobi pošte; njegovi čakajoči zapisi v vrsti se izbrišejo, seje
+// prekličejo. Izbris odstrani člana z vsemi podatki (komentarji, ogledi ...).
 import { Napaka, json, telo, istiIzvor } from "../../../zaledje/osnova.js";
-import { zahtevajAdmina } from "../../../zaledje/seja.js";
+import { zahtevajAdmina, preklicSej } from "../../../zaledje/seja.js";
+import { izbrisiClana } from "../../../zaledje/clani.js";
 import { obravnavaj } from "../../../zaledje/strani.js";
 
 export const onRequestPost = obravnavaj(async ({ request, env }) => {
@@ -15,12 +17,16 @@ export const onRequestPost = obravnavaj(async ({ request, env }) => {
   if (id === admin.id && dejanje !== "odblokiraj") throw new Napaka(400, "sam", "Sebe ne moreš blokirati ali izbrisati.");
   const db = env.DB;
   if (dejanje === "izbrisi") {
-    const r = await db.prepare("DELETE FROM clani WHERE id = ?").bind(id).run();
-    if (!(r.meta?.changes ?? 0)) throw new Napaka(404, "clan", "Člana ni.");
+    const c = await db.prepare("SELECT id, email FROM clani WHERE id = ?").bind(id).first();
+    if (!c) throw new Napaka(404, "clan", "Člana ni.");
+    await izbrisiClana(db, c);
   } else {
     const r = await db.prepare("UPDATE clani SET blokiran = ?1 WHERE id = ?2").bind(dejanje === "blokiraj" ? 1 : 0, id).run();
     if (!(r.meta?.changes ?? 0)) throw new Napaka(404, "clan", "Člana ni.");
-    if (dejanje === "blokiraj") await db.prepare("DELETE FROM vrsta WHERE clan_id = ?1 AND poslano_at IS NULL").bind(id).run();
+    if (dejanje === "blokiraj") {
+      await db.prepare("DELETE FROM vrsta WHERE clan_id = ?1 AND poslano_at IS NULL").bind(id).run();
+      await preklicSej(db, id);
+    }
   }
   return json({ stanje: "ok", id, dejanje });
 });

@@ -10,7 +10,7 @@ export const T = {
     potrditev_zadeva: "Potrdi prijavo na obvestila Wayfare Studia",
     potrditev_naslov: "Še en klik.",
     potrditev_uvod: "Potrdi e-naslov in obveščen boš o vsakem novem filmu in novi različici aplikacije.",
-    potrditev_besedilo: "Klikni gumb in e-naslov je potrjen. Potem ti pišemo, ko objavimo nov film ali novo različico aplikacije. Povezava velja en dan.",
+    potrditev_besedilo: "Klikni gumb in e-naslov je potrjen. Potem ti pišemo, ko objavimo nov film ali novo različico aplikacije. Povezava velja eno uro.",
     potrditev_gumb: "Potrdi e-naslov",
     potrditev_opomba: "Če tega nisi zahteval ti, pošto prezri: brez klika se ne zgodi nič.",
     potrditev_noga: "To pošto si dobil, ker je bil ta e-naslov vpisan na strani Wayfare Studio.",
@@ -29,7 +29,7 @@ export const T = {
     potrditev_zadeva: "Confirm your Wayfare Studio updates",
     potrditev_naslov: "One more click.",
     potrditev_uvod: "Confirm your email to hear about every new film and app release.",
-    potrditev_besedilo: "Click the button to confirm your email. We'll then write when a new film or a new version of the app is out. The link is valid for one day.",
+    potrditev_besedilo: "Click the button to confirm your email. We'll then write when a new film or a new version of the app is out. The link is valid for one hour.",
     potrditev_gumb: "Confirm email",
     potrditev_opomba: "If this wasn't you, ignore this email: nothing happens without the click.",
     potrditev_noga: "You're getting this because this address was entered on the Wayfare Studio site.",
@@ -223,6 +223,25 @@ export function sestaviKomentarAdminu({ ime, vlog, besedilo, odgovor, url, koren
   };
 }
 
+// Pošta adminu: nov odziv s strani ali iz aplikacije.
+export function sestaviOdzivAdminu({ vrsta, besedilo, email, vir, razlicica, sistem, koren }) {
+  const ime = { napaka: "Napaka", predlog: "Predlog", pohvala: "Pohvala" }[vrsta] || "Odziv";
+  const od = [vir === "app" ? "iz aplikacije" : "s strani", razlicica ? `različica ${razlicica}` : "", sistem || ""].filter(Boolean).join(", ");
+  const uvod = `${ime} ${od}${email ? `, odgovor na ${email}` : ", brez e-naslova"}:`;
+  const k = String(koren || "").replace(/\/$/, "");
+  return {
+    zadeva: `${ime}: ${besedilo.replace(/\s+/g, " ").slice(0, 60)}`,
+    html: ovoj({
+      jezik: "sl", koren: k, naslov: "Nov odziv.", predogled: besedilo.slice(0, 140),
+      odstavki: [pobegni(uvod), ...odstavkiIz(besedilo).map(odstavekHtml)],
+      gumb: { besedilo: "Odpri nadzor", url: `${k}/nadzor#odzivi` },
+      noga: "To pošto dobiš, ker je v nadzoru vklopljeno »Obvesti me ob novem odzivu«.",
+    }),
+    besedilo: ["Nov odziv.", "", uvod, "", besedilo, "", `Nadzor: ${k}/nadzor#odzivi`].join("\n"),
+    ...(email ? { odgovor: email } : {}),
+  };
+}
+
 // Odjavni žeton je podpis (ne zapis v bazi), zato povezava v stari pošti velja
 // vedno; z menjavo e-naslova ali SESSION_SECRET neha veljati.
 export const odjavaZeton = async (env, clan) => `${clan.id}.${await podpisi(env.SESSION_SECRET, `odjava:${clan.id}:${clan.email}`)}`;
@@ -271,6 +290,7 @@ async function posljiBrevo(env, sporocila) {
   if (sporocila.length === 1) {
     const [s] = sporocila;
     Object.assign(telo, { to: [naslovnik(s)], subject: s.zadeva, htmlContent: s.html, textContent: s.besedilo });
+    if (s.odgovor) telo.replyTo = { email: s.odgovor };
   } else {
     Object.assign(telo, {
       subject: sporocila[0].zadeva, htmlContent: sporocila[0].html, textContent: sporocila[0].besedilo,
@@ -296,6 +316,7 @@ async function posljiResend(env, sporocila) {
     body: JSON.stringify(sporocila.map((s) => ({
       from: `${od.ime} <${od.email}>`, to: [s.za], subject: s.zadeva, html: s.html, text: s.besedilo,
       ...(s.glave ? { headers: s.glave } : {}),
+      ...(s.odgovor ? { reply_to: s.odgovor } : {}),
     }))),
   });
   if (!odg.ok) throw new Error(`Resend ${await preberiNapako(odg)}`);
@@ -312,7 +333,7 @@ function posljiDnevnik(sporocila, zamik) {
 
 const NA_KLIC = { brevo: 100, resend: 100, dnevnik: 100 };
 
-// Sporočilo: { za, ime?, zadeva, html, besedilo, glave?, vrsta, kljuc? }. Pošlje po
+// Sporočilo: { za, ime?, zadeva, html, besedilo, glave?, odgovor?, vrsta, kljuc? }. Pošlje po
 // kosih in vsako zapiše v tabelo posta (po njej se šteje dnevna meja).
 export async function posljiPosto(env, db, sporocila) {
   if (!sporocila.length) return [];

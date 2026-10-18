@@ -21,7 +21,7 @@ export class Napaka extends Error {
 export function json(telo, status = 200, glave = {}) {
   return new Response(JSON.stringify(telo), {
     status,
-    headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...glave },
+    headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", ...glave },
   });
 }
 

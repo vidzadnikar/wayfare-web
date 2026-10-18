@@ -8,6 +8,7 @@ import { Napaka, json, telo, enakaSkrivnost, stranUrl, zahtevaj } from "../../za
 import { napolniVrsto, posljiIzVrste } from "../../zaledje/posta.js";
 import { obravnavaj } from "../../zaledje/strani.js";
 import { preberiNastavitve } from "../../zaledje/nastavitve.js";
+import { pocisti } from "../../zaledje/clani.js";
 
 const VRSTE = new Set(["vlog", "izdaja", "novica"]);
 
@@ -49,6 +50,7 @@ export const onRequestPost = obravnavaj(async ({ request, env }) => {
   zahtevaj(env, "OBVESTI_SECRET", "SESSION_SECRET");
   const auth = (request.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
   if (!(await enakaSkrivnost(auth, env.OBVESTI_SECRET))) throw new Napaka(401, "dostop");
+  await pocisti(env.DB);
   const { podatki } = await telo(request);
   const postavke = Array.isArray(podatki.postavke) ? podatki.postavke : [];
   if (postavke.length > 50) throw new Napaka(400, "postavka", "Največ 50 postavk na klic.");

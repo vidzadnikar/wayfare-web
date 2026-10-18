@@ -1,16 +1,18 @@
 // Stran /nadzor: le za prijavljenega člana z e-naslovom ADMIN_EMAIL.
-// Pregled, čakajoča obvestila, vlogi z YouTuba, člani, ogledi, novica,
+// Pregled, čakajoča obvestila, odzivi, vlogi z YouTuba, člani, ogledi, novica,
 // obvestila in nastavitve. Brez
 // seje preusmeri domov s pozivom k prijavi; prijavljen tujec dobi 404, da
 // stran ne izdaja, da obstaja. Vsebino nariše /js/nadzor.js iz /api/nadzor/clani.
 import { preusmeri, pobegni } from "../zaledje/osnova.js";
-import { clanIzSeje, jeAdmin } from "../zaledje/seja.js";
+import { clanIzSeje, jeAdmin, svezaSejaAdmina } from "../zaledje/seja.js";
 import { obravnavaj, stranHtml, stranNapake } from "../zaledje/strani.js";
 
 export const onRequestGet = obravnavaj(async ({ request, env }) => {
   const clan = await clanIzSeje(env, request);
   if (!clan) return preusmeri("/sl/?prijava=nadzor");
   if (!jeAdmin(env, clan)) return stranNapake("sl", "ni", 404);
+  // seja skrbnika, starejša od 14 dni: znova v prijavo
+  if (!svezaSejaAdmina(clan)) return preusmeri("/sl/?prijava=nadzor");
   return stranHtml(`<!doctype html>
 <html lang="sl">
 <head>
@@ -52,6 +54,20 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
     <div class="tabela-ovoj">
       <table class="tabela" data-cakajo>
         <thead><tr><th>Kaj</th><th>Naslov</th><th>Ustvarjeno</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="nadzor-odsek" id="odzivi" aria-labelledby="odzivi-naslov">
+    <h2 id="odzivi-naslov" class="serif">Odzivi</h2>
+    <p class="nadzor-opis">Kar testerji pošljejo z obrazca na strani (/odziv/) ali iz aplikacije (meni ⋯ → Pošlji odziv). Nerešeni so zgoraj. Če je kdo pustil e-naslov, mu odgovoriš iz pošte, ki jo dobiš ob odzivu.</p>
+    <div class="nadzor-akcije">
+      <a class="gumb gumb-majhen gumb-tihi" href="/api/nadzor/izvoz?kaj=odzivi">Izvozi odzive CSV</a>
+    </div>
+    <div class="tabela-ovoj">
+      <table class="tabela" data-odzivi>
+        <thead><tr><th>Vrsta</th><th>Odziv</th><th>Od koga</th><th>Od kod</th><th>Kdaj</th><th>Stanje</th><th></th></tr></thead>
         <tbody></tbody>
       </table>
     </div>

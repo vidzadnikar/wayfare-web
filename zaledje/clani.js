@@ -35,9 +35,13 @@ export function zabeleziObisk(db, id) {
   ).bind(zdaj(), id, predUro).run();
 }
 
-// Omejitev: največ `meja` zahtev na ključ v tekoči uri. Stare vrstice se
-// občasno počistijo.
+// Omejitev: največ `meja` zahtev na ključ v tekoči uri. Ključ je
+// <vrsta>:<vrednost>; vrednost (naslov IP, e-naslov, id) se shrani le kot
+// zgoščena vrednost, da tabela omejitev ne hrani osebnih podatkov. Stare
+// vrstice se občasno počistijo (in vsak dan v pocisti()).
 export async function omeji(db, kljuc, meja) {
+  const i = kljuc.indexOf(":");
+  kljuc = i < 0 ? (await sha256(kljuc)).slice(0, 32) : kljuc.slice(0, i + 1) + (await sha256(kljuc.slice(i + 1))).slice(0, 32);
   const okno = new Date().toISOString().slice(0, 13);
   const r = await db.prepare(
     "INSERT INTO omejitve (kljuc, okno, stevilo) VALUES (?1, ?2, 1) ON CONFLICT (kljuc, okno) DO UPDATE SET stevilo = stevilo + 1 RETURNING stevilo",
@@ -49,7 +53,7 @@ export async function omeji(db, kljuc, meja) {
   return (r?.stevilo ?? 1) <= meja;
 }
 
-const ZETON_VELJA = 24 * 3600e3;
+const ZETON_VELJA = 3600e3; // povezava za prijavo velja eno uro
 
 // Žeton za potrditev: v bazi je le zgoščena vrednost, v pošti pa žeton sam.
 export async function ustvariZeton(db, { email, jezik, nazaj }) {
@@ -62,6 +66,13 @@ export async function ustvariZeton(db, { email, jezik, nazaj }) {
   return zeton;
 }
 
+// Ali žeton velja (ni porabljen, ni potekel), brez porabe: za stran z gumbom.
+export async function preveriZeton(db, zeton) {
+  if (!/^[\w-]{20,}$/.test(zeton || "")) return null;
+  return db.prepare("SELECT email, jezik, nazaj FROM zetoni WHERE hash = ?1 AND porabljen_at IS NULL AND potece_at > ?2")
+    .bind(await sha256(zeton), zdaj()).first();
+}
+
 // Porabi žeton (enkrat, pred potekom) in vrne, za koga je bil.
 export async function porabiZeton(db, zeton) {
   if (!/^[\w-]{20,}$/.test(zeton || "")) return null;
@@ -69,4 +80,30 @@ export async function porabiZeton(db, zeton) {
   return db.prepare(
     "UPDATE zetoni SET porabljen_at = ?1 WHERE hash = ?2 AND porabljen_at IS NULL AND potece_at > ?1 RETURNING email, jezik, nazaj",
   ).bind(t, await sha256(zeton)).first();
+}
+
+// Izbriše člana z vsemi podatki: ogledi, komentarji (z odgovori drugih nanje),
+// všečki, vrsta pošte in žetoni. Enako za izbris v nastavitvah in v nadzoru.
+export function izbrisiClana(db, c) {
+  return db.batch([
+    db.prepare("DELETE FROM vrsta WHERE clan_id = ?").bind(c.id),
+    db.prepare("DELETE FROM ogledi WHERE clan_id = ?").bind(c.id),
+    db.prepare("DELETE FROM komentarji_vsecki WHERE clan_id = ?1 OR komentar_id IN (SELECT id FROM komentarji WHERE clan_id = ?1 OR odgovor_na IN (SELECT id FROM komentarji WHERE clan_id = ?1))").bind(c.id),
+    db.prepare("DELETE FROM komentarji WHERE odgovor_na IN (SELECT id FROM komentarji WHERE clan_id = ?1)").bind(c.id),
+    db.prepare("DELETE FROM komentarji WHERE clan_id = ?").bind(c.id),
+    db.prepare("DELETE FROM zetoni WHERE email = ?").bind(c.email),
+    // odzivi ostanejo (pomagajo izboljšati aplikacijo), a brez člana in e-naslova
+    db.prepare("UPDATE odzivi SET clan_id = NULL, email = NULL WHERE clan_id = ?1 OR email = ?2").bind(c.id, c.email),
+    db.prepare("DELETE FROM clani WHERE id = ?").bind(c.id),
+  ]);
+}
+
+// Dnevno čiščenje (klic /api/obvesti iz GitHub Actions): potečeni in porabljeni
+// žetoni (v njih je e-naslov) ter omejitve, starejše od dneva.
+export function pocisti(db) {
+  const dan = new Date(Date.now() - 86400e3);
+  return db.batch([
+    db.prepare("DELETE FROM zetoni WHERE potece_at < ?1 OR porabljen_at IS NOT NULL").bind(zdaj()),
+    db.prepare("DELETE FROM omejitve WHERE okno < ?").bind(dan.toISOString().slice(0, 13)),
+  ]);
 }
