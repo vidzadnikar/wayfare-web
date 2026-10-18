@@ -142,8 +142,9 @@ if (obmocjeGlobusa) {
     nalozen = true;
     import("./zemljevid.js").then(({ zemljevid }) => zemljevid(obmocjeGlobusa, { gsap, koren }));
   };
-  // ScrollTrigger ujame tudi skok na sidro in vrnitev sredi strani, opazovalec pa drsenje brez Lenis
-  ScrollTrigger.create({ trigger: obmocjeGlobusa, start: "top bottom+=900", end: "max", once: true, onEnter: nalozi });
+  // ScrollTrigger ujame tudi skok na sidro in vrnitev sredi strani, opazovalec pa drsenje brez Lenis.
+  // Brez once: sprožilec, ki se ubije med osveževanjem, zlomi ScrollTrigger 3.15 (glej prikaziNaslove).
+  ScrollTrigger.create({ trigger: obmocjeGlobusa, start: "top bottom+=900", end: "max", onEnter: nalozi });
   const blizu = new IntersectionObserver(([v]) => { if (v.isIntersecting) { blizu.disconnect(); nalozi(); } }, { rootMargin: "900px 0px" });
   blizu.observe(obmocjeGlobusa);
 }
