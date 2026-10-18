@@ -430,7 +430,7 @@ def ogled_stran(oznaka, jezik, b, p):
         "ogled_oznaka": oznaka,
         "ogled_pokoncno": "true" if o["pokoncno"] else "false",
         "ogled_trajanje": o["trajanje"],
-        "ogled_poglavja": poglavja_html(o["poglavja"]),
+        "ogled_poglavja": poglavja_html(o["poglavja"], jezik),
         "ogled_poglavja_skrito": "" if o["poglavja"] else "hidden",
         "ogled_naprej_seznam": naprej,
         # naslov stranskega stolpca je ime serije (kraj); brez drugih filmov stolpca ni
@@ -440,10 +440,24 @@ def ogled_stran(oznaka, jezik, b, p):
     }
 
 
-def poglavja_html(poglavja):
+# Poglavja so v vlogi.json slovenska (iz projektov vlogov); angleška stran jih
+# prevede po stran/poglavja-en.json. Manjkajoče ime ostane izvirno z opozorilom.
+POGLAVJA_EN = {k: v for k, v in json.loads(Path(TU, "poglavja-en.json").read_text(encoding="utf-8")).items() if not k.startswith("_")}
+BREZ_PREVODA = set()
+
+
+def ime_poglavja(ime, jezik):
+    if jezik != "en":
+        return ime
+    if ime not in POGLAVJA_EN:
+        BREZ_PREVODA.add(ime)
+    return POGLAVJA_EN.get(ime, ime)
+
+
+def poglavja_html(poglavja, jezik):
     return "".join(
         f'<li><button type="button" class="poglavje-gumb" data-cas="{t}">'
-        f'<span class="poglavje-cas">{cas(t)}</span>{html.escape(ime)}</button></li>'
+        f'<span class="poglavje-cas">{cas(t)}</span>{html.escape(ime_poglavja(ime, jezik))}</button></li>'
         for t, ime in poglavja
     )
 
@@ -839,6 +853,8 @@ def objavi(zgoscene, strani, okvirji):
     brez = [v["oznaka"] for v in vsi_vlogi() if not v.get("youtube")]
     if brez:
         print("brez oznake youtube (še niso objavljeni, na strani jih ni):", ", ".join(brez))
+    if BREZ_PREVODA:
+        print("poglavja brez angleškega imena (dodaj v stran/poglavja-en.json):", ", ".join(sorted(BREZ_PREVODA)))
     if prevelike:
         raise SystemExit(f"Prevelike za Cloudflare Pages (nad {NAJVEC_MB} MB): {prevelike}")
 

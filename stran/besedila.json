@@ -241,7 +241,7 @@
   "hero_opomba_windows": "Free, for 64-bit Windows 10 or later. Also available for <a href=\"{{prenos_href}}\">macOS</a> and <a href=\"{{prenos_android_href}}\">Android</a>.",
   "hero_opomba_android": "Free, for Android 8 or later. Also available for <a href=\"{{prenos_href}}\">macOS</a> and <a href=\"{{prenos_windows_href}}\">Windows</a>.",
   "hero_opomba_mobilno": "Wayfare Studio is for Mac, Windows and Android. On iPhone or iPad, send yourself this page and open it on your computer.",
-  "zid_naslov": "{{st_filmov}}.<br><em>All edited in Wayfare.</em>",
+  "zid_naslov": "{{st_filmov}}.<br><em>All edited in&nbsp;Wayfare.</em>",
   "zid_uvod": "From {{st_potovanj}}, all shot on a phone. <span class=\"samo-miska\">Click</span><span class=\"samo-dotik\">Tap</span> any film to watch it.",
   "zid_ustavi": "Pause motion",
   "zid_nadaljuj": "Resume motion",
