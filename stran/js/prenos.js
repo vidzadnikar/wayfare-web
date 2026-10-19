@@ -48,6 +48,8 @@ export function prenos() {
     if ((n === "android" || n === "mobilno") && namesti) {
       for (const e of namesti.querySelectorAll(".namesti-qr, .namesti-qr-opis")) e.remove();
     }
+    // iPhone in iPad: Wayfare zanju ni, Obtainium je le za Android
+    if (n === "mobilno" && namesti) namesti.querySelector('[data-namesti="android"]')?.remove();
     if (n === "android" && namesti) {
       const android = namesti.querySelector('[data-namesti="android"]');
       namesti.insertBefore(android, namesti.querySelector(".namesti-sistem"));
