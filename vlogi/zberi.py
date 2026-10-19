@@ -4,6 +4,7 @@
     python3 zberi.py --video    # samo spletni različici videa in zanke (dolgo)
     python3 zberi.py --slike    # samo naslovnice in vlogi.json (hitro)
     python3 zberi.py --samo <oznaka>   # video in zanka le za ta vlog, slike in vlogi.json za vse
+    python3 zberi.py --splet    # le manjkajoči spletni različici plačljivih vlogov (za R2), brez vlogi.json
 
 Izhod v ../stran/media/vlogi/: <oznaka>-1080.mp4 in <oznaka>-720.mp4 (spletni
 različici, x264 kot pri heroju), <oznaka>-zanka.mp4 (6 s nemega predogleda za
@@ -17,8 +18,9 @@ iz filma ob navedenem času. Vlog z oznako youtube dobi isto naslovnico kot na
 YouTubu (velika sličica videa), razen če je naslovna pot do lastne slike. Vrstni red v seznamu je vrstni red na strani:
 najnovejši prvi.
 
-Vlog z oznako youtube (v VLOGI ali že v vlogi.json) na strani igra z YouTuba:
-zanj nastaneta le zanka in naslovnica, spletni različici ne.
+Vlogi so na strani plačljivi (film iz zasebnega R2, nalaganje zaledje/videi.py),
+zato spletni različici nastaneta za vsak vlog, tudi z oznako youtube. Le vlog z
+brezplacen=True v VLOGI igra z YouTuba in spletnih različic ne rabi.
 """
 
 import json
@@ -214,8 +216,8 @@ def casi_zanke(v, info):
     return [d * 0.22, d * 0.5, d * 0.78]
 
 
-def video(v, izvor, info, splet=True):
-    """Spletni različici (1080 in 720 v eni obdelavi; vlog z YouTuba ju ne rabi) in zanka za kazalec."""
+def video(v, izvor, info, splet=True, zanka=True):
+    """Spletni različici (1080 in 720 v eni obdelavi; brezplačen vlog z YouTuba ju ne rabi) in zanka za kazalec."""
     gop = str(info["fps"] * 2)
     if splet:
         skala = "scale=w={w}:h={h}:force_original_aspect_ratio=decrease:force_divisible_by=2"
@@ -229,6 +231,8 @@ def video(v, izvor, info, splet=True):
             str(CILJ / f"{v['oznaka']}-720.mp4"),
         ], check=True)
 
+    if not zanka:
+        return
     odsek = "fps=30,scale=w=854:h=480:force_original_aspect_ratio=decrease:force_divisible_by=2,setsar=1"
     vhodi, veriga = [], ""
     for i, t in enumerate(casi_zanke(v, info)):
@@ -271,11 +275,28 @@ def naslovnica(v, izvor, youtube):
                     "-q:v", "3", "-map_metadata", "-1", str(cilj)], check=True)
 
 
+def manjkajoci_splet(v):
+    return [r for r in ("1080", "720") if not (CILJ / f"{v['oznaka']}-{r}.mp4").is_file()]
+
+
 def main(argv):
     samo_video = "--video" in argv
     samo_slike = "--slike" in argv
     samo = argv[argv.index("--samo") + 1] if "--samo" in argv else None  # video le za ta vlog
     CILJ.mkdir(parents=True, exist_ok=True)
+    if "--splet" in argv:
+        # le spletni različici plačljivih vlogov, ki jih še ni (za R2); vlogi.json ostane
+        for v in VLOGI:
+            if v.get("brezplacen") or not manjkajoci_splet(v) or samo not in (None, v["oznaka"]):
+                continue
+            izvor = VIDEO / v["izvor"]
+            if not izvor.is_file():
+                raise SystemExit(f"Ni izvora: {izvor}")
+            info = probe(izvor)
+            print(f"{v['oznaka']}: spletni različici ({info['trajanje']:.0f} s) …", flush=True)
+            video(v, izvor, info, splet=True, zanka=False)
+        print("spletne različice narejene")
+        return
     prej = {}  # oznake youtube iz prejšnjega vlogi.json ostanejo, če jih v VLOGI ni
     if JSON.is_file():
         prej = {z["oznaka"]: z.get("youtube") for z in json.load(open(JSON, encoding="utf-8"))["vlogi"]}
@@ -289,7 +310,7 @@ def main(argv):
         print(f"{v['oznaka']}: {info['sirina']}×{info['visina']} {info['fps']} fps, {info['trajanje']:.0f} s"
               + (f", YouTube {youtube}" if youtube else ""))
         if not samo_slike and samo in (None, v["oznaka"]):
-            video(v, izvor, info, splet=not youtube)
+            video(v, izvor, info, splet=not v.get("brezplacen"))
         if not samo_video:
             naslovnica(v, izvor, youtube)
         zapis.append(dict(
@@ -297,6 +318,7 @@ def main(argv):
             datum=v["datum"][0], datum_do=v["datum"][1],
             trajanje=info["trajanje"], sirina=info["sirina"], visina=info["visina"],
             posnetkov=posnetkov(v), poglavja=poglavja(v), jezik="sl", youtube=youtube,
+            **({"brezplacen": True} if v.get("brezplacen") else {}),
         ))
     # vlogi in kraji, ki jih je dodal samodejno.py (GitHub Actions), ostanejo,
     # dokler jih ne prevzameš v VLOGI oziroma KRAJI
