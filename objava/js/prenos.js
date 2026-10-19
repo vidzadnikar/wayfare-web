@@ -7,6 +7,8 @@
 //   windows   gumbi kazejo na namestitveni program za Windows; obvestilo o SmartScreenu
 //   drugo     Linux ...: razlaga in »Vseeno prenesi«
 
+import { povezi } from "./kopiraj.js";
+
 function zaznajNapravo() {
   const ua = navigator.userAgent;
   const ipad = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1; // iPadOS se predstavi kot Mac
@@ -53,6 +55,7 @@ export function prenos() {
     plosca.dataset.odprto = "";
     vsebina.querySelector("[tabindex='-1']")?.focus({ preventScroll: true });
     vsebina.querySelector("[data-deli]")?.addEventListener("click", deli);
+    povezi(vsebina, vsebina.querySelector("[data-kopiraj-stanje]"));
     // »Vseeno prenesi« sproži prenos in pokaže navodila za Mac
     vsebina.querySelector("[data-prenos-vseeno]")?.addEventListener("click", () => {
       setTimeout(() => pokazi("mac", prej), 0);

@@ -4,6 +4,7 @@ import { prenos } from "./prenos.js";
 import { zankeKartic, nagibKartic } from "./kartice.js";
 import { zid } from "./zid.js";
 import { clan } from "./clan.js";
+import { povezi } from "./kopiraj.js";
 
 const { gsap, ScrollTrigger, lenis } = zazeniDrsenje();
 if (!mirno) document.documentElement.classList.add("gibanje");
@@ -188,36 +189,11 @@ if (!mirno) {
     .from(".claude-zahteve", { autoAlpha: 0, duration: 0.6, ease: "power1.out" }, 0.5);
 }
 
-// Gumb ob vsakem ukazu kopira ta ukaz. Odložišče ima 1 s časa (v nekaterih
-// vgrajenih brskalnikih obljuba nikoli ne pride); nato ukaz izbere in poskusi
-// execCommand. Če ne gre ne tako, ostane ukaz izbran za ⌘C.
-async function vOdlozisce(koda) {
-  try {
-    await Promise.race([
-      navigator.clipboard.writeText(koda.textContent.trim()),
-      new Promise((_, ne) => setTimeout(() => ne(new Error("odložišče ne odgovori")), 1000)),
-    ]);
-    return true;
-  } catch (e) {
-    const izbor = getSelection();
-    izbor.selectAllChildren(koda);
-    let ok = false;
-    try { ok = document.execCommand("copy"); } catch (e2) {}
-    if (ok) izbor.removeAllRanges();
-    return ok;
-  }
-}
-const kopirajStanje = terminal.querySelector("[data-kopiraj-stanje]");
-for (const gumb of terminal.querySelectorAll("[data-kopiraj]")) {
-  let cas;
-  gumb.addEventListener("click", async () => {
-    if (!(await vOdlozisce(document.getElementById(gumb.dataset.za)))) return;
-    gumb.dataset.stanje = "kopirano";
-    kopirajStanje.textContent = gumb.dataset.kopirano;
-    clearTimeout(cas);
-    cas = setTimeout(() => { delete gumb.dataset.stanje; kopirajStanje.textContent = ""; }, 2000);
-  });
-}
+// Gumb ob vsakem ukazu kopira ta ukaz (kopiraj.js): v terminalu razdelka
+// Claude in pri namestitvi z enim ukazom v razdelku Prenos.
+povezi(terminal, terminal.querySelector("[data-kopiraj-stanje]"));
+const namesti = document.querySelector(".namesti");
+povezi(namesti, namesti?.querySelector("[data-kopiraj-stanje]"));
 
 // izbira jezika se zapomni (angleška stran sicer slovenske obiskovalce preusmeri)
 for (const a of document.querySelectorAll("[data-jezik]")) {

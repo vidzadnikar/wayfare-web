@@ -904,6 +904,12 @@ html:not(.js) .clan-mesto { display: none; }
 .naprava[data-priporoceno] .naprava-ime { color: var(--bg); }
 .naprava[data-priporoceno] .naprava-opis { color: #4a4c55; }
 @media (max-width: 760px) { .naprave { grid-template-columns: 1fr; } }
+/* Namestitev na Macu z enim ukazom: stavek in ukaz z gumbom za kopiranje. */
+.namesti { display: grid; gap: var(--s3); width: min(100%, 980px); padding: var(--s5); text-align: left; border-radius: var(--radius-lg); background: rgba(19, 20, 25, 0.72); border: 1px solid var(--border-strong); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.namesti p { margin: 0; font-size: 15px; color: var(--muted); }
+.ukaz-vrstica { display: flex; align-items: center; gap: var(--s3); margin: 0; padding: 10px 14px; border-radius: var(--radius); background: rgba(0, 0, 0, 0.35); border: 1px solid var(--border); font: 400 14px/1.6 var(--mono); }
+.ukaz-vrstica::before { content: "$"; flex: none; color: var(--subtle); }
+.ukaz-vrstica code, .obvestilo .ukaz-vrstica code { flex: 1; min-width: 0; font: inherit; color: var(--fg); background: none; padding: 0; overflow-wrap: anywhere; }
 
 /* -------------------------------------------------- novosti (izdaje aplikacije) */
 .novosti { max-width: 980px; }

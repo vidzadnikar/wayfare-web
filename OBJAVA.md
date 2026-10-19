@@ -47,6 +47,15 @@ Cloudflare po vsakem pushu objavi novo različico v minuti.
 Nova različica paketa: `python3 paket/zgradi_paket.py`, nova izdaja z oznako
 `v<različica>` na GitHubu, `python3 stran/zgradi.py`, push.
 
+Namestitev na Macu z enim ukazom (`curl -fsSL https://wayfarestudio.pages.dev/install.sh | bash`):
+`zgradi.py` iz `stran/install.sh` naredi `objava/install.sh` z različico,
+naslovom in kontrolno vsoto SHA-256 paketa iz `stran/prenos/` (vsota je tudi
+v `prenos.json`, da gradnja brez paketa, npr. v GitHub Actions, ostane
+pravilna). Skripta prenese paket z izdaje, preveri vsoto in aplikacijo
+skopira v Applications. Paket, prenesen s curl, ni označen kot prenesen iz
+brskalnika, zato ga macOS ob zagonu ne ustavi; Apple ga s tem ne preveri.
+Zato mora biti `stran/prenos/` ob gradnji isti paket kot v izdaji.
+
 ## Predogled objave doma
 
     python3 streznik.py 8496 objava

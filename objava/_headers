@@ -22,6 +22,11 @@
 /pisave/*
   Cache-Control: public, max-age=31536000, immutable
 
+# Namestitev z enim ukazom: berljiva v brskalniku, vsakic sveza (nova izdaja).
+/install.sh
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: no-cache
+
 /js/knjiznice/*
   Cache-Control: public, max-age=604800, stale-while-revalidate=86400
 

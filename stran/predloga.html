@@ -247,6 +247,11 @@
       <li><a class="naprava" href="{{prenos_windows_href}}" download data-naprava="windows"><span class="naprava-ime"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3.5" width="18" height="17" rx="2"/><path d="M3 12h18M12 3.5v17"/></svg>Windows</span><span class="naprava-opis">{{naprava_windows}}</span></a></li>
       <li><a class="naprava" href="{{prenos_android_href}}" download data-naprava="android"><span class="naprava-ime"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><path d="M10.5 18h3"/></svg>Android</span><span class="naprava-opis">{{naprava_android}}</span></a></li>
     </ul>
+    <div class="namesti">
+      <p>{{namesti_uvod}}</p>
+      <p class="ukaz-vrstica"><code id="ukaz-namesti">{{namesti_ukaz}}</code>{{kopiraj:ukaz-namesti}}</p>
+      <p class="skrito" role="status" aria-live="polite" data-kopiraj-stanje></p>
+    </div>
   </section>
 </main>
 

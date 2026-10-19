@@ -32,6 +32,7 @@
 <link rel="modulepreload" href="../js/vlogi.js">
 <link rel="modulepreload" href="../js/gibanje.js">
 <link rel="modulepreload" href="../js/prenos.js">
+<link rel="modulepreload" href="../js/kopiraj.js">
 <link rel="modulepreload" href="../js/kartice.js">
 <link rel="modulepreload" href="../js/clan.js">
 <script>document.documentElement.classList.add("js");try{var j=localStorage.getItem("wayfare-jezik");if(!j&&/^sl\b/i.test(navigator.language||""))j="sl";if(j==="sl")location.replace("../sl/vlogi/"+location.hash);}catch(e){}</script>
@@ -129,6 +130,9 @@
 <template id="obvestilo-mac">
   <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">Wayfare Studio is downloading</p>
   <ol class="obvestilo-koraki"><li>Open the downloaded file and drag Wayfare Studio into Applications.</li><li>First time: open the app. The Mac stops it with a warning that it can’t be verified (the app isn’t notarized with Apple yet). Go to System Settings → Privacy & Security, click “Open Anyway” at the bottom and confirm. From then on it opens normally. On older macOS, right-click → Open is enough.</li><li>Wayfare Studio opens in its own window. Drop your clips onto it — it makes the project for you.</li></ol>
+  <p>Prefer no warning? Paste this into Terminal (Applications → Utilities) instead:</p>
+  <p class="ukaz-vrstica"><code id="ukaz-namesti-okno">curl -fsSL https://wayfarestudio.pages.dev/install.sh | bash</code><button class="kopiraj" type="button" aria-label="Copy command" aria-describedby="ukaz-namesti-okno" data-kopiraj data-za="ukaz-namesti-okno" data-kopirano="Copied"><svg class="kopiraj-ikona" viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 3.5v-.5a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5"/></svg><svg class="kopiraj-kljukica" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg></button></p>
+  <p class="skrito" role="status" aria-live="polite" data-kopiraj-stanje></p>
   <p class="drobno">If the Mac says the app is damaged, run this in Terminal: <code>xattr -dr com.apple.quarantine "/Applications/Wayfare Studio.app"</code></p>
   <p class="drobno">Wayfare-Studio-0.2.0.dmg · 440 MB</p>
 </template>
