@@ -913,6 +913,12 @@ html:not(.js) .clan-mesto { display: none; }
 .ukaz-vrstica::before { content: "$"; flex: none; color: var(--subtle); }
 .ukaz-ps::before { content: "PS>"; }
 .namesti .namesti-sistem { margin: var(--s2) 0 calc(var(--s1) * -1); font-size: 14px; color: var(--fg); }
+.namesti-android { display: grid; grid-template-columns: 112px 1fr; gap: var(--s4); align-items: center; margin-top: var(--s2); }
+.namesti-android > div { display: grid; gap: var(--s2); }
+.namesti-android .namesti-sistem { margin: 0; }
+.namesti-qr { width: 112px; height: 112px; border-radius: var(--radius); display: block; }
+.namesti a, .obvestilo-vsebina p a { color: var(--fg); text-underline-offset: 3px; }
+@media (max-width: 760px) { .namesti-android { grid-template-columns: 1fr; } }
 .ukaz-vrstica code, .obvestilo .ukaz-vrstica code { flex: 1; min-width: 0; font: inherit; color: var(--fg); background: none; padding: 0; overflow-wrap: anywhere; }
 
 /* -------------------------------------------------- novosti (izdaje aplikacije) */

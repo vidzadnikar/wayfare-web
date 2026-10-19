@@ -31,6 +31,7 @@ import re
 import shutil
 import subprocess
 import sys
+import urllib.parse
 from pathlib import Path
 from urllib.parse import urljoin
 
@@ -150,6 +151,14 @@ NAMESTI_UKAZ = f"curl -fsSL {STRAN_URL}/install.sh | bash"
 # Enako za Windows v PowerShellu (install.ps1): datoteka, ki jo prenese
 # PowerShell, nima oznake »s spleta«, zato je SmartScreen ne ustavi.
 NAMESTI_UKAZ_WINDOWS = f"irm {STRAN_URL}/install.ps1 | iex"
+# Android: QR koda (media/qr-android.svg) kaze na /android, ki ga _redirects
+# preusmeri na zadnji .apk; koda zato velja tudi za naslednje izdaje. Obtainium
+# (odprtokodni posodabljalnik) doda aplikacijo z izdaj na GitHubu in jo sam
+# posodablja; preusmeritvena stran Obtainiuma pomaga, ce ga se ni.
+ANDROID_POT = "/android"
+OBTAINIUM_HREF = ("https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/" + urllib.parse.quote(
+    json.dumps({"id": "studio.wayfare.app", "url": "https://github.com/vidzadnikar/wayfare-web",
+                "author": "vidzadnikar", "name": "Wayfare Studio"}, separators=(",", ":")), safe=""))
 
 
 def vsota_sha256(pot):
@@ -856,6 +865,8 @@ def objavi(zgoscene, strani, okvirji):
         cilj.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(Path(TU, rel), cilj)
     (objava / "_headers").write_text(GLAVE.format(csp=csp(zgoscene, okvirji)))
+    # /android (QR koda na strani) vodi na zadnji paket za Android
+    (objava / "_redirects").write_text(f"{ANDROID_POT} {prenos()['prenos_android_href']} 302\n")
     # install.sh (Mac) in install.ps1 (Windows): namestitev z enim ukazom, z
     # naslovom in vsoto paketa iz izdaje
     paket = prenos()
@@ -944,6 +955,7 @@ def main():
             html_ = html_.replace("{{skill_ukaz}}", deli_ukaza(SKILL_UKAZ))
             html_ = html_.replace("{{namesti_ukaz}}", html.escape(NAMESTI_UKAZ))
             html_ = html_.replace("{{namesti_ukaz_windows}}", html.escape(NAMESTI_UKAZ_WINDOWS))
+            html_ = html_.replace("{{obtainium_href}}", html.escape(OBTAINIUM_HREF))
             for i, d in enumerate(PLUGIN_UKAZI, 1):
                 html_ = html_.replace("{{plugin_ukaz_%d}}" % i, deli_ukaza(d))
             html_ = re.sub(r"\{\{kopiraj:([\w-]+)\}\}",

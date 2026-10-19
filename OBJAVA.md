@@ -67,6 +67,14 @@ PowerShella). Preizkušeno 19. 10. 2026 na Windows Server v GitHub Actions:
 namestitev, zagon (studio odgovori na 8420), brez Zone.Identifier, zavrnitev
 napačne vsote.
 
+Android nima ukaza za terminal. Na računalniku razdelek Prenos pokaže QR
+kodo (`stran/media/qr-android.svg`, narejena enkrat s Core Image in
+preverjena z Vision), ki kaže na `/android`; `zgradi.py` v `_redirects`
+zapiše preusmeritev na zadnji .apk, zato koda velja tudi za naslednje
+izdaje. Povezava »Dodaj v Obtainium« (`OBTAINIUM_HREF`) doda Wayfare v
+Obtainium, ki ga z izdaj na GitHubu sam posodablja. Na telefonu QR kode ni,
+vrstica za Android je prva.
+
 ## Predogled objave doma
 
     python3 streznik.py 8496 objava

@@ -44,6 +44,14 @@ export function prenos() {
       const stanje = namesti.querySelector("[data-kopiraj-stanje]");
       for (const e of namesti.querySelectorAll('[data-namesti="mac"]')) namesti.insertBefore(e, stanje);
     }
+    // na telefonu kode ne skeniras; na Androidu je vrstica za Android prva
+    if ((n === "android" || n === "mobilno") && namesti) {
+      for (const e of namesti.querySelectorAll(".namesti-qr, .namesti-qr-opis")) e.remove();
+    }
+    if (n === "android" && namesti) {
+      const android = namesti.querySelector('[data-namesti="android"]');
+      namesti.insertBefore(android, namesti.querySelector(".namesti-sistem"));
+    }
     // na Windows in Androidu gumbi za prenos kazejo na paket za ta sistem
     if (n !== "windows" && n !== "android") return;
     for (const gumb of document.querySelectorAll(`[data-prenos-${n}]`)) {
