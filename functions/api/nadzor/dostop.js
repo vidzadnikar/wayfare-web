@@ -1,16 +1,25 @@
-// Nadzor: podari članu brezplačen dostop do vlogov (brez roka ali do dne)
-// ali mu ga odvzemi. Naročnine pri Stripu to ne spremeni.
+// Nadzor: podari članu dostop do vlogov (brez roka ali do dne) ali mu ga
+// odvzemi. Po id ali po e-naslovu; e-naslov, ki še ni član, dobi vrstico
+// vnaprej (potrjen ob prvi prijavi, dostop ostane). Naročnine pri Stripu to
+// ne spremeni.
 import { Napaka, json, telo, istiIzvor } from "../../../zaledje/osnova.js";
 import { zahtevajAdmina } from "../../../zaledje/seja.js";
+import { VELJAVEN_EMAIL, normalizirajEmail } from "../../../zaledje/clani.js";
 import { obravnavaj } from "../../../zaledje/strani.js";
 
 export const onRequestPost = obravnavaj(async ({ request, env }) => {
   await zahtevajAdmina(env, request);
   if (!istiIzvor(request)) throw new Napaka(403, "izvor");
   const { podatki } = await telo(request);
-  const id = Number(podatki.id);
-  if (!Number.isInteger(id) || id <= 0) throw new Napaka(400, "clan", "id manjka.");
   const db = env.DB;
+  let id = Number(podatki.id);
+  if (!id && podatki.email) {
+    const email = normalizirajEmail(podatki.email);
+    if (!VELJAVEN_EMAIL.test(email)) throw new Napaka(400, "email", "E-naslov ni pravilen.");
+    await db.prepare("INSERT OR IGNORE INTO clani (email, vir, jezik) VALUES (?1, 'eposta', ?2)").bind(email, podatki.jezik === "en" ? "en" : "sl").run();
+    id = (await db.prepare("SELECT id FROM clani WHERE email = ?").bind(email).first())?.id;
+  }
+  if (!Number.isInteger(id) || id <= 0) throw new Napaka(400, "clan", "id ali email manjka.");
   let r;
   if (podatki.dejanje === "podari") {
     let do_ = null;

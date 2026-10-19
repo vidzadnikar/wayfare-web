@@ -246,10 +246,10 @@ body:has(.ogled-stran) .glava { background: rgba(11, 12, 15, 0.82); backdrop-fil
 .ogled-zaklep-drobno { color: var(--subtle); }
 .ogled-zaklep [data-zaklep-za] { display: none; }
 .ogled-zaklep[data-za="gost"] [data-zaklep-za~="gost"], .ogled-zaklep[data-za="clan"] [data-zaklep-za~="clan"],
-.ogled-zaklep[data-za="ni_na_voljo"] [data-zaklep-za~="ni_na_voljo"], .ogled-zaklep[data-za="kmalu"] [data-zaklep-za~="kmalu"] { display: block; }
+.ogled-zaklep[data-za="povabilo"] [data-zaklep-za~="povabilo"], .ogled-zaklep[data-za="kmalu"] [data-zaklep-za~="kmalu"] { display: block; }
 .ogled-zaklep[data-za="clan"] .ogled-zaklep-obrazec { display: grid; }
-.ogled-zaklep .gumb { display: inline-flex; }
-.ogled-zaklep[data-za="clan"] [data-zaklep-prijava], .ogled-zaklep[data-za="gost"] .ogled-zaklep-obrazec { display: none; }
+/* gumbi so inline-flex le v svoji različici (splošno pravilo zgoraj jih skrije) */
+.ogled-zaklep[data-za="gost"] .gumb[data-zaklep-za~="gost"], .ogled-zaklep[data-za="povabilo"] .gumb[data-zaklep-za~="povabilo"] { display: inline-flex; }
 @media (max-width: 700px) {
   .ogled-zaklep { padding: var(--s3); }
   .ogled-zaklep-notri { gap: var(--s2); }

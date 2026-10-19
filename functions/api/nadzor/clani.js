@@ -6,6 +6,7 @@ import { zahtevajAdmina } from "../../../zaledje/seja.js";
 import { dnevnoStanje, stanjeVrste } from "../../../zaledje/posta.js";
 import { obravnavaj } from "../../../zaledje/strani.js";
 import { preberiNastavitve, NASTAVITVE } from "../../../zaledje/nastavitve.js";
+import { narocninaNaVoljo } from "../../../zaledje/narocnine.js";
 
 export const onRequestGet = obravnavaj(async ({ request, env }) => {
   const admin = await zahtevajAdmina(env, request);
@@ -54,7 +55,7 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
     admin: { id: admin.id, email: admin.email },
     clani: clani.results, obvestila: obvestila.results, youtube: youtube.results,
     ogledi: ogledi.results, ogledi_clanov: poClanih.results, obiski: obiski.results, komentarji: komentarji.results,
-    odzivi: odzivi.results, narocnine: narocnine.results,
+    odzivi: odzivi.results, narocnine: narocnine.results, narocnine_na_voljo: narocninaNaVoljo(env),
     nastavitve: { vrednosti: await preberiNastavitve(db), opisi: Object.fromEntries(Object.entries(NASTAVITVE).map(([k, n]) => [k, { vrsta: n.vrsta, opis: n.opis, najmanj: n.najmanj, najvec: n.najvec }])) },
     vrsta: { caka: await stanjeVrste(db), dnevno: await dnevnoStanje(env, db) },
   });

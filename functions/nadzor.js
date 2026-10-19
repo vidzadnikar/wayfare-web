@@ -108,10 +108,27 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
     </div>
   </section>
 
-  <section class="nadzor-odsek" aria-labelledby="narocnine-naslov">
-    <h2 id="narocnine-naslov" class="serif">Naročnine</h2>
-    <p class="nadzor-opis">Vlogi so za naročnike (Stripe, 6,99 € na mesec) in za člane, ki jim dostop podariš pri Članih (»Podari dostop«: brez roka ali do dne). Stanje naročnine je Stripovo: active plačuje, past_due plačilo ni uspelo (dostop še 7 dni), canceled do konca obdobja še velja.</p>
+  <section class="nadzor-odsek" aria-labelledby="dostop-naslov">
+    <h2 id="dostop-naslov" class="serif">Dostop do filmov</h2>
+    <p class="nadzor-opis">Filme vidi le član, ki mu podariš dostop: tu po e-naslovu (lahko še preden se prijavi; dostop ga počaka) ali pri Članih z gumbom »Podari dostop«. Brez roka ali do dne; z »Odvzemi dostop« ga umakneš. Prošnje za dostop pridejo med Odzive.</p>
+    <form class="novica" data-dostop>
+      <div class="novica-mreza">
+        <label>E-naslov<input name="email" type="email" required autocomplete="off" placeholder="ime@naslov.si"></label>
+        <label>Do dne (prazno = brez roka)<input name="do" type="date"></label>
+        <label class="novica-cela">Opomba (le zate)<input name="opomba" maxlength="200" placeholder="prijatelj, družina …"></label>
+      </div>
+      <div class="nadzor-akcije">
+        <button class="gumb gumb-majhen" type="submit">Podari dostop</button>
+      </div>
+    </form>
     <div class="tabela-ovoj">
+      <table class="tabela" data-dostopi>
+        <thead><tr><th>Kdo</th><th>Dostop</th><th>Prijavljen</th><th>Opomba</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="nadzor-opis" data-narocnine-opis hidden>Naročnine prek Stripa: active plačuje, past_due plačilo ni uspelo (dostop še 7 dni), canceled do konca obdobja še velja.</p>
+    <div class="tabela-ovoj" data-narocnine-ovoj hidden>
       <table class="tabela" data-narocnine>
         <thead><tr><th>Član</th><th>Stanje</th><th>Plačano do</th><th>Preklic</th><th>Od</th><th>Posodobljeno</th></tr></thead>
         <tbody></tbody>

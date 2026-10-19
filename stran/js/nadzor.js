@@ -152,7 +152,7 @@ function narisiPregled() {
   const podarjenih = clani.filter((c) => dostopClana(c)[0].startsWith("podarjen") && dostopClana(c)[1] === "stanje-aktiven").length;
   $("[data-ploscice]").replaceChildren(
     ploscica(aktivnih, "aktivnih članov", `${clani.length} skupaj`),
-    ploscica(narocnikov, "naročnikov", `${podarjenih} s podarjenim dostopom`),
+    stanje.narocnine_na_voljo ? ploscica(narocnikov, "naročnikov", `${podarjenih} s podarjenim dostopom`) : ploscica(podarjenih, "s podarjenim dostopom", "filmi so na povabilo"),
     ploscica(neresenih, "nerešenih odzivov", `${odzivi.length} skupaj`),
     ploscica(obiskDanes("obisk_gost") + obiskDanes("obisk_clan"), "nalaganj strani danes", `${obiskDanes("obisk_clan")} od članov`),
     ploscica(vsehOgledov, "ogledov vlogov", `${ogledi.length} različnih filmov`),
@@ -293,8 +293,48 @@ youtube.addEventListener("submit", async (e) => {
   gumb.disabled = false;
 });
 
-// ---------------------------------------------------------------- naročnine
+// ---------------------------------------------------------------- dostop do filmov
+const dostopObrazec = $("[data-dostop]");
+dostopObrazec.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const f = new FormData(dostopObrazec);
+  const telo = { dejanje: "podari", email: f.get("email"), opomba: f.get("opomba") || "" };
+  if (f.get("do")) telo.do = f.get("do");
+  const gumb = dostopObrazec.querySelector("button");
+  gumb.disabled = true;
+  try {
+    await klic("/api/nadzor/dostop", telo);
+    povej(`Dostop podarjen: ${telo.email}`);
+    dostopObrazec.reset();
+    await nalozi();
+  } catch (e2) { povej(e2.message, true); }
+  gumb.disabled = false;
+});
+
+function narisiDostope() {
+  const s = stanje.clani.filter((c) => c.dostop_vrsta === "podarjen" || (stanje.narocnine || []).some((n) => n.clan_id === c.id && narocninaVelja(n)));
+  const vrstice = s.map((c) => {
+    const [oznaka, razred] = dostopClana(c);
+    return el("tr", {},
+      el("td", { class: "naslov" }, c.ime ? `${c.ime} (${c.email})` : c.email),
+      el("td", { class: razred }, oznaka),
+      el("td", {}, c.potrjen_at ? datum(c.potrjen_at) : "še ne (dostop ga čaka)"),
+      el("td", { class: "naslov" }, c.dostop_opomba || "—"),
+      el("td", {}, c.dostop_vrsta === "podarjen"
+        ? el("button", { type: "button", class: "tabela-gumb tabela-gumb-rdec", onclick: () => dostopDejanje(c, "odvzemi") }, "Odvzemi dostop")
+        : null),
+    );
+  });
+  $("[data-dostopi] tbody").replaceChildren(...vrstice);
+  if (!vrstice.length) $("[data-dostopi] tbody").append(prazno(5, "Še nihče nima dostopa."));
+}
+
+// ---------------------------------------------------------------- naročnine (Stripe; vidno le, ko so ključi nastavljeni)
 function narisiNarocnine() {
+  const naVoljo = !!stanje.narocnine_na_voljo || (stanje.narocnine || []).length > 0;
+  $("[data-narocnine-opis]").hidden = !naVoljo;
+  $("[data-narocnine-ovoj]").hidden = !naVoljo;
+  if (!naVoljo) return;
   const vrstice = (stanje.narocnine || []).map((n) => el("tr", {},
     el("td", { class: "naslov" }, n.ime ? `${n.ime} (${n.email})` : n.email),
     el("td", { class: narocninaVelja(n) ? "stanje-aktiven" : "stanje-odjavljen" }, n.stanje),
@@ -465,6 +505,7 @@ async function nalozi() {
   narisiYoutube();
   $("[data-clani] tbody").replaceChildren(...clani.map(vrsticaClana));
   if (!clani.length) $("[data-clani] tbody").append(prazno(12, "Še nihče."));
+  narisiDostope();
   narisiNarocnine();
   narisiOdzive();
   narisiOgledi();

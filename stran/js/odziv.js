@@ -30,6 +30,11 @@ const gumb = obrazec.querySelector('button[type="submit"]');
 // Podatki iz aplikacije (ali iz povezave za preizkus); strežnik jih še enkrat preveri.
 const iskanje = new URLSearchParams(location.search);
 if (iskanje.get("iz") === "app") obrazec.querySelector("[data-odziv-vir]").value = "app";
+// prošnja za dostop do filmov (zaklep na strani ogleda): besedilo je že vpisano
+if (iskanje.get("iz") === "dostop") {
+  const polje = obrazec.querySelector('[name="besedilo"]');
+  if (polje && !polje.value) polje.value = obrazec.dataset.besediloDostop || "";
+}
 obrazec.querySelector("[data-odziv-razlicica]").value = (iskanje.get("v") || "").slice(0, 30);
 obrazec.querySelector("[data-odziv-sistem]").value = (iskanje.get("os") || "").slice(0, 80);
 const vrsta = obrazec.querySelector(`input[name="vrsta"][value="${CSS.escape(iskanje.get("vrsta") || "")}"]`);

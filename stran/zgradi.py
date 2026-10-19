@@ -47,7 +47,8 @@ STRANI = {
     "zasebnost": dict(predloga="predloga-zasebnost.html", izhod={"en": "zasebnost/index.html", "sl": "sl/zasebnost/index.html"}),
     "novosti": dict(predloga="predloga-novosti.html", izhod={"en": "novosti/index.html", "sl": "sl/novosti/index.html"}),
     "odziv": dict(predloga="predloga-odziv.html", izhod={"en": "odziv/index.html", "sl": "sl/odziv/index.html"}),
-    "pogoji": dict(predloga="predloga-pogoji.html", izhod={"en": "pogoji/index.html", "sl": "sl/pogoji/index.html"}),
+    # pogoji naročnine (predloga-pogoji.html) se zgradijo šele, ko bo naročnina vklopljena:
+    # "pogoji": dict(predloga="predloga-pogoji.html", izhod={"en": "pogoji/index.html", "sl": "sl/pogoji/index.html"}),
     "napaka": dict(predloga="predloga-404.html", izhod={"en": "404.html", "sl": "sl/404.html"}),
 }
 
@@ -63,8 +64,9 @@ PODJETJE = {
 }
 
 
-# Plačljivi vlogi: vsak vlog je za naročnike (film iz zasebnega R2, oznaka
-# youtube ostane doma), razen če ima v vlogi.json "brezplacen": true (igra z
+# Zaklenjeni vlogi: vsak vlog je za člane z dostopom (podarjen v nadzoru; naročnina
+# prek Stripa je pripravljena, a izklopljena), film pride iz zasebnega R2, oznaka
+# youtube ostane doma. Izjema je vlog z "brezplacen": true v vlogi.json (igra z
 # YouTuba kot prej). Objavljen je vlog z oznako youtube ali z "objavljen": true.
 def je_brezplacen(v):
     return bool(v.get("brezplacen"))
@@ -292,7 +294,7 @@ def poti(stran, jezik):
     zasebnost = STRANI["zasebnost"]["izhod"][jezik]
     novosti = STRANI["novosti"]["izhod"][jezik]
     odziv = STRANI["odziv"]["izhod"][jezik]
-    pogoji = STRANI["pogoji"]["izhod"][jezik]
+    pogoji = STRANI["pogoji"]["izhod"][jezik] if "pogoji" in STRANI else zasebnost  # brez strani Pogoji kaže na zasebnost
     if stran == "napaka":
         absolutna = lambda do: "/" + do.removesuffix("index.html")
         koren, pot_dom = "/", absolutna(dom)
@@ -965,8 +967,8 @@ def main():
     okvirji = any(v.get("youtube") and je_brezplacen(v) for v in vlogi_podatki())
     okvir_vloga = {v["oznaka"]: bool(v.get("youtube") and je_brezplacen(v)) for v in vlogi_podatki()}
     podjetje = {f"podjetje_{k}": html.escape(v) for k, v in PODJETJE.items()}
-    if any(v.startswith("[") for v in PODJETJE.values()):
-        print("OPOZORILO: PODJETJE v zgradi.py ima še nadomestne vrednosti (stran Pogoji in Zasebnost)")
+    if "pogoji" in STRANI and any(v.startswith("[") for v in PODJETJE.values()):
+        print("OPOZORILO: PODJETJE v zgradi.py ima še nadomestne vrednosti (stran Pogoji)")
     for v in vlogi_podatki():
         STRANI[f"ogled:{v['oznaka']}"] = dict(predloga="predloga-ogled.html",
                                                izhod={j: izhod_ogleda(v["oznaka"], j) for j in ("en", "sl")})

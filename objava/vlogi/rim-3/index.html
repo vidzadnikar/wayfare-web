@@ -105,7 +105,7 @@
         <img class="ogled-oder-ozadje" src="../../media/vlogi/rim-3.jpg" alt="" aria-hidden="true">
         <img class="ogled-oder-naslovnica" src="../../media/vlogi/rim-3.jpg" alt="" data-naslovnica>
         <video class="ogled-oder-video" data-video playsinline controls preload="metadata" poster="../../media/vlogi/rim-3.jpg" hidden></video>
-        <a class="ogled-oder-gumb" href="../../pogoji/" data-predvajaj aria-label="Play: Rome — Day 3, 4:02">
+        <a class="ogled-oder-gumb" href="../../zasebnost/" data-predvajaj aria-label="Play: Rome — Day 3, 4:02">
           <span class="ogled-oder-ikona" aria-hidden="true"></span>
           <span class="ogled-oder-cas">4:02</span>
         </a>
@@ -113,19 +113,21 @@
         <div class="ogled-zaklep" data-zaklep hidden>
           <div class="ogled-zaklep-notri">
             <svg class="ogled-zaklep-ikona" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.3" class="polno"/></svg>
-            <p class="ogled-zaklep-naslov serif">This film is for <em>subscribers.</em></p>
-            <p class="ogled-zaklep-opis" data-zaklep-za="gost clan">Every vlog, each new film the moment it's out, no ads.</p>
-            <p class="ogled-zaklep-cena" data-zaklep-za="gost clan">€6.99 a month</p>
-            <button class="gumb" type="button" data-zaklep-za="gost" data-zaklep-prijava>Sign in to subscribe</button>
+            <p class="ogled-zaklep-naslov serif">This film is for <em>invited viewers.</em></p>
+            <p class="ogled-zaklep-opis" data-zaklep-za="gost">Sign in. Access to the films is by invitation.</p>
+            <button class="gumb" type="button" data-zaklep-za="gost" data-zaklep-prijava>Sign in</button>
+            <p class="ogled-zaklep-opis" data-zaklep-za="povabilo">You're signed in but don't have access to the films yet. Ask for it and I'll get back to you.</p>
+            <a class="gumb" href="../../odziv/?vrsta=predlog&amp;iz=dostop" data-zaklep-za="povabilo">Ask for access</a>
+            <p class="ogled-zaklep-opis" data-zaklep-za="clan">Every vlog, each new film the moment it's out, no ads.</p>
+            <p class="ogled-zaklep-cena" data-zaklep-za="clan">€6.99 a month</p>
             <form class="ogled-zaklep-obrazec" method="post" action="/api/narocnina/zacni" data-zaklep-za="clan" data-zaklep-obrazec>
               <input type="hidden" name="jezik" value="en">
               <input type="hidden" name="nazaj" value="/vlogi/rim-3/">
-              <label class="ogled-zaklep-soglasje"><input type="checkbox" name="soglasje" value="da" required> <span>I agree to the <a href="../../pogoji/" target="_blank" rel="noopener">terms</a> and want the service to start right away.</span></label>
+              <label class="ogled-zaklep-soglasje"><input type="checkbox" name="soglasje" value="da" required> <span>I agree to the <a href="../../zasebnost/" target="_blank" rel="noopener">terms</a> and want the service to start right away.</span></label>
               <button class="gumb" type="submit">Subscribe</button>
             </form>
-            <p class="ogled-zaklep-opis" data-zaklep-za="ni_na_voljo">Subscriptions are coming soon.</p>
             <p class="ogled-zaklep-opis" data-zaklep-za="kmalu">This film will be available to subscribers soon.</p>
-            <p class="drobno ogled-zaklep-drobno" data-zaklep-za="gost clan">Cancel any time. Access lasts until the end of the paid month.</p>
+            <p class="drobno ogled-zaklep-drobno" data-zaklep-za="clan">Cancel any time. Access lasts until the end of the paid month.</p>
           </div>
         </div>
       </div>
@@ -279,7 +281,6 @@
     <li><a href="../../novosti/">What’s new</a></li>
     <li><a href="../../odziv/">Feedback</a></li>
     <li><a href="../../zasebnost/">Privacy</a></li>
-    <li><a href="../../pogoji/">Terms</a></li>
   </ul></nav>
   <p class="drobno">Map data © OpenStreetMap contributors · Natural Earth · Contains modified Copernicus Sentinel data (2021). City footage: Pexels. App footage from the maker’s own trips.</p>
   <span class="drobno">© 2026 Wayfare</span>
