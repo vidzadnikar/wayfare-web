@@ -90,6 +90,11 @@
           <p class="clan-email" data-clan-email></p>
           <a class="clan-povezava" href="/nadzor" data-clan-nadzor hidden>Admin</a>
           <button class="clan-povezava" type="button" data-racun-odpri>Settings</button>
+          <form method="post" action="/api/narocnina/portal" data-clan-portal hidden>
+            <input type="hidden" name="jezik" value="en">
+            <input type="hidden" name="nazaj" value="" data-portal-nazaj>
+            <button class="clan-povezava" type="submit">Subscription</button>
+          </form>
           <button class="clan-povezava" type="button" data-izpis>Sign out</button>
         </div>
       </details>
@@ -453,7 +458,9 @@
 <p class="sporocilo" role="status" aria-live="polite" data-sporocilo hidden
    data-google="You're signed in. We'll write when there's a new film or release." data-potrjeno="Email confirmed. We'll write when there's a new film or release." data-poslano="Check your inbox: we sent you a confirmation link."
    data-napaka="Sign-in didn't work. Please try again." data-zaprto="Sign-ups are closed right now." data-izbrisan="Your account has been deleted." data-omejitev="Too many attempts. Try again in an hour." data-email="That email doesn't look right."
-   data-nadzor="Sign in with Google first to open the admin page." data-izpis="You're signed out." data-blokiran="This account has no access."></p>
+   data-nadzor="Sign in with Google first to open the admin page." data-izpis="You're signed out." data-blokiran="This account has no access."
+   data-narocnina-ok="Thank you! Your subscription is active and the films are unlocked." data-narocnina-preklic="Payment cancelled. Nothing was charged." data-narocnina-prijava="Sign in first to subscribe."
+   data-narocnina-ze="You already have a subscription." data-narocnina-ni-na-voljo="Subscriptions aren't available yet." data-narocnina-soglasje="Please accept the terms to subscribe." data-narocnina-napaka="That didn't work. Try again in a minute." data-narocnina-caka="Payment received. Access unlocks within a minute; refresh the page."></p>
 
 <footer class="noga">
   <span class="znamka"><img src="media/logo.svg" alt="" width="22" height="22"><span>Wayfare</span></span>
@@ -466,6 +473,7 @@
     <li><a href="novosti/">What’s new</a></li>
     <li><a href="odziv/">Feedback</a></li>
     <li><a href="zasebnost/">Privacy</a></li>
+    <li><a href="pogoji/">Terms</a></li>
   </ul></nav>
   <p class="drobno">Map data © OpenStreetMap contributors · Natural Earth · Contains modified Copernicus Sentinel data (2021). City footage: Pexels. App footage from the maker’s own trips.</p>
   <span class="drobno">© 2026 Wayfare</span>

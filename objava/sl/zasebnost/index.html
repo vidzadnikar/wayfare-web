@@ -79,6 +79,11 @@
           <p class="clan-email" data-clan-email></p>
           <a class="clan-povezava" href="/nadzor" data-clan-nadzor hidden>Nadzor</a>
           <button class="clan-povezava" type="button" data-racun-odpri>Nastavitve</button>
+          <form method="post" action="/api/narocnina/portal" data-clan-portal hidden>
+            <input type="hidden" name="jezik" value="sl">
+            <input type="hidden" name="nazaj" value="../" data-portal-nazaj>
+            <button class="clan-povezava" type="submit">Naročnina</button>
+          </form>
           <button class="clan-povezava" type="button" data-izpis>Izpis</button>
         </div>
       </details>
@@ -92,9 +97,9 @@
   <article class="besedilo" aria-labelledby="zasebnost-naslov">
     <h1 id="zasebnost-naslov" class="serif" data-naslov-uvod>Malo podatkov, <em>jasno povedano.</em></h1>
     <p class="uvodnik" data-uvod>Stran si lahko ogledaš brez prijave in brez piškotkov. Spodaj piše, kaj shranimo, če se prijaviš na obvestila.</p>
-    <section><h2 class="serif">Kaj hranimo</h2><p>E-naslov, ime in sliko profila (če prideš z Googlom), izbrani jezik in katera obvestila želiš, čas prijave, čas zadnjega obiska strani, število obiskov in katere filme si začel gledati na strani ter komentarje, ki jih napišeš (vidni so vsem obiskovalcem, z imenom in sliko profila, brez e-naslova). Nič drugega.</p></section>
+    <section><h2 class="serif">Kaj hranimo</h2><p>E-naslov, ime in sliko profila (če prideš z Googlom), izbrani jezik in katera obvestila želiš, čas prijave, čas zadnjega obiska strani, število obiskov in katere filme si začel gledati na strani ter komentarje, ki jih napišeš (vidni so vsem obiskovalcem, z imenom in sliko profila, brez e-naslova). Nič drugega. Če se naročiš na vloge, še stanje naročnine in čas, do katerega velja.</p></section>
     <section><h2 class="serif">Zakaj</h2><p>Da ti pošljemo e-pošto, ko objavimo nov film ali novo različico aplikacije Wayfare Studio, in da vemo, koliko ljudi se vrača. Podatkov ne prodajamo in jih ne dajemo naprej.</p></section>
-    <section><h2 class="serif">Kje</h2><p>Podatki so v bazi pri Cloudflaru, ki gosti tudi stran. Pošto pošilja Brevo. Prijava z Googlom teče pri Googlu; od njega dobimo le e-naslov, ime in sliko, Google pa od nas nič.</p></section>
+    <section><h2 class="serif">Kje</h2><p>Podatki so v bazi pri Cloudflaru, ki gosti tudi stran. Pošto pošilja Brevo. Prijava z Googlom teče pri Googlu; od njega dobimo le e-naslov, ime in sliko, Google pa od nas nič. Plačila naročnine obdeluje Stripe; podatkov o kartici ne vidimo in jih ne hranimo, pri sebi hranimo le Stripovo oznako stranke in stanje naročnine.</p></section>
     <section><h2 class="serif">Koliko časa</h2><p>Dokler imaš račun. S povezavo na dnu vsake pošte se odjaviš z enim <span class="samo-miska">klikom</span><span class="samo-dotik">dotikom</span>. Račun in vse podatke (komentarje, oglede, nastavitve) izbrišeš sam v Nastavitvah (meni z imenom v glavi strani). Povezava za prijavo velja eno uro in se porabi z enim klikom; porabljene in potečene povezave izbrišemo vsak dan. Za zaščito pred zlorabo štejemo poskuse prijave in komentarje na uro, a e-naslov in naslov IP sta pri tem shranjena le v nepovratno zgoščeni obliki in se izbrišeta po enem dnevu.</p></section>
     <section><h2 class="serif">Piškotki</h2><p>En piškotek (<code>wayfare_seja</code>) te drži prijavljenega eno leto; nastavi se šele ob prijavi, je podpisan in ga skripti na strani ne morejo prebrati. Ko se izpišeš, se izpišeš na vseh napravah. Brskalnik si zapomni še izbrani jezik. Piškotkov tretjih ni.</p></section>
     <section><h2 class="serif">Obiski</h2><p>Prijavljenim članom zapišemo čas zadnjega obiska, število obiskov in katere filme so začeli gledati. Za vse obiskovalce štejemo le, kolikokrat na dan se stran naloži, brez piškotkov in brez prepoznavanja posameznika. Stran šteje oglede tudi s Cloudflare Web Analytics, brez piškotkov in brez prepoznavanja obiskovalcev: vidimo le skupne številke (koliko ogledov, katere strani, iz katere države), nikoli kdo si.</p></section>
@@ -200,7 +205,9 @@
 <p class="sporocilo" role="status" aria-live="polite" data-sporocilo hidden
    data-google="Prijavljen si. Pišemo ti ob novem filmu ali izdaji." data-potrjeno="E-naslov je potrjen. Pišemo ti ob novem filmu ali izdaji." data-poslano="Preveri pošto: poslali smo ti povezavo za potrditev."
    data-napaka="Prijava ni uspela. Poskusi znova." data-zaprto="Prijave so trenutno zaprte." data-izbrisan="Tvoj račun je izbrisan." data-omejitev="Preveč poskusov. Poskusi čez eno uro." data-email="Ta e-naslov ne izgleda pravilno."
-   data-nadzor="Za nadzor se najprej prijavi z Googlom." data-izpis="Izpisan si." data-blokiran="Ta račun nima dostopa."></p>
+   data-nadzor="Za nadzor se najprej prijavi z Googlom." data-izpis="Izpisan si." data-blokiran="Ta račun nima dostopa."
+   data-narocnina-ok="Hvala! Naročnina je aktivna, filmi so odklenjeni." data-narocnina-preklic="Plačilo je preklicano. Nič ni zaračunano." data-narocnina-prijava="Za naročnino se najprej prijavi."
+   data-narocnina-ze="Naročnino že imaš." data-narocnina-ni-na-voljo="Naročnina še ni na voljo." data-narocnina-soglasje="Za naročnino potrdi pogoje." data-narocnina-napaka="Ni šlo. Poskusi znova čez minuto." data-narocnina-caka="Plačilo je sprejeto. Dostop se odklene v minuti; osveži stran."></p>
 
 <footer class="noga">
   <span class="znamka"><img src="../../media/logo.svg" alt="" width="22" height="22"><span>Wayfare</span></span>
@@ -213,6 +220,7 @@
     <li><a href="../novosti/">Novosti</a></li>
     <li><a href="../odziv/">Odziv</a></li>
     <li><a href="./" aria-current="page">Zasebnost</a></li>
+    <li><a href="../pogoji/">Pogoji</a></li>
   </ul></nav>
   <p class="drobno">Map data © OpenStreetMap contributors · Natural Earth · Vsebuje spremenjene podatke Copernicus Sentinel (2021). Posnetki mest: Pexels. Posnetki v aplikaciji so z avtorjevih potovanj.</p>
   <span class="drobno">© 2026 Wayfare</span>

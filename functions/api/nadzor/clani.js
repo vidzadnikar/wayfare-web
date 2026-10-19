@@ -1,6 +1,6 @@
 // Nadzor: vse za stran /nadzor v enem klicu — člani z ogledi, zadržana
 // obvestila, zadnja obvestila, vlogi z YouTuba v obdelavi, ogledi po vlogih,
-// obiski zadnjih 14 dni, odzivi testerjev, nastavitve in stanje vrste.
+// obiski zadnjih 14 dni, odzivi testerjev, naročnine, nastavitve in stanje vrste.
 import { json } from "../../../zaledje/osnova.js";
 import { zahtevajAdmina } from "../../../zaledje/seja.js";
 import { dnevnoStanje, stanjeVrste } from "../../../zaledje/posta.js";
@@ -11,10 +11,11 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
   const admin = await zahtevajAdmina(env, request);
   const db = env.DB;
   const pred14 = new Date(Date.now() - 13 * 86400e3).toISOString().slice(0, 10);
-  const [clani, obvestila, youtube, ogledi, poClanih, obiski, komentarji, odzivi] = await Promise.all([
+  const [clani, obvestila, youtube, ogledi, poClanih, obiski, komentarji, odzivi, narocnine] = await Promise.all([
     db.prepare(
       `SELECT c.id, c.email, c.ime, c.slika_url, c.vir, c.jezik, c.potrjen_at, c.odjavljen_at, c.blokiran, c.ustvarjen_at,
               c.zadnji_obisk_at, c.obiskov, c.zeli_vlogi, c.zeli_izdaje, c.zeli_novice,
+              c.dostop_vrsta, c.dostop_do, c.dostop_opomba, c.stripe_customer_id,
               (SELECT COUNT(DISTINCT o.oznaka) FROM ogledi o WHERE o.clan_id = c.id) AS ogledanih
        FROM clani c ORDER BY c.ustvarjen_at DESC`,
     ).all(),
@@ -44,12 +45,16 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
               o.resen_at, o.ustvarjeno_at
        FROM odzivi o LEFT JOIN clani c ON c.id = o.clan_id ORDER BY (o.resen_at IS NULL) DESC, o.ustvarjeno_at DESC LIMIT 200`,
     ).all(),
+    db.prepare(
+      `SELECT n.id, n.clan_id, n.stanje, n.obdobje_do, n.preklic_ob_koncu, n.ustvarjeno_at, n.posodobljeno_at, c.email, c.ime
+       FROM narocnine n JOIN clani c ON c.id = n.clan_id ORDER BY n.posodobljeno_at DESC LIMIT 200`,
+    ).all(),
   ]);
   return json({
     admin: { id: admin.id, email: admin.email },
     clani: clani.results, obvestila: obvestila.results, youtube: youtube.results,
     ogledi: ogledi.results, ogledi_clanov: poClanih.results, obiski: obiski.results, komentarji: komentarji.results,
-    odzivi: odzivi.results,
+    odzivi: odzivi.results, narocnine: narocnine.results,
     nastavitve: { vrednosti: await preberiNastavitve(db), opisi: Object.fromEntries(Object.entries(NASTAVITVE).map(([k, n]) => [k, { vrsta: n.vrsta, opis: n.opis, najmanj: n.najmanj, najvec: n.najvec }])) },
     vrsta: { caka: await stanjeVrste(db), dnevno: await dnevnoStanje(env, db) },
   });

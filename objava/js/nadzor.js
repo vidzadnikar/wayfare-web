@@ -3,8 +3,9 @@
 // vlogi z YouTuba (/api/nadzor/youtube), komentarji (/api/komentarji/izbrisi),
 // odzivi (/api/nadzor/odziv),
 // novica (/api/nadzor/novica), vrsta
-// (/api/nadzor/vrsta) in nastavitve (/api/nadzor/nastavitve). Izvoz je
-// navadna povezava. Imena vlogov pridejo iz /vlogi/seznam.json.
+// (/api/nadzor/vrsta), nastavitve (/api/nadzor/nastavitve) in podarjen
+// dostop do vlogov (/api/nadzor/dostop). Izvoz je navadna povezava. Imena
+// vlogov pridejo iz /vlogi/seznam.json.
 const koren = document.querySelector("[data-nadzor]");
 const $ = (izbirnik) => koren.querySelector(izbirnik);
 const povzetek = $("[data-povzetek]");
@@ -54,8 +55,43 @@ function stanjeClana(c) {
   return ["aktiven", "aktiven"];
 }
 
+const narocninaVelja = (n) => !!n && (["active", "trialing"].includes(n.stanje)
+  || (n.stanje === "past_due" && Date.parse(n.obdobje_do || 0) + 7 * 86400e3 > Date.now())
+  || (n.stanje === "canceled" && Date.parse(n.obdobje_do || 0) > Date.now()));
+const kratekDan = (iso) => (iso ? new Date(iso).toLocaleDateString("sl-SI", { day: "numeric", month: "numeric", year: "numeric" }) : "");
+
+// Dostop do vlogov: naročnina (Stripe), podarjen (nadzor) ali nič.
+function dostopClana(c) {
+  const n = (stanje.narocnine || []).filter((x) => x.clan_id === c.id).find(narocninaVelja);
+  if (c.id === stanje.admin.id) return ["admin", "stanje-aktiven"];
+  if (n) return [`naročnik do ${kratekDan(n.obdobje_do)}${n.preklic_ob_koncu ? " (preklic)" : ""}`, "stanje-aktiven"];
+  if (c.dostop_vrsta === "podarjen" && (!c.dostop_do || Date.parse(c.dostop_do) > Date.now())) {
+    return [`podarjen${c.dostop_do ? ` do ${kratekDan(c.dostop_do)}` : ""}${c.dostop_opomba ? ` · ${c.dostop_opomba}` : ""}`, "stanje-aktiven"];
+  }
+  if (c.dostop_vrsta === "podarjen") return ["podarjen, potekel", "stanje-odjavljen"];
+  return ["—", ""];
+}
+
+async function dostopDejanje(c, kaj) {
+  const telo = { id: c.id, dejanje: kaj };
+  if (kaj === "podari") {
+    const do_ = prompt(`Podarim dostop do vlogov za ${c.email}.\nDo katerega dne (LLLL-MM-DD)? Prazno = brez roka.`, "");
+    if (do_ === null) return;
+    if (do_.trim()) telo.do = do_.trim();
+    const opomba = prompt("Opomba (neobvezno, le zate):", c.dostop_opomba || "");
+    if (opomba === null) return;
+    telo.opomba = opomba;
+  } else if (!confirm(`Odvzamem podarjen dostop za ${c.email}?`)) return;
+  try {
+    await klic("/api/nadzor/dostop", telo);
+    povej(kaj === "podari" ? `Dostop podarjen: ${c.email}` : `Dostop odvzet: ${c.email}`);
+    await nalozi();
+  } catch (e) { povej(e.message, true); }
+}
+
 function vrsticaClana(c) {
   const [oznaka, razred] = stanjeClana(c);
+  const [dostopOznaka, dostopRazred] = dostopClana(c);
   const jaz = c.id === stanje.admin.id;
   const ime = el("td", { class: "naslov" });
   if (c.slika_url) ime.append(el("img", { class: "clan-majhna", src: c.slika_url, alt: "", width: 24, height: 24, referrerpolicy: "no-referrer" }));
@@ -64,6 +100,10 @@ function vrsticaClana(c) {
   const dejanja = el("td");
   if (!jaz) {
     dejanja.append(
+      c.dostop_vrsta === "podarjen"
+        ? el("button", { type: "button", class: "tabela-gumb", onclick: () => dostopDejanje(c, "odvzemi") }, "Odvzemi dostop")
+        : el("button", { type: "button", class: "tabela-gumb", onclick: () => dostopDejanje(c, "podari") }, "Podari dostop"),
+      " ",
       el("button", { type: "button", class: "tabela-gumb", onclick: () => dejanjeClana(c, c.blokiran ? "odblokiraj" : "blokiraj") }, c.blokiran ? "Odblokiraj" : "Blokiraj"),
       " ",
       el("button", { type: "button", class: "tabela-gumb tabela-gumb-rdec", onclick: () => dejanjeClana(c, "izbrisi") }, "Izbriši"),
@@ -79,6 +119,7 @@ function vrsticaClana(c) {
     el("td", {}, datum(c.zadnji_obisk_at)),
     el("td", {}, String(c.obiskov)),
     el("td", {}, c.ogledanih ? `${c.ogledanih} ${c.ogledanih === 1 ? "film" : c.ogledanih === 2 ? "filma" : c.ogledanih < 5 ? "filme" : "filmov"}` : "—"),
+    el("td", { class: `naslov ${dostopRazred}` }, dostopOznaka),
     el("td", { class: `stanje-${razred}` }, oznaka),
     dejanja,
   );
@@ -107,8 +148,11 @@ function narisiPregled() {
   const vsehOgledov = ogledi.reduce((s, o) => s + o.ogledov, 0);
   const odzivi = stanje.odzivi || [];
   const neresenih = odzivi.filter((o) => !o.resen_at).length;
+  const narocnikov = new Set((stanje.narocnine || []).filter(narocninaVelja).map((n) => n.clan_id)).size;
+  const podarjenih = clani.filter((c) => dostopClana(c)[0].startsWith("podarjen") && dostopClana(c)[1] === "stanje-aktiven").length;
   $("[data-ploscice]").replaceChildren(
     ploscica(aktivnih, "aktivnih članov", `${clani.length} skupaj`),
+    ploscica(narocnikov, "naročnikov", `${podarjenih} s podarjenim dostopom`),
     ploscica(neresenih, "nerešenih odzivov", `${odzivi.length} skupaj`),
     ploscica(obiskDanes("obisk_gost") + obiskDanes("obisk_clan"), "nalaganj strani danes", `${obiskDanes("obisk_clan")} od članov`),
     ploscica(vsehOgledov, "ogledov vlogov", `${ogledi.length} različnih filmov`),
@@ -248,6 +292,20 @@ youtube.addEventListener("submit", async (e) => {
   } catch (e2) { povej(e2.message, true); }
   gumb.disabled = false;
 });
+
+// ---------------------------------------------------------------- naročnine
+function narisiNarocnine() {
+  const vrstice = (stanje.narocnine || []).map((n) => el("tr", {},
+    el("td", { class: "naslov" }, n.ime ? `${n.ime} (${n.email})` : n.email),
+    el("td", { class: narocninaVelja(n) ? "stanje-aktiven" : "stanje-odjavljen" }, n.stanje),
+    el("td", {}, datum(n.obdobje_do)),
+    el("td", {}, n.preklic_ob_koncu ? "ob koncu obdobja" : "—"),
+    el("td", {}, datum(n.ustvarjeno_at)),
+    el("td", {}, datum(n.posodobljeno_at)),
+  ));
+  $("[data-narocnine] tbody").replaceChildren(...vrstice);
+  if (!vrstice.length) $("[data-narocnine] tbody").append(prazno(6, "Naročnin še ni."));
+}
 
 // ---------------------------------------------------------------- ogledi
 function narisiOgledi() {
@@ -406,7 +464,8 @@ async function nalozi() {
   narisiCakajo();
   narisiYoutube();
   $("[data-clani] tbody").replaceChildren(...clani.map(vrsticaClana));
-  if (!clani.length) $("[data-clani] tbody").append(prazno(11, "Še nihče."));
+  if (!clani.length) $("[data-clani] tbody").append(prazno(12, "Še nihče."));
+  narisiNarocnine();
   narisiOdzive();
   narisiOgledi();
   narisiKomentarje();

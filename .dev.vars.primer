@@ -16,5 +16,12 @@ BREVO_API_KEY=
 RESEND_API_KEY=
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
+# naročnina na vloge (Stripe): skrivni ključ (sk_test_… doma, sk_live_… v živo),
+# cena (price_…, 6,99 € na mesec) in skrivnost webhooka (whsec_…)
+STRIPE_SECRET_KEY=
+STRIPE_PRICE_ID=
+STRIPE_WEBHOOK_SECRET=
+# le doma: lažni Stripe (zaledje/preizkus_stripe.py); v živo te vrstice ni
+# STRIPE_API_URL=http://127.0.0.1:8799
 # naslov strani v povezavah v pošti (privzeto izvor zahteve)
 # STRAN_URL=https://wayfarestudio.pages.dev

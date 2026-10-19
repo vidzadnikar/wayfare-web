@@ -40,6 +40,14 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://wayfarestudio.pages.dev/odziv/"/>
     <xhtml:link rel="alternate" hreflang="sl" href="https://wayfarestudio.pages.dev/sl/odziv/"/>
   </url>
+  <url><loc>https://wayfarestudio.pages.dev/pogoji/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://wayfarestudio.pages.dev/pogoji/"/>
+    <xhtml:link rel="alternate" hreflang="sl" href="https://wayfarestudio.pages.dev/sl/pogoji/"/>
+  </url>
+  <url><loc>https://wayfarestudio.pages.dev/sl/pogoji/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://wayfarestudio.pages.dev/pogoji/"/>
+    <xhtml:link rel="alternate" hreflang="sl" href="https://wayfarestudio.pages.dev/sl/pogoji/"/>
+  </url>
   <url><loc>https://wayfarestudio.pages.dev/vlogi/milano-4/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://wayfarestudio.pages.dev/vlogi/milano-4/"/>
     <xhtml:link rel="alternate" hreflang="sl" href="https://wayfarestudio.pages.dev/sl/vlogi/milano-4/"/>

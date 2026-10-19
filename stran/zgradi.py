@@ -9,6 +9,7 @@ Strani:
     predloga-zasebnost.html → zasebnost/index.html in sl/zasebnost/index.html
     predloga-odziv.html  → odziv/index.html in sl/odziv/index.html (obrazec za odziv testerjev)
     predloga-ogled.html  → vlogi/<oznaka>/index.html in sl/vlogi/<oznaka>/index.html (vsak vlog)
+    predloga-pogoji.html → pogoji/index.html in sl/pogoji/index.html (pogoji naročnine)
 
 Besedila so v besedila.json; ključ {{x}} v predlogi se zamenja z vrednostjo.
 Vrednosti so zaupanja vredno besedilo z dovoljeno oznako (<em>, <br>).
@@ -46,8 +47,28 @@ STRANI = {
     "zasebnost": dict(predloga="predloga-zasebnost.html", izhod={"en": "zasebnost/index.html", "sl": "sl/zasebnost/index.html"}),
     "novosti": dict(predloga="predloga-novosti.html", izhod={"en": "novosti/index.html", "sl": "sl/novosti/index.html"}),
     "odziv": dict(predloga="predloga-odziv.html", izhod={"en": "odziv/index.html", "sl": "sl/odziv/index.html"}),
+    "pogoji": dict(predloga="predloga-pogoji.html", izhod={"en": "pogoji/index.html", "sl": "sl/pogoji/index.html"}),
     "napaka": dict(predloga="predloga-404.html", izhod={"en": "404.html", "sl": "sl/404.html"}),
 }
+
+# Podatki ponudnika za stran Pogoji in Zasebnost (ZVPot-1 zahteva ime, naslov,
+# matično in davčno številko ter e-naslov). Dokler so v oklepajih, gradnja
+# opozori: izpolni jih po registraciji dejavnosti (s.p.).
+PODJETJE = {
+    "ime": "[ime podjetja ali s.p.]",
+    "naslov": "[naslov]",
+    "maticna": "[matična številka]",
+    "davcna": "[davčna številka]",
+    "email": "[e-naslov za stranke]",
+}
+
+
+# Plačljivi vlogi: vsak vlog je za naročnike (film iz zasebnega R2, oznaka
+# youtube ostane doma), razen če ima v vlogi.json "brezplacen": true (igra z
+# YouTuba kot prej). Objavljen je vlog z oznako youtube ali z "objavljen": true.
+def je_brezplacen(v):
+    return bool(v.get("brezplacen"))
+
 
 # 24 sličic surovih posnetkov v časovnem zaporedju; poletijo v sled V1 časovnice
 _VSE = [f"t{n:02d}" for n in range(1, 45) if n != 36]  # t36 je pokončen
@@ -271,16 +292,17 @@ def poti(stran, jezik):
     zasebnost = STRANI["zasebnost"]["izhod"][jezik]
     novosti = STRANI["novosti"]["izhod"][jezik]
     odziv = STRANI["odziv"]["izhod"][jezik]
+    pogoji = STRANI["pogoji"]["izhod"][jezik]
     if stran == "napaka":
         absolutna = lambda do: "/" + do.removesuffix("index.html")
         koren, pot_dom = "/", absolutna(dom)
         url_en, url_sl, pot_vlogi, pot_zasebnost = absolutna(en), absolutna(sl), absolutna(vlogi), absolutna(zasebnost)
-        pot_novosti, pot_odziv = absolutna(novosti), absolutna(odziv)
+        pot_novosti, pot_odziv, pot_pogoji = absolutna(novosti), absolutna(odziv), absolutna(pogoji)
     else:
         koren, pot_dom = relmapa(ta, "index.html"), relmapa(ta, dom)
         url_en, url_sl = relmapa(ta, en, "./"), relmapa(ta, sl, "./")
         pot_vlogi, pot_zasebnost = relmapa(ta, vlogi, "./"), relmapa(ta, zasebnost, "./")
-        pot_novosti, pot_odziv = relmapa(ta, novosti, "./"), relmapa(ta, odziv, "./")
+        pot_novosti, pot_odziv, pot_pogoji = relmapa(ta, novosti, "./"), relmapa(ta, odziv, "./"), relmapa(ta, pogoji, "./")
     return {
         "lang": jezik,
         "koren": koren,
@@ -291,12 +313,14 @@ def poti(stran, jezik):
         "pot_zasebnost": pot_zasebnost,
         "pot_novosti": pot_novosti,
         "pot_odziv": pot_odziv,
+        "pot_pogoji": pot_pogoji,
         "en_aktiven": 'aria-current="page"' if jezik == "en" else "",
         "sl_aktiven": 'aria-current="page"' if jezik == "sl" else "",
         "vlogi_aktiven": ' aria-current="page"' if stran == "vlogi" or stran.startswith("ogled:") else "",
         "zasebnost_aktiven": ' aria-current="page"' if stran == "zasebnost" else "",
         "novosti_aktiven": ' aria-current="page"' if stran == "novosti" else "",
         "odziv_aktiven": ' aria-current="page"' if stran == "odziv" else "",
+        "pogoji_aktiven": ' aria-current="page"' if stran == "pogoji" else "",
         "_drug": drug,
         "_ta": ta,
     }
@@ -338,7 +362,7 @@ def vlogi_podatki():
     ne na domači strani, ne na globusu. Ko dobi oznako (vlogi/zberi.py ali
     vlogi.json), se ob naslednji gradnji pokaže sam, GitHub Action pa pošlje
     obvestilo članom."""
-    return [v for v in vsi_vlogi() if v.get("youtube")]
+    return [v for v in vsi_vlogi() if v.get("youtube") or v.get("objavljen")]
 
 
 def kraji_podatki():
@@ -446,13 +470,20 @@ def ogled_stran(oznaka, jezik, b, p):
     naprej = "".join(kartica_html(x, opis_vloga(x, jezik, media), pot_ogleda(p, x["oznaka"], jezik), izberi=False, vrsta=True,
                                   velikosti="(min-width: 900px) 180px, 100vw")
                      for x in serija)
+    brezplacen = je_brezplacen(v)
+    youtube_javen = o["youtube"] if brezplacen else ""
     return {
         "ogled_naslov_strani": html.escape(f"{o['naslov']} — Wayfare Studio"),
         "ogled_opis_meta": html.escape(opis),
         "ogled_naslov": html.escape(o["naslov"]),
         "ogled_opis": html.escape(opis),
         "ogled_slika": o["slika"],
-        "ogled_youtube_id": o["youtube"],
+        # plačljiv vlog: oznaka youtube ostane doma, film pride iz R2 prek /api/video
+        "ogled_youtube_id": youtube_javen,
+        "ogled_placljiv": "false" if brezplacen else "true",
+        "ogled_youtube_skrito": "" if youtube_javen else " hidden",
+        "ogled_gumb_href": f"https://www.youtube.com/watch?v={youtube_javen}" if youtube_javen else p["pot_pogoji"],
+        "ogled_pot_absolutna": "/" + izhod_ogleda(oznaka, jezik).removesuffix("index.html"),
         "ogled_oznaka": oznaka,
         "ogled_pokoncno": "true" if o["pokoncno"] else "false",
         "ogled_trajanje": o["trajanje"],
@@ -738,11 +769,17 @@ def strukturirani(stran, jezik, b, url, slika, opis):
         }
     if stran.startswith("ogled:"):
         v = next(x for x in vlogi_podatki() if x["oznaka"] == stran.split(":", 1)[1])
-        return {
+        podatki = {
             "@context": "https://schema.org", "@type": "VideoObject", "name": v["naslov"][jezik], "description": opis,
             "thumbnailUrl": [slika], "uploadDate": v.get("datum_do") or v["datum"], "duration": iso_trajanje(v["trajanje"]),
-            "embedUrl": f"https://www.youtube.com/embed/{v['youtube']}", "inLanguage": v.get("jezik", "sl"), "url": url,
+            "inLanguage": v.get("jezik", "sl"), "url": url,
         }
+        if je_brezplacen(v) and v.get("youtube"):
+            podatki["embedUrl"] = f"https://www.youtube.com/embed/{v['youtube']}"
+        else:
+            podatki["isAccessibleForFree"] = False
+            podatki["hasPart"] = {"@type": "WebPageElement", "isAccessibleForFree": False, "cssSelector": ".ogled-oder"}
+        return podatki
     return None
 
 
@@ -904,9 +941,11 @@ def objavi(zgoscene, strani, okvirji):
     print(f"objava: {len(datoteke)} datotek, {velikost:.0f} MB")
     if neuporabljeni:
         print("ni v objavi (stran jih ne uporablja):", ", ".join(neuporabljeni))
-    brez = [v["oznaka"] for v in vsi_vlogi() if not v.get("youtube")]
+    brez = [v["oznaka"] for v in vsi_vlogi() if not (v.get("youtube") or v.get("objavljen"))]
     if brez:
-        print("brez oznake youtube (še niso objavljeni, na strani jih ni):", ", ".join(brez))
+        print("brez oznake youtube ali objavljen (na strani jih ni):", ", ".join(brez))
+    placljivi = [v["oznaka"] for v in vlogi_podatki() if not je_brezplacen(v)]
+    print(f"plačljivi vlogi (film iz R2, nalaganje: python3 zaledje/videi.py): {len(placljivi)}, brezplačni: {len(vlogi_podatki()) - len(placljivi)}")
     if BREZ_PREVODA:
         print("poglavja brez angleškega imena (dodaj v stran/poglavja-en.json):", ", ".join(sorted(BREZ_PREVODA)))
     if prevelike:
@@ -922,7 +961,12 @@ def main():
     paket["prenos_windows_mb"] = paket["prenos_windows_velikost"].strip(" ·") or "Windows"
     paket["prenos_android_mb"] = paket["prenos_android_velikost"].strip(" ·") or "Android"
     male_slike()
-    okvirji = any(v.get("youtube") for v in vlogi_podatki())
+    # okvir YouTuba rabijo le brezplačni vlogi; plačljivi igrajo iz R2 (<video>)
+    okvirji = any(v.get("youtube") and je_brezplacen(v) for v in vlogi_podatki())
+    okvir_vloga = {v["oznaka"]: bool(v.get("youtube") and je_brezplacen(v)) for v in vlogi_podatki()}
+    podjetje = {f"podjetje_{k}": html.escape(v) for k, v in PODJETJE.items()}
+    if any(v.startswith("[") for v in PODJETJE.values()):
+        print("OPOZORILO: PODJETJE v zgradi.py ima še nadomestne vrednosti (stran Pogoji in Zasebnost)")
     for v in vlogi_podatki():
         STRANI[f"ogled:{v['oznaka']}"] = dict(predloga="predloga-ogled.html",
                                                izhod={j: izhod_ogleda(v["oznaka"], j) for j in ("en", "sl")})
@@ -931,7 +975,7 @@ def main():
         predloga = open(os.path.join(TU, s["predloga"]), encoding="utf-8").read()
         for jezik in ("en", "sl"):
             p = poti(stran, jezik)
-            b = {**besedila[jezik], **{k: v for k, v in p.items() if not k.startswith("_")}}
+            b = {**besedila[jezik], **{k: v for k, v in p.items() if not k.startswith("_")}, **podjetje}
             if ANALITIKA:
                 b["zasebnost_6_besedilo"] += " " + b["zasebnost_analitika"]
             if stran == "vlogi":
@@ -960,8 +1004,10 @@ def main():
                 html_ = html_.replace("{{plugin_ukaz_%d}}" % i, deli_ukaza(d))
             html_ = re.sub(r"\{\{kopiraj:([\w-]+)\}\}",
                            lambda m: GUMB_KOPIRAJ.replace("{id}", m.group(1)), html_)
-            for kljuc, vrednost in b.items():
-                html_ = html_.replace("{{" + kljuc + "}}", vrednost)
+            # dvakrat: besedilo sme vsebovati drug ključ (npr. {{narocnina_cena}}, {{podjetje_email}})
+            for _ in range(2):
+                for kljuc, vrednost in b.items():
+                    html_ = html_.replace("{{" + kljuc + "}}", vrednost)
             html_ = html_.replace("{{prenos_href}}", paket["url"])
             for kljuc in ("prenos_ime", "prenos_velikost", "razlicica", "prenos_windows_href",
                           "prenos_windows_ime", "prenos_windows_velikost", "prenos_android_href",
@@ -971,7 +1017,7 @@ def main():
             html_ = predhodno_moduli(html_)
             zgoscene = zgoscene_skript(html_)
             vse_zgoscene |= zgoscene
-            html_ = html_.replace("{{csp}}", csp(zgoscene, okvirji and stran.startswith("ogled:")))
+            html_ = html_.replace("{{csp}}", csp(zgoscene, stran.startswith("ogled:") and okvir_vloga.get(stran.split(":", 1)[1], False)))
             manjka = sorted(set(re.findall(r"\{\{(\w+)\}\}", html_)))
             if manjka:
                 raise SystemExit(f"{stran}/{jezik}: manjkajo besedila za {manjka}")

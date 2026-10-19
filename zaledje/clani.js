@@ -92,6 +92,7 @@ export function izbrisiClana(db, c) {
     db.prepare("DELETE FROM komentarji WHERE odgovor_na IN (SELECT id FROM komentarji WHERE clan_id = ?1)").bind(c.id),
     db.prepare("DELETE FROM komentarji WHERE clan_id = ?").bind(c.id),
     db.prepare("DELETE FROM zetoni WHERE email = ?").bind(c.email),
+    db.prepare("DELETE FROM narocnine WHERE clan_id = ?").bind(c.id),
     // odzivi ostanejo (pomagajo izboljšati aplikacijo), a brez člana in e-naslova
     db.prepare("UPDATE odzivi SET clan_id = NULL, email = NULL WHERE clan_id = ?1 OR email = ?2").bind(c.id, c.email),
     db.prepare("DELETE FROM clani WHERE id = ?").bind(c.id),

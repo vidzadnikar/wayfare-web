@@ -102,12 +102,22 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
     <h2 id="clani-naslov" class="serif">Člani</h2>
     <div class="tabela-ovoj">
       <table class="tabela" data-clani>
-        <thead><tr><th>Ime</th><th>E-naslov</th><th>Vir</th><th>Jezik</th><th>Želi</th><th>Prijavljen</th><th>Zadnji obisk</th><th>Obiskov</th><th>Ogledal</th><th>Stanje</th><th></th></tr></thead>
+        <thead><tr><th>Ime</th><th>E-naslov</th><th>Vir</th><th>Jezik</th><th>Želi</th><th>Prijavljen</th><th>Zadnji obisk</th><th>Obiskov</th><th>Ogledal</th><th>Dostop</th><th>Stanje</th><th></th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
   </section>
 
+  <section class="nadzor-odsek" aria-labelledby="narocnine-naslov">
+    <h2 id="narocnine-naslov" class="serif">Naročnine</h2>
+    <p class="nadzor-opis">Vlogi so za naročnike (Stripe, 6,99 € na mesec) in za člane, ki jim dostop podariš pri Članih (»Podari dostop«: brez roka ali do dne). Stanje naročnine je Stripovo: active plačuje, past_due plačilo ni uspelo (dostop še 7 dni), canceled do konca obdobja še velja.</p>
+    <div class="tabela-ovoj">
+      <table class="tabela" data-narocnine>
+        <thead><tr><th>Član</th><th>Stanje</th><th>Plačano do</th><th>Preklic</th><th>Od</th><th>Posodobljeno</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
   <section class="nadzor-odsek" aria-labelledby="ogledi-naslov">
     <h2 id="ogledi-naslov" class="serif">Ogledi vlogov</h2>
     <p class="nadzor-opis">Šteje se, ko nekdo na strani začne predvajati film. Prijavljene člane vidiš po imenu, goste le kot število.</p>

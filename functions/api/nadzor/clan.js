@@ -4,6 +4,7 @@
 import { Napaka, json, telo, istiIzvor } from "../../../zaledje/osnova.js";
 import { zahtevajAdmina, preklicSej } from "../../../zaledje/seja.js";
 import { izbrisiClana } from "../../../zaledje/clani.js";
+import { prekliciNarocnine } from "../../../zaledje/narocnine.js";
 import { obravnavaj } from "../../../zaledje/strani.js";
 
 export const onRequestPost = obravnavaj(async ({ request, env }) => {
@@ -19,6 +20,7 @@ export const onRequestPost = obravnavaj(async ({ request, env }) => {
   if (dejanje === "izbrisi") {
     const c = await db.prepare("SELECT id, email FROM clani WHERE id = ?").bind(id).first();
     if (!c) throw new Napaka(404, "clan", "Člana ni.");
+    await prekliciNarocnine(env, db, c.id);
     await izbrisiClana(db, c);
   } else {
     const r = await db.prepare("UPDATE clani SET blokiran = ?1 WHERE id = ?2").bind(dejanje === "blokiraj" ? 1 : 0, id).run();

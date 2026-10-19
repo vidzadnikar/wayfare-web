@@ -23,8 +23,8 @@
 <link rel="apple-touch-icon" href="/media/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#0b0c0f">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoObject", "name": "Madrid — Recap", "description": "Madrid, Spain. Filmed 25 September – 28 September 2026. Edited from 164 clips.", "thumbnailUrl": ["https://wayfarestudio.pages.dev/media/vlogi/madrid-recap.jpg"], "uploadDate": "2026-09-28", "duration": "PT4M13S", "embedUrl": "https://www.youtube.com/embed/LSp_V7revZU", "inLanguage": "sl", "url": "https://wayfarestudio.pages.dev/vlogi/madrid-recap/"}</script>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-RbbuzVXWcPRfhDEBAOfwGBxB3FSDmtFqDWLZxEbGrww=' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; media-src 'self'; font-src 'self'; connect-src 'self' blob: https://cloudflareinsights.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src https://www.youtube-nocookie.com; worker-src 'none'; manifest-src 'self'">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoObject", "name": "Madrid — Recap", "description": "Madrid, Spain. Filmed 25 September – 28 September 2026. Edited from 164 clips.", "thumbnailUrl": ["https://wayfarestudio.pages.dev/media/vlogi/madrid-recap.jpg"], "uploadDate": "2026-09-28", "duration": "PT4M13S", "inLanguage": "sl", "url": "https://wayfarestudio.pages.dev/vlogi/madrid-recap/", "isAccessibleForFree": false, "hasPart": {"@type": "WebPageElement", "isAccessibleForFree": false, "cssSelector": ".ogled-oder"}}</script>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-RbbuzVXWcPRfhDEBAOfwGBxB3FSDmtFqDWLZxEbGrww=' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; media-src 'self'; font-src 'self'; connect-src 'self' blob: https://cloudflareinsights.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; worker-src 'none'; manifest-src 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="preload" href="../../pisave/instrument-sans-latin-11aa49.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../media/vlogi/madrid-recap.jpg" as="image">
@@ -84,6 +84,11 @@
           <p class="clan-email" data-clan-email></p>
           <a class="clan-povezava" href="/nadzor" data-clan-nadzor hidden>Admin</a>
           <button class="clan-povezava" type="button" data-racun-odpri>Settings</button>
+          <form method="post" action="/api/narocnina/portal" data-clan-portal hidden>
+            <input type="hidden" name="jezik" value="en">
+            <input type="hidden" name="nazaj" value="../../" data-portal-nazaj>
+            <button class="clan-povezava" type="submit">Subscription</button>
+          </form>
           <button class="clan-povezava" type="button" data-izpis>Sign out</button>
         </div>
       </details>
@@ -96,13 +101,33 @@
 <main id="vsebina" class="ogled-stran">
   <div class="ogled">
     <article class="ogled-glavno" aria-labelledby="ogled-naslov">
-      <div class="ogled-oder" data-ogled-oder data-youtube="LSp_V7revZU" data-oznaka="madrid-recap" data-pokoncno="false" data-stanje="pripravljen">
+      <div class="ogled-oder" data-ogled-oder data-youtube="" data-placljiv="true" data-oznaka="madrid-recap" data-pokoncno="false" data-stanje="pripravljen">
         <img class="ogled-oder-ozadje" src="../../media/vlogi/madrid-recap.jpg" alt="" aria-hidden="true">
         <img class="ogled-oder-naslovnica" src="../../media/vlogi/madrid-recap.jpg" alt="" data-naslovnica>
-        <a class="ogled-oder-gumb" href="https://www.youtube.com/watch?v=LSp_V7revZU" data-predvajaj aria-label="Play: Madrid — Recap, 4:13">
+        <video class="ogled-oder-video" data-video playsinline controls preload="metadata" poster="../../media/vlogi/madrid-recap.jpg" hidden></video>
+        <a class="ogled-oder-gumb" href="../../pogoji/" data-predvajaj aria-label="Play: Madrid — Recap, 4:13">
           <span class="ogled-oder-ikona" aria-hidden="true"></span>
           <span class="ogled-oder-cas">4:13</span>
         </a>
+        <!-- plačljiv vlog brez dostopa: zaklep čez naslovnico (ogled.js pokaže pravi del) -->
+        <div class="ogled-zaklep" data-zaklep hidden>
+          <div class="ogled-zaklep-notri">
+            <svg class="ogled-zaklep-ikona" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.3" class="polno"/></svg>
+            <p class="ogled-zaklep-naslov serif">This film is for <em>subscribers.</em></p>
+            <p class="ogled-zaklep-opis" data-zaklep-za="gost clan">Every vlog, each new film the moment it's out, no ads.</p>
+            <p class="ogled-zaklep-cena" data-zaklep-za="gost clan">€6.99 a month</p>
+            <button class="gumb" type="button" data-zaklep-za="gost" data-zaklep-prijava>Sign in to subscribe</button>
+            <form class="ogled-zaklep-obrazec" method="post" action="/api/narocnina/zacni" data-zaklep-za="clan" data-zaklep-obrazec>
+              <input type="hidden" name="jezik" value="en">
+              <input type="hidden" name="nazaj" value="/vlogi/madrid-recap/">
+              <label class="ogled-zaklep-soglasje"><input type="checkbox" name="soglasje" value="da" required> <span>I agree to the <a href="../../pogoji/" target="_blank" rel="noopener">terms</a> and want the service to start right away.</span></label>
+              <button class="gumb" type="submit">Subscribe</button>
+            </form>
+            <p class="ogled-zaklep-opis" data-zaklep-za="ni_na_voljo">Subscriptions are coming soon.</p>
+            <p class="ogled-zaklep-opis" data-zaklep-za="kmalu">This film will be available to subscribers soon.</p>
+            <p class="drobno ogled-zaklep-drobno" data-zaklep-za="gost clan">Cancel any time. Access lasts until the end of the paid month.</p>
+          </div>
+        </div>
       </div>
 
       <div class="ogled-podatki">
@@ -113,7 +138,7 @@
             <svg class="ogled-ikona" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3.5M7.5 8 12 3.5 16.5 8"/><path d="M5 12.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-6.5"/></svg>
             <span>Share</span>
           </button>
-          <a class="gumb gumb-majhen gumb-tihi" href="https://www.youtube.com/watch?v=LSp_V7revZU" rel="noopener" target="_blank">
+          <a class="gumb gumb-majhen gumb-tihi" href="https://www.youtube.com/watch?v=" rel="noopener" target="_blank" hidden>
             <svg class="ogled-ikona" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="4"/><path d="M10.2 9.2v5.6l4.8-2.8z" class="polno"/></svg>
             <span>Watch on YouTube</span>
           </a>
@@ -239,7 +264,9 @@
 <p class="sporocilo" role="status" aria-live="polite" data-sporocilo hidden
    data-google="You're signed in. We'll write when there's a new film or release." data-potrjeno="Email confirmed. We'll write when there's a new film or release." data-poslano="Check your inbox: we sent you a confirmation link."
    data-napaka="Sign-in didn't work. Please try again." data-zaprto="Sign-ups are closed right now." data-izbrisan="Your account has been deleted." data-omejitev="Too many attempts. Try again in an hour." data-email="That email doesn't look right."
-   data-nadzor="Sign in with Google first to open the admin page." data-izpis="You're signed out." data-blokiran="This account has no access."></p>
+   data-nadzor="Sign in with Google first to open the admin page." data-izpis="You're signed out." data-blokiran="This account has no access."
+   data-narocnina-ok="Thank you! Your subscription is active and the films are unlocked." data-narocnina-preklic="Payment cancelled. Nothing was charged." data-narocnina-prijava="Sign in first to subscribe."
+   data-narocnina-ze="You already have a subscription." data-narocnina-ni-na-voljo="Subscriptions aren't available yet." data-narocnina-soglasje="Please accept the terms to subscribe." data-narocnina-napaka="That didn't work. Try again in a minute." data-narocnina-caka="Payment received. Access unlocks within a minute; refresh the page."></p>
 
 <footer class="noga">
   <span class="znamka"><img src="../../media/logo.svg" alt="" width="22" height="22"><span>Wayfare</span></span>
@@ -252,6 +279,7 @@
     <li><a href="../../novosti/">What’s new</a></li>
     <li><a href="../../odziv/">Feedback</a></li>
     <li><a href="../../zasebnost/">Privacy</a></li>
+    <li><a href="../../pogoji/">Terms</a></li>
   </ul></nav>
   <p class="drobno">Map data © OpenStreetMap contributors · Natural Earth · Contains modified Copernicus Sentinel data (2021). City footage: Pexels. App footage from the maker’s own trips.</p>
   <span class="drobno">© 2026 Wayfare</span>

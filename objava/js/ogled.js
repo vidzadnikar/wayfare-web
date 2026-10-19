@@ -1,12 +1,17 @@
 // Stran ogleda enega vloga (vlogi/<oznaka>/): predvajalnik, poglavja,
 // deljenje, komentarji (komentarji.js) in seznam Naprej.
 //
-// Predvajalnik je do klika le naslovnica z gumbom (nič z YouTuba se ne
-// naloži, dokler obiskovalec ne predvaja). Ob kliku pride okvir YouTuba brez
-// piškotkov s samodejnim predvajanjem; ukaze mu pošiljamo prek postMessage po
-// istem kanalu kot uradni IFrame API, a brez njegove skripte: po nalaganju
-// pošljemo "listening", predvajalnik javi onReady ter nato stanje in čas
-// (infoDelivery); ukaza sta seekTo in playVideo.
+// Plačljiv vlog (data-placljiv="true"): v strani ni ne filma ne oznake
+// YouTube. Skripta vpraša /api/vlog/<oznaka>, ali sme prijavljeni gledati;
+// če sme, dobi povezavi do filma (/api/video/…, iz zasebnega R2) in igra v
+// lastnem <video>; sicer čez naslovnico pride zaklep z gumbom za prijavo
+// ali naročnino. Po prijavi ali plačilu se dostop preveri znova.
+//
+// Brezplačen vlog igra z YouTuba: do klika le naslovnica z gumbom, ob kliku
+// okvir YouTuba brez piškotkov s samodejnim predvajanjem; ukaze mu
+// pošiljamo prek postMessage po istem kanalu kot uradni IFrame API, a brez
+// njegove skripte: po nalaganju pošljemo "listening", predvajalnik javi
+// onReady ter nato stanje in čas (infoDelivery); ukaza sta seekTo in playVideo.
 import { zazeniDrsenje, prikaziNaslove, mirno, svet } from "./gibanje.js";
 import { prenos } from "./prenos.js";
 import { zankeKartic, nagibKartic } from "./kartice.js";
@@ -19,20 +24,96 @@ if (!mirno) document.documentElement.classList.add("gibanje");
 const YOUTUBE = "https://www.youtube-nocookie.com";
 const oderEl = document.querySelector("[data-ogled-oder]");
 const gumb = oderEl.querySelector("[data-predvajaj]");
+const zaklep = oderEl.querySelector("[data-zaklep]");
+const videoEl = oderEl.querySelector("[data-video]");
 const seznam = document.querySelector("[data-poglavja]");
 const sporocilo = document.querySelector("[data-ogled-sporocilo]");
 const id = oderEl.dataset.youtube;
 const oznaka = oderEl.dataset.oznaka;
+const placljiv = oderEl.dataset.placljiv === "true";
 let okvir = null;
 let pripravljen = false;    // YouTube sprejema ukaze (javil je onReady)
 let ogledZapisan = false;
 let zadnjeOznaceno = null;
+let viri = null;            // plačljiv vlog z dostopom: { "1080": url, "720": url }
 
 const sporoci = (s) => okvir?.contentWindow?.postMessage(JSON.stringify(s), YOUTUBE);
 const ukaz = (func, args = []) => sporoci({ event: "command", func, args });
 const poslusaj = () => sporoci({ event: "listening", id: 1, channel: "widget" });
 
+// ---------------------------------------------------------------- dostop (plačljiv vlog)
+function pokaziZaklep(za) {
+  zaklep.dataset.za = za;
+  zaklep.hidden = false;
+  gumb.hidden = true;
+}
+function skrijZaklep() {
+  zaklep.hidden = true;
+  gumb.hidden = false;
+}
+
+async function preveriDostop() {
+  if (!placljiv) return;
+  let odg = null;
+  try {
+    const r = await fetch(`/api/vlog/${encodeURIComponent(oznaka)}`, { headers: { Accept: "application/json" } });
+    if (r.ok) odg = await r.json();
+  } catch (e) { odg = null; }
+  if (!odg) { pokaziZaklep("ni_na_voljo"); return; }
+  if (odg.dostop && !odg.kmalu) {
+    viri = odg.viri;
+    skrijZaklep();
+    return;
+  }
+  viri = null;
+  if (odg.dostop) pokaziZaklep("kmalu");
+  else if (!odg.prijavljen) pokaziZaklep("gost");
+  else if (!odg.na_voljo) pokaziZaklep("ni_na_voljo");
+  else pokaziZaklep("clan");
+}
+
+if (placljiv) {
+  preveriDostop();
+  // prijava, izpis ali plačilo (clan.js) spremenijo dostop
+  document.addEventListener("wayfare:clan", preveriDostop);
+  document.addEventListener("wayfare:narocnina", preveriDostop);
+  zaklep.querySelector("[data-zaklep-prijava]")?.addEventListener("click", () => document.querySelector("[data-prijava-odpri]")?.click());
+  // soglasje in gumb: obrazec pošlje strežnik (preusmeritev na Stripe), tu le preverimo kljukico
+  zaklep.querySelector("[data-zaklep-obrazec]")?.addEventListener("submit", (e) => {
+    const f = e.currentTarget;
+    if (!f.elements.soglasje.checked) { e.preventDefault(); f.elements.soglasje.focus(); }
+  });
+}
+
+// ---------------------------------------------------------------- predvajanje
+function izberiVir() {
+  if (!viri) return null;
+  const sirok = innerWidth >= 900 || devicePixelRatio > 1.5;
+  return (sirok && viri["1080"]) || viri["720"] || viri["1080"] || null;
+}
+
+function predvajajVideo(zacetek) {
+  const vir = izberiVir();
+  if (!vir) return;
+  if (videoEl.getAttribute("src") !== vir) {
+    videoEl.src = vir;
+    videoEl.load();
+  }
+  videoEl.hidden = false;
+  oderEl.dataset.stanje = "tece";
+  const skoci = () => { if (zacetek > 0) { try { videoEl.currentTime = zacetek; } catch (e) {} } };
+  if (videoEl.readyState >= 1) skoci(); else videoEl.addEventListener("loadedmetadata", skoci, { once: true });
+  videoEl.play().catch(() => {});
+  videoEl.focus({ preventScroll: true });
+}
+
 function predvajaj(zacetek = 0) {
+  if (placljiv) {
+    if (!viri) { if (zaklep.hidden) pokaziZaklep("ni_na_voljo"); zaklep.querySelector(".gumb, input")?.focus({ preventScroll: true }); return; }
+    predvajajVideo(zacetek);
+    return;
+  }
+  if (!id) return;
   if (okvir && pripravljen) {
     if (zacetek > 0) ukaz("seekTo", [zacetek, true]);
     ukaz("playVideo");
@@ -58,6 +139,16 @@ function predvajaj(zacetek = 0) {
 
 gumb.addEventListener("click", (e) => { e.preventDefault(); predvajaj(); });
 
+videoEl.addEventListener("play", zapisiOgled);
+videoEl.addEventListener("timeupdate", () => oznaciPoglavje(videoEl.currentTime));
+videoEl.addEventListener("error", () => {
+  // povezava poteče ali dostop ugasne med ogledom: preveri znova
+  oderEl.dataset.stanje = "pripravljen";
+  videoEl.hidden = true;
+  videoEl.removeAttribute("src");
+  preveriDostop();
+});
+
 addEventListener("message", (e) => {
   if (!okvir || e.origin !== YOUTUBE || e.source !== okvir.contentWindow || typeof e.data !== "string") return;
   let s;
@@ -78,8 +169,13 @@ function zapisiOgled() {
 // ---------------------------------------------------------------- poglavja
 const casi = seznam ? [...seznam.querySelectorAll("[data-cas]")] : [];
 function skoci(t) {
-  predvajaj(t);
-  if (pripravljen) ukaz("playVideo");
+  if (placljiv && viri && !videoEl.hidden && videoEl.getAttribute("src")) {
+    try { videoEl.currentTime = t; } catch (e) {}
+    videoEl.play().catch(() => {});
+  } else {
+    predvajaj(t);
+    if (!placljiv && pripravljen) ukaz("playVideo");
+  }
   if (!mirno && oderEl.getBoundingClientRect().top < 0) oderEl.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 seznam?.addEventListener("click", (e) => {

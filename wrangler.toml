@@ -20,3 +20,10 @@ binding = "DB"
 database_name = "wayfare-clani"
 database_id = "b4c42dfd-7f6c-47e2-ba19-5726c94b3a52"
 migrations_dir = "migrations"
+
+# Filmi za naročnike: zasebno vedro R2, stran jih pošilja prek /api/video/…
+# le članom z dostopom. Ustvari enkrat: npx wrangler r2 bucket create wayfare-vlogi
+# Naloži filme: python3 zaledje/videi.py (doma --local za npx wrangler pages dev).
+[[r2_buckets]]
+binding = "VIDEI"
+bucket_name = "wayfare-vlogi"

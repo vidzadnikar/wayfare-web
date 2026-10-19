@@ -303,3 +303,124 @@ Ob objavi najprej na oddaljeni bazi uveljavi migracijo (0004, skupaj z 0005
 iz varnostnih popravkov), šele nato pushaj:
 
     npx wrangler d1 migrations apply wayfare-clani --remote
+
+## Plačljivi vlogi: naročnina in podarjen dostop (od 19. 10. 2026)
+
+Vlogi so za naročnike: 6,99 € na mesec prek Stripa, ali za člane, ki jim v
+nadzoru podariš dostop. Film plačljivega vloga ni več z YouTuba: leži v
+zasebnem vedru R2 (`wayfare-vlogi`) in ga zaledje (`functions/api/video/`)
+pošlje le prijavljenemu članu z dostopom; v strani ni ne filma ne oznake
+YouTube. Brezplačen ostane vlog z `"brezplacen": true` v `stran/vlogi.json`
+(igra z YouTuba kot prej). Objavljen je vlog z oznako youtube ali
+`"objavljen": true`.
+
+### Prvič (koraki, ki jih narediš sam)
+
+1. **Dejavnost.** Naročnina je trajna pridobitna dejavnost: pred prvim
+   zaračunavanjem registriraj (popoldanski) s.p. prek SPOT. Podatke
+   ponudnika vpiši v `PODJETJE` v `stran/zgradi.py` (ime, naslov, matična in
+   davčna številka, e-naslov za stranke) in datum v `pogoji_datum` v
+   `stran/besedila.json`; dokler so v oklepajih, gradnja opozori. Če nisi
+   zavezanec za DDV, stavek v `pogoji_1_besedilo` ostane; sicer ga popravi.
+   Pri FURS preveri, ali plačila prek Stripa (posrednik nakaže na TRR)
+   štejejo kot negotovinska (brez davčne blagajne). Vse to preveri z
+   računovodjo.
+
+2. **Stripe** (dashboard.stripe.com): račun (Individual ali Company, Slovenija),
+   nato
+   - Product catalog → Add product: »Vlogi Wayfare Studio«, Recurring,
+     6,99 EUR, Monthly → `price_…` je `STRIPE_PRICE_ID`;
+   - Developers → API keys → Secret key (`sk_test_…` za preizkus,
+     `sk_live_…` v živo) → `STRIPE_SECRET_KEY`;
+   - Developers → Webhooks → Add endpoint
+     `https://wayfarestudio.pages.dev/api/stripe/webhook`, dogodki
+     `checkout.session.completed`, `customer.subscription.created`,
+     `customer.subscription.updated`, `customer.subscription.deleted`,
+     `customer.subscription.paused`, `customer.subscription.resumed` →
+     Signing secret `whsec_…` je `STRIPE_WEBHOOK_SECRET`;
+   - Settings → Billing → Customer portal: vklopi preklic naročnine,
+     menjavo plačilnega sredstva in zgodovino računov, shrani;
+   - Settings → Business → Public details in Branding: ime, naslov, e-naslov;
+     Settings → Billing → Invoice template: v nogo računa »DDV ni obračunan
+     (1. odstavek 94. člena ZDDV-1)«, če nisi zavezanec; vklopi pošiljanje
+     računov strankam;
+   - Settings → Payment methods: vklopi PayPal (za naročnine Stripe zahteva
+     odobritev, 2–5 dni), Apple Pay in Google Pay sta vklopljena.
+   Skrivnosti:
+
+       npx wrangler pages secret put STRIPE_SECRET_KEY --project-name wayfarestudio
+       npx wrangler pages secret put STRIPE_PRICE_ID --project-name wayfarestudio
+       npx wrangler pages secret put STRIPE_WEBHOOK_SECRET --project-name wayfarestudio
+
+   Brez teh treh stran kaže »Naročnina bo kmalu na voljo«; vse drugo dela.
+   Najprej s testnimi ključi (kartica 4242 4242 4242 4242), nato zamenjaj
+   s pravimi in dodaj webhook še za način v živo.
+
+3. **R2 in filmi.** R2 najprej vklopi v nadzorni plošči (Cloudflare → R2 →
+   Get started; Cloudflare zahteva plačilno sredstvo tudi za brezplačni
+   paket, do 10 GB in za prenos ne zaračuna nič). Nato vedro:
+   `npx wrangler r2 bucket create wayfare-vlogi --location weur` (vezava
+   `VIDEI` je v `wrangler.toml`; brez vedra objava ne uspe). Filme naloži
+   `python3 zaledje/videi.py` (spletni različici `-1080.mp4` in `-720.mp4`
+   iz `stran/media/vlogi/`, naredi jih `vlogi/zberi.py --video`; `--seznam`
+   pove, kaj je naloženo in kaj manjka). Datoteke do 300 MB gredo prek
+   wranglerja; za večje (milano-2-1080 ima 383 MB) naredi žeton R2 (R2 →
+   Manage R2 API Tokens → Object Read & Write) in ga zapiši v
+   `~/.config/wayfare/r2.env` (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`,
+   `R2_SECRET_ACCESS_KEY`); z žetonom skripta vse naloži v kosih. Vlog brez
+   filma v R2 naročniku pove, da bo na voljo kmalu. Spletne različice ima
+   zdaj 9 vlogov (Madrid, Milano 1–2, Rifnik, Budimpešta); za druge jih
+   naredi `vlogi/zberi.py --video` iz izvoza v ~/Video.
+
+4. **YouTube.** Plačljivi vlogi naj bodo na YouTubu zasebni ali neobjavljeni
+   (javni video je dostopen vsakomur, zapora na strani ne pomaga). Nov vlog,
+   dodan prek nadzora (»Nov vlog z YouTuba«), je plačljiv; če naj ostane
+   brezplačen, mu v `stran/vlogi.json` dodaj `"brezplacen": true`.
+
+5. **Objava:** `cd stran && python3 zgradi.py`, commit, push. Po objavi: na
+   strani ogleda kot gost vidiš zaklep, prijavljen brez naročnine obrazec z
+   gumbom Naroči se; s testno kartico se naroči in preveri predvajanje,
+   v nadzoru naročnika pod Naročnine in stolpec Dostop pri Članih.
+
+### Kako deluje
+
+- `/api/vlog/<oznaka>` pove strani ogleda, ali sme prijavljeni gledati in
+  kje je film; `/api/video/<oznaka>-1080.mp4` (in `-720`) pošlje film iz R2
+  z Range (iskanje po filmu) le članu z dostopom (401 gost, 403 brez
+  dostopa). `js/ogled.js` igra v lastnem `<video>` (1080 na širokih
+  zaslonih, sicer 720), poglavja in štetje ogledov delajo kot prej.
+- Dostop (`zaledje/narocnine.js`): admin vedno; naročnina `active` ali
+  `trialing` (tudi s preklicem ob koncu obdobja), `past_due` še 7 dni po
+  koncu obdobja, `canceled` do konca plačanega obdobja; podarjen dostop do
+  roka ali brez. Naročnina ima prednost pred podarjenim (zaradi portala).
+- Naročnina: gumb na strani ogleda (`POST /api/narocnina/zacni`, s kljukico
+  soglasja k pogojem in takojšnjemu začetku) preusmeri na Stripe Checkout
+  (kartice, Apple Pay, Google Pay, PayPal, kode za popust). Po plačilu Stripe
+  vrne na isto stran z `?narocnina=ok&seja=…`; stran prek
+  `/api/narocnina/preveri` dostop uskladi takoj, webhook ga potrdi še
+  enkrat. V meniju z imenom je »Naročnina« (`POST /api/narocnina/portal`):
+  preklic, kartica, računi. Stripe sam pošilja račune in opomine.
+- Webhook `/api/stripe/webhook`: preveri podpis, vsak dogodek obdela enkrat
+  (tabela `stripe_dogodki`), starejši dogodek ne povozi novejšega stanja
+  (`dogodek_at`). Ob izbrisu člana (sam ali v nadzoru) se njegove naročnine
+  pri Stripu prekličejo takoj.
+- Nadzor: pri Članih stolpec Dostop in gumba »Podari dostop« (brez roka ali
+  do dne, z opombo) in »Odvzemi dostop«; razdelek Naročnine (Stripovo
+  stanje, plačano do, preklic); ploščica naročnikov.
+- Pogoji: stran `pogoji/` in `sl/pogoji/` (`predloga-pogoji.html`,
+  `pogoji_*` v `besedila.json`): ponudnik, kaj dobiš, plačilo, preklic in
+  14-dnevni odstop s polnim vračilom prvega plačila, podarjen dostop,
+  pritožbe (ne priznavamo IRPS), spremembe. Zasebnost omenja Stripe.
+- Tabele (`migrations/0006_narocnine.sql`): `clani.dostop_vrsta`,
+  `dostop_do`, `dostop_opomba`, `stripe_customer_id`; `narocnine`;
+  `stripe_dogodki`. Migracijo na oddaljeni bazi naredi
+  `npx wrangler d1 migrations apply wayfare-clani --remote`.
+
+### Doma
+
+V `.dev.vars` so lažne vrednosti `STRIPE_SECRET_KEY=sk_test_lazni`,
+`STRIPE_PRICE_ID=price_lazni`, `STRIPE_WEBHOOK_SECRET=whsec_lazni` in
+`STRIPE_API_URL=http://127.0.0.1:8799` (lažni Stripe; brez te vrstice gre
+klic na pravi Stripe s testnim ključem). Film za preizkus v lokalno vedro:
+`python3 zaledje/videi.py --local --samo madrid-1`. Migracija:
+`npx wrangler d1 migrations apply wayfare-clani --local`.

@@ -4,6 +4,9 @@
 // kdo je prijavljen; /api/izpis izpiše. Po vrnitvi z zaledja (?prijava=…)
 // se pod glavo pokaže kratko sporočilo in naslov se počisti. Nastavitve
 // (jezik pošte, katera obvestila, izbris računa) gredo prek /api/jaz/nastavitve.
+// Naročnina na vloge: po vrnitvi s Stripa (?narocnina=ok&seja=…) stran prek
+// /api/narocnina/preveri takoj uskladi dostop in to javi (wayfare:narocnina);
+// član s Stripovo stranko ima v meniju »Naročnina« (portal: preklic, kartica).
 export function clan() {
   const mesto = document.querySelector("[data-clan-mesto]");
   const okno = document.querySelector("[data-prijava]");
@@ -16,6 +19,7 @@ export function clan() {
   const ime = mesto.querySelector("[data-clan-ime]");
   const email = mesto.querySelector("[data-clan-email]");
   const nadzor = mesto.querySelector("[data-clan-nadzor]");
+  const portal = mesto.querySelector("[data-clan-portal]");
   const izpis = mesto.querySelector("[data-izpis]");
   const obrazec = okno.querySelector("[data-prijava-obrazec]");
   const napaka = okno.querySelector("[data-prijava-napaka]");
@@ -33,10 +37,34 @@ export function clan() {
   }
   const url = new URL(location.href);
   const koda = url.searchParams.get("prijava");
-  if (koda) {
-    url.searchParams.delete("prijava");
+  const narocnina = url.searchParams.get("narocnina");
+  const sejaStripe = url.searchParams.get("seja");
+  if (koda || narocnina) {
+    for (const k of ["prijava", "narocnina", "seja"]) url.searchParams.delete(k);
     history.replaceState(null, "", url.pathname + url.search + url.hash);
-    pokaziSporocilo(koda);
+    if (koda) pokaziSporocilo(koda);
+  }
+  const javiNarocnino = () => document.dispatchEvent(new CustomEvent("wayfare:narocnina"));
+  if (narocnina === "ok") {
+    // dostop uskladi takoj (webhook lahko pride šele čez nekaj sekund); če
+    // še ni odklenjeno, še nekajkrat preveri, nato pove, naj osveži stran
+    (async () => {
+      let odklenjeno = false;
+      for (let poskus = 0; poskus < 4 && !odklenjeno; poskus++) {
+        if (poskus) await new Promise((r) => setTimeout(r, 3000));
+        try {
+          const r = sejaStripe && poskus === 0
+            ? await fetch(`/api/narocnina/preveri?seja=${encodeURIComponent(sejaStripe)}`, { headers: { Accept: "application/json" } })
+            : await fetch("/api/jaz", { headers: { Accept: "application/json" } });
+          if (r.ok) odklenjeno = !!(await r.json()).dostop;
+        } catch (e) {}
+      }
+      pokaziSporocilo(odklenjeno ? "narocninaOk" : "narocninaCaka");
+      await osvezi();
+      javiNarocnino();
+    })();
+  } else if (narocnina) {
+    pokaziSporocilo("narocnina" + narocnina.charAt(0).toUpperCase() + narocnina.slice(1).replace(/_(\w)/g, (m, c) => c.toUpperCase()));
   }
 
   function prikaziGosta() { podrobnosti.hidden = true; gumbPrijava.hidden = false; }
@@ -47,6 +75,11 @@ export function clan() {
     zacetnica.textContent = kratko.slice(0, 1).toUpperCase();
     if (c.slika) { slika.src = c.slika; slika.hidden = false; } else { slika.removeAttribute("src"); slika.hidden = true; }
     nadzor.hidden = !c.admin;
+    if (portal) {
+      portal.hidden = !c.portal;
+      const nazaj = portal.querySelector("[data-portal-nazaj]");
+      if (nazaj) nazaj.value = location.pathname;
+    }
     gumbPrijava.hidden = true;
     podrobnosti.hidden = false;
   }

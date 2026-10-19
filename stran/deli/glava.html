@@ -32,6 +32,11 @@
           <p class="clan-email" data-clan-email></p>
           <a class="clan-povezava" href="/nadzor" data-clan-nadzor hidden>{{nav_nadzor}}</a>
           <button class="clan-povezava" type="button" data-racun-odpri>{{nav_racun}}</button>
+          <form method="post" action="/api/narocnina/portal" data-clan-portal hidden>
+            <input type="hidden" name="jezik" value="{{lang}}">
+            <input type="hidden" name="nazaj" value="{{dom}}" data-portal-nazaj>
+            <button class="clan-povezava" type="submit">{{nav_narocnina}}</button>
+          </form>
           <button class="clan-povezava" type="button" data-izpis>{{nav_izpis}}</button>
         </div>
       </details>

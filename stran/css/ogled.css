@@ -219,3 +219,42 @@ body:has(.ogled-stran) .glava { background: rgba(11, 12, 15, 0.82); backdrop-fil
 /* film brez serije (en sam film s potovanja): brez stranskega stolpca, na sredini */
 .naprej[hidden] { display: none; }
 @media (min-width: 1100px) { .ogled.ogled-sam { grid-template-columns: minmax(0, 1fr); max-width: 1180px; } }
+
+/* -------------------------------------------------- plačljiv vlog: lastni predvajalnik in zaklep */
+.ogled-oder-video { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; background: #000; object-fit: contain; }
+.ogled-oder-video[hidden] { display: none; }
+.ogled-oder[data-pokoncno="true"] .ogled-oder-video { background: transparent; }
+.ogled-oder[data-stanje="tece"] .ogled-oder-naslovnica { opacity: 0; }
+
+.ogled-zaklep {
+  position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; padding: var(--s4);
+  background: linear-gradient(to top, rgba(6, 9, 20, 0.92), rgba(6, 9, 20, 0.62)); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  animation: zaklep-pride 300ms var(--ease-out);
+}
+.ogled-zaklep[hidden] { display: none; }
+@keyframes zaklep-pride { from { opacity: 0; } }
+.ogled-zaklep-notri { display: grid; justify-items: center; gap: var(--s3); max-width: 420px; text-align: center; }
+.ogled-zaklep-ikona { width: 40px; height: 40px; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.ogled-zaklep-ikona .polno { fill: var(--accent); stroke: none; }
+.ogled-zaklep-naslov { font-size: clamp(28px, 3.2vw, 44px); line-height: 1.02; }
+.ogled-zaklep-opis { color: var(--muted); font-size: 16px; max-width: 36ch; }
+.ogled-zaklep-cena { font: 500 20px/1 var(--sans); color: var(--fg); }
+.ogled-zaklep-obrazec { display: grid; justify-items: center; gap: var(--s3); }
+.ogled-zaklep-soglasje { display: flex; gap: var(--s2); align-items: flex-start; text-align: left; color: var(--muted); font-size: 14px; max-width: 40ch; cursor: pointer; }
+.ogled-zaklep-soglasje input { margin-top: 3px; accent-color: var(--accent); flex: none; }
+.ogled-zaklep-soglasje a { color: var(--fg); }
+.ogled-zaklep-drobno { color: var(--subtle); }
+.ogled-zaklep [data-zaklep-za] { display: none; }
+.ogled-zaklep[data-za="gost"] [data-zaklep-za~="gost"], .ogled-zaklep[data-za="clan"] [data-zaklep-za~="clan"],
+.ogled-zaklep[data-za="ni_na_voljo"] [data-zaklep-za~="ni_na_voljo"], .ogled-zaklep[data-za="kmalu"] [data-zaklep-za~="kmalu"] { display: block; }
+.ogled-zaklep[data-za="clan"] .ogled-zaklep-obrazec { display: grid; }
+.ogled-zaklep .gumb { display: inline-flex; }
+.ogled-zaklep[data-za="clan"] [data-zaklep-prijava], .ogled-zaklep[data-za="gost"] .ogled-zaklep-obrazec { display: none; }
+@media (max-width: 700px) {
+  .ogled-zaklep { padding: var(--s3); }
+  .ogled-zaklep-notri { gap: var(--s2); }
+  .ogled-zaklep-naslov { font-size: 24px; }
+  .ogled-zaklep-opis, .ogled-zaklep-drobno { font-size: 13px; }
+  .ogled-zaklep-cena { font-size: 17px; }
+  .ogled-zaklep .gumb { height: 42px; font-size: 14px; }
+}
