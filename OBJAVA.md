@@ -26,8 +26,9 @@ odkloni.
    Stran je na https://wayfarestudio.pages.dev; lastna domena se doda v
    nadzorni plošči pod Custom domains (Workers & Pages → wayfarestudio).
 
-4. Paket: GitHub → Releases → Draft a new release → oznaka `v0.1.0`, priloži
-   `stran/prenos/Wayfare-Studio-0.1.0.dmg`, Publish. Gumb Prenos na strani
+4. Paket: GitHub → Releases → Draft a new release → oznaka `v<različica>`
+   (prva je bila `v0.1.0`), priloži `stran/prenos/Wayfare-Studio-<različica>.dmg`,
+   Publish. Gumb Prenos na strani
    kaže na ta naslov (različica pride iz imena paketa v `stran/prenos/`).
 
 5. Vlogi: vsak film naloži na YouTube (izvorni izvoz iz `~/Video`, vidnost
