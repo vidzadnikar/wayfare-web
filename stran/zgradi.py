@@ -147,6 +147,17 @@ PRENOS_ANDROID = "Wayfare-Studio-{razlicica}.apk"
 # prenesenega iz brskalnika, zato ga macOS ob zagonu ne ustavi. Skripta
 # preveri kontrolno vsoto paketa, zato je vsota v prenos.json.
 NAMESTI_UKAZ = f"curl -fsSL {STRAN_URL}/install.sh | bash"
+# Enako za Windows v PowerShellu (install.ps1): datoteka, ki jo prenese
+# PowerShell, nima oznake »s spleta«, zato je SmartScreen ne ustavi.
+NAMESTI_UKAZ_WINDOWS = f"irm {STRAN_URL}/install.ps1 | iex"
+
+
+def vsota_sha256(pot):
+    vsota = hashlib.sha256()
+    with open(pot, "rb") as f:
+        for kos in iter(lambda: f.read(1 << 20), b""):
+            vsota.update(kos)
+    return vsota.hexdigest()
 
 
 def prenos():
@@ -169,13 +180,10 @@ def prenos_iz_paketa(paketi):
     razlicica = re.search(r"Studio-(.+)\.dmg$", dmg.name)[1]
     windows = PRENOS_WINDOWS.format(razlicica=razlicica)
     exe = Path(TU, "prenos", windows)
-    vsota = hashlib.sha256()
-    with open(dmg, "rb") as f:
-        for kos in iter(lambda: f.read(1 << 20), b""):
-            vsota.update(kos)
     return {
         "url": os.environ.get("WAYFARE_PRENOS_URL") or PRENOS_URL.format(razlicica=razlicica, ime=dmg.name),
-        "sha256": vsota.hexdigest(),
+        "sha256": vsota_sha256(dmg),
+        "sha256_windows": vsota_sha256(exe) if exe.is_file() else "",
         "prenos_ime": dmg.name,
         "prenos_velikost": f"{round(dmg.stat().st_size / 1e6)} MB",
         "razlicica": razlicica,
@@ -784,6 +792,10 @@ GLAVE = """/*
   Content-Type: text/plain; charset=utf-8
   Cache-Control: no-cache
 
+/install.ps1
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: no-cache
+
 /js/knjiznice/*
   Cache-Control: public, max-age=604800, stale-while-revalidate=86400
 
@@ -844,17 +856,23 @@ def objavi(zgoscene, strani, okvirji):
         cilj.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(Path(TU, rel), cilj)
     (objava / "_headers").write_text(GLAVE.format(csp=csp(zgoscene, okvirji)))
-    # install.sh: namestitev na Macu z enim ukazom, z naslovom in vsoto paketa
+    # install.sh (Mac) in install.ps1 (Windows): namestitev z enim ukazom, z
+    # naslovom in vsoto paketa iz izdaje
     paket = prenos()
-    if not paket.get("sha256"):
-        raise SystemExit("V prenos.json ni kontrolne vsote paketa. Zaženi zgradi.py doma s paketom v prenos/.")
-    namesti = Path(TU, "install.sh").read_text(encoding="utf-8")
-    for kljuc, vrednost in (("__RAZLICICA__", paket["razlicica"]), ("__URL__", paket["url"]),
-                            ("__SHA256__", paket["sha256"]), ("__VELIKOST__", paket["prenos_velikost"])):
-        namesti = namesti.replace(kljuc, vrednost)
-    if re.search(r"__(RAZLICICA|URL|SHA256|VELIKOST)__", namesti):
-        raise SystemExit("install.sh ima nezamenjano oznako.")
-    (objava / "install.sh").write_text(namesti, encoding="utf-8")
+    for ime, vrednosti in (
+            ("install.sh", (paket["url"], paket.get("sha256"), paket["prenos_velikost"])),
+            ("install.ps1", (paket["prenos_windows_href"], paket.get("sha256_windows"),
+                             paket["prenos_windows_velikost"].strip(" ·")))):
+        url, vsota, velikost = vrednosti
+        if not vsota:
+            raise SystemExit(f"Za {ime} v prenos.json ni kontrolne vsote. Zaženi zgradi.py doma s paketi v prenos/.")
+        namesti = Path(TU, ime).read_text(encoding="utf-8")
+        for kljuc, vrednost in (("__RAZLICICA__", paket["razlicica"]), ("__URL__", url),
+                                ("__SHA256__", vsota), ("__VELIKOST__", velikost)):
+            namesti = namesti.replace(kljuc, vrednost)
+        if re.search(r"__(RAZLICICA|URL|SHA256|VELIKOST)__", namesti):
+            raise SystemExit(f"{ime} ima nezamenjano oznako.")
+        (objava / ime).write_text(namesti, encoding="utf-8")
     (objava / "sitemap.xml").write_text(zemljevid_strani(), encoding="utf-8")
     (objava / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /nadzor\n\nSitemap: {STRAN_URL}/sitemap.xml\n")
     (objava / "manifest.webmanifest").write_text(json.dumps(MANIFEST, ensure_ascii=False, indent=1))
@@ -925,6 +943,7 @@ def main():
             html_ = html_.replace("{{hero_video}}", HERO_VIDEO)
             html_ = html_.replace("{{skill_ukaz}}", deli_ukaza(SKILL_UKAZ))
             html_ = html_.replace("{{namesti_ukaz}}", html.escape(NAMESTI_UKAZ))
+            html_ = html_.replace("{{namesti_ukaz_windows}}", html.escape(NAMESTI_UKAZ_WINDOWS))
             for i, d in enumerate(PLUGIN_UKAZI, 1):
                 html_ = html_.replace("{{plugin_ukaz_%d}}" % i, deli_ukaza(d))
             html_ = re.sub(r"\{\{kopiraj:([\w-]+)\}\}",

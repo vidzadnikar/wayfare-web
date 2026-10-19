@@ -56,6 +56,16 @@ skopira v Applications. Paket, prenesen s curl, ni označen kot prenesen iz
 brskalnika, zato ga macOS ob zagonu ne ustavi; Apple ga s tem ne preveri.
 Zato mora biti `stran/prenos/` ob gradnji isti paket kot v izdaji.
 
+Enako za Windows (`irm https://wayfarestudio.pages.dev/install.ps1 | iex`,
+PowerShell 5.1): `stran/install.ps1` dobi naslov in vsoto namestitvenega
+programa (`sha256_windows` v `prenos.json`). Skripta ga prenese, preveri in
+zažene tiho za trenutnega uporabnika (`/SILENT /CURRENTUSER`), nato odpre
+Wayfare. Datoteka, ki jo prenese PowerShell, nima oznake Zone.Identifier,
+zato je SmartScreen ne ustavi. Nikoli ne kliče `exit` (z `iex` bi zaprl okno
+PowerShella). Preizkušeno 19. 10. 2026 na Windows Server v GitHub Actions:
+namestitev, zagon (studio odgovori na 8420), brez Zone.Identifier, zavrnitev
+napačne vsote.
+
 ## Predogled objave doma
 
     python3 streznik.py 8496 objava

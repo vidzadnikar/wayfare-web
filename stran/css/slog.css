@@ -909,6 +909,8 @@ html:not(.js) .clan-mesto { display: none; }
 .namesti p { margin: 0; font-size: 15px; color: var(--muted); }
 .ukaz-vrstica { display: flex; align-items: center; gap: var(--s3); margin: 0; padding: 10px 14px; border-radius: var(--radius); background: rgba(0, 0, 0, 0.35); border: 1px solid var(--border); font: 400 14px/1.6 var(--mono); }
 .ukaz-vrstica::before { content: "$"; flex: none; color: var(--subtle); }
+.ukaz-ps::before { content: "PS>"; }
+.namesti .namesti-sistem { margin: var(--s2) 0 calc(var(--s1) * -1); font-size: 14px; color: var(--fg); }
 .ukaz-vrstica code, .obvestilo .ukaz-vrstica code { flex: 1; min-width: 0; font: inherit; color: var(--fg); background: none; padding: 0; overflow-wrap: anywhere; }
 
 /* -------------------------------------------------- novosti (izdaje aplikacije) */

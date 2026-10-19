@@ -19,6 +19,9 @@
 <template id="obvestilo-windows">
   <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">{{windows_naslov}}</p>
   <ol class="obvestilo-koraki"><li>{{windows_korak1}}</li><li>{{windows_korak2}}</li><li>{{windows_korak3}}</li></ol>
+  <p>{{windows_ukaz}}</p>
+  <p class="ukaz-vrstica ukaz-ps"><code id="ukaz-namesti-windows-okno">{{namesti_ukaz_windows}}</code>{{kopiraj:ukaz-namesti-windows-okno}}</p>
+  <p class="skrito" role="status" aria-live="polite" data-kopiraj-stanje></p>
   <p class="drobno">{{prenos_windows_ime}}{{prenos_windows_velikost}}</p>
 </template>
 <template id="obvestilo-android">

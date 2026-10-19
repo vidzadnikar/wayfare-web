@@ -249,7 +249,10 @@
     </ul>
     <div class="namesti">
       <p>{{namesti_uvod}}</p>
-      <p class="ukaz-vrstica"><code id="ukaz-namesti">{{namesti_ukaz}}</code>{{kopiraj:ukaz-namesti}}</p>
+      <p class="namesti-sistem" data-namesti="mac">{{namesti_mac}}</p>
+      <p class="ukaz-vrstica" data-namesti="mac"><code id="ukaz-namesti">{{namesti_ukaz}}</code>{{kopiraj:ukaz-namesti}}</p>
+      <p class="namesti-sistem" data-namesti="windows">{{namesti_windows}}</p>
+      <p class="ukaz-vrstica ukaz-ps" data-namesti="windows"><code id="ukaz-namesti-windows">{{namesti_ukaz_windows}}</code>{{kopiraj:ukaz-namesti-windows}}</p>
       <p class="skrito" role="status" aria-live="polite" data-kopiraj-stanje></p>
     </div>
   </section>

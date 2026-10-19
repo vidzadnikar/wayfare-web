@@ -38,6 +38,12 @@ export function prenos() {
     const opomba = document.querySelector("[data-prenos-opomba]");
     const predloga = document.querySelector(`template[data-opomba="${n}"]`);
     if (opomba && predloga) opomba.replaceChildren(predloga.content.cloneNode(true));
+    // namestitev z enim ukazom: na Windows je ukaz za PowerShell prvi
+    const namesti = document.querySelector(".namesti");
+    if (n === "windows" && namesti) {
+      const stanje = namesti.querySelector("[data-kopiraj-stanje]");
+      for (const e of namesti.querySelectorAll('[data-namesti="mac"]')) namesti.insertBefore(e, stanje);
+    }
     // na Windows in Androidu gumbi za prenos kazejo na paket za ta sistem
     if (n !== "windows" && n !== "android") return;
     for (const gumb of document.querySelectorAll(`[data-prenos-${n}]`)) {
