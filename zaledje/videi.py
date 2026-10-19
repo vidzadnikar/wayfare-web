@@ -176,16 +176,20 @@ def main():
     s3 = None if lokalno else (S3(zeton_r2()) if zeton_r2() else None)
     if not naloga:
         print("vse je že naloženo")
+    prevelike = []
     for ime, pot, velikost in naloga:
+        if not s3 and not lokalno and velikost > MEJA_WRANGLER:
+            prevelike.append(ime)
+            continue
         print(f"nalagam {ime} ({velikost / 1e6:.0f} MB) …", flush=True)
         if s3:
             s3.nalozi(ime, pot)
-        elif velikost > MEJA_WRANGLER and not lokalno:
-            raise SystemExit(f"{ime} je večja od 300 MB: wrangler je ne more naložiti. Naredi žeton R2 (glej vrh datoteke) in zaženi znova.")
         else:
             nalozi_wrangler(ime, pot, lokalno)
         nalozeno[ime] = {"velikost": velikost, "nalozeno_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
         shrani_manifest(manifest)
+    if prevelike:
+        print("nad 300 MB, wrangler jih ne more naložiti; naredi žeton R2 (glej vrh datoteke) in zaženi znova:", ", ".join(prevelike))
     if manjka:
         print("ni spletne različice v stran/media/vlogi (vlogi/zberi.py --video):", ", ".join(manjka))
 
