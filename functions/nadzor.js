@@ -48,6 +48,41 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
     <div class="ploscice" data-ploscice></div>
     <div class="graf" data-graf aria-label="Nalaganja strani zadnjih 14 dni"></div>
   </section>
+  <section class="nadzor-odsek" id="dovoljenja" aria-labelledby="dostop-naslov">
+    <h2 id="dostop-naslov" class="serif">Dovoljenja <em>za ogled</em></h2>
+    <p class="nadzor-opis">Kdo sme gledati filme. Stikalo vklopi ali izklopi ogled takoj; datum omeji dovoljenje do tistega dne (prazno = brez roka), opomba je le zate. Novo osebo dodaš po e-naslovu, tudi preden se prijavi: dovoljenje jo počaka. Prošnje za dostop pridejo med Odzive.</p>
+    <form class="novica dovoljenje-dodaj" data-dostop>
+      <div class="novica-mreza">
+        <label>E-naslov<input name="email" type="email" required autocomplete="off" placeholder="ime@naslov.si"></label>
+        <label>Do dne (prazno = brez roka)<input name="do" type="date"></label>
+        <label class="novica-cela">Opomba (le zate)<input name="opomba" maxlength="200" placeholder="prijatelj, družina …"></label>
+      </div>
+      <div class="nadzor-akcije">
+        <button class="gumb gumb-majhen" type="submit">Dodaj in dovoli ogled</button>
+      </div>
+    </form>
+    <div class="dovoljenja-filter">
+      <input type="search" placeholder="Išči po imenu ali e-naslovu" aria-label="Išči člana" data-dovoljenja-isci>
+      <div class="dovoljenja-izbira" role="radiogroup" aria-label="Pokaži">
+        <label><input type="radio" name="dovoljenja-kaj" value="vsi" checked> Vsi</label>
+        <label><input type="radio" name="dovoljenja-kaj" value="da"> Lahko gledajo</label>
+        <label><input type="radio" name="dovoljenja-kaj" value="ne"> Ne morejo</label>
+      </div>
+    </div>
+    <div class="tabela-ovoj">
+      <table class="tabela tabela-dovoljenja" data-dostopi>
+        <thead><tr><th>Član</th><th>Lahko gleda</th><th>Do dne</th><th>Opomba</th><th>Stanje</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="nadzor-opis" data-narocnine-opis hidden>Naročnine prek Stripa: active plačuje, past_due plačilo ni uspelo (dostop še 7 dni), canceled do konca obdobja še velja.</p>
+    <div class="tabela-ovoj" data-narocnine-ovoj hidden>
+      <table class="tabela" data-narocnine>
+        <thead><tr><th>Član</th><th>Stanje</th><th>Plačano do</th><th>Preklic</th><th>Od</th><th>Posodobljeno</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
 
   <section class="nadzor-odsek nadzor-cakajo" aria-labelledby="cakajo-naslov" data-cakajo-odsek hidden>
     <h2 id="cakajo-naslov" class="serif">Čaka <em>tebe</em></h2>
@@ -108,33 +143,6 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
     </div>
   </section>
 
-  <section class="nadzor-odsek" aria-labelledby="dostop-naslov">
-    <h2 id="dostop-naslov" class="serif">Dostop do filmov</h2>
-    <p class="nadzor-opis">Filme vidi le član, ki mu podariš dostop: tu po e-naslovu (lahko še preden se prijavi; dostop ga počaka) ali pri Članih z gumbom »Podari dostop«. Brez roka ali do dne; z »Odvzemi dostop« ga umakneš. Prošnje za dostop pridejo med Odzive.</p>
-    <form class="novica" data-dostop>
-      <div class="novica-mreza">
-        <label>E-naslov<input name="email" type="email" required autocomplete="off" placeholder="ime@naslov.si"></label>
-        <label>Do dne (prazno = brez roka)<input name="do" type="date"></label>
-        <label class="novica-cela">Opomba (le zate)<input name="opomba" maxlength="200" placeholder="prijatelj, družina …"></label>
-      </div>
-      <div class="nadzor-akcije">
-        <button class="gumb gumb-majhen" type="submit">Podari dostop</button>
-      </div>
-    </form>
-    <div class="tabela-ovoj">
-      <table class="tabela" data-dostopi>
-        <thead><tr><th>Kdo</th><th>Dostop</th><th>Prijavljen</th><th>Opomba</th><th></th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <p class="nadzor-opis" data-narocnine-opis hidden>Naročnine prek Stripa: active plačuje, past_due plačilo ni uspelo (dostop še 7 dni), canceled do konca obdobja še velja.</p>
-    <div class="tabela-ovoj" data-narocnine-ovoj hidden>
-      <table class="tabela" data-narocnine>
-        <thead><tr><th>Član</th><th>Stanje</th><th>Plačano do</th><th>Preklic</th><th>Od</th><th>Posodobljeno</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </section>
   <section class="nadzor-odsek" aria-labelledby="ogledi-naslov">
     <h2 id="ogledi-naslov" class="serif">Ogledi vlogov</h2>
     <p class="nadzor-opis">Šteje se, ko nekdo na strani začne predvajati film. Prijavljene člane vidiš po imenu, goste le kot število.</p>

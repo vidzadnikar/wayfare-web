@@ -321,11 +321,13 @@ vklop so spodaj pod »Če kdaj vklopiš naročnino«.
 
 ### Kako podariš dostop
 
-- **V nadzoru** (`/nadzor` → Dostop do filmov): vpiši e-naslov (in po želji
-  datum, do katerega velja, ter opombo) → Podari dostop. Deluje tudi, če se
-  ta oseba še ni prijavila: dostop jo počaka, velja od prve prijave (z
-  Googlom ali e-pošto na isti naslov). Pri Članih sta še gumba »Podari
-  dostop« in »Odvzemi dostop«.
+- **V nadzoru** (`/nadzor` → Dovoljenja za ogled, takoj pod Pregledom): vsi
+  člani s stikalom »Lahko gleda« (vklop ali izklop velja takoj), rokom (do
+  dne; prazno = brez roka) in opombo; iskanje po imenu ali e-naslovu in
+  izbira Vsi / Lahko gledajo / Ne morejo. Novo osebo dodaš po e-naslovu
+  (»Dodaj in dovoli ogled«), tudi preden se prijavi: dovoljenje jo počaka in
+  velja od prve prijave (z Googlom ali e-pošto na isti naslov). Pri Članih
+  gumb »Dovoljenje« skoči na vrstico tega člana.
 - **Prek ukaza** (npr. ko Vid naroči Claudu):
 
       npx wrangler d1 execute wayfare-clani --remote --command "INSERT INTO clani (email, vir, jezik) VALUES ('ime@naslov.si', 'eposta', 'sl') ON CONFLICT (email) DO NOTHING; UPDATE clani SET dostop_vrsta = 'podarjen', dostop_do = NULL, dostop_opomba = 'prijatelj' WHERE email = 'ime@naslov.si'"

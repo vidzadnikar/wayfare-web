@@ -83,3 +83,19 @@ a.tabela-gumb { text-decoration: none; display: inline-block; }
 .nadzor-odsek[hidden] { display: none; }
 .tabela td.komentar-celica { max-width: 420px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .nadzor-stran .glava .nadzor-kdo { grid-column: -2; justify-self: end; }
+
+/* dovoljenja za ogled: iskanje, izbira, vrstice s stikalom, rokom in opombo */
+.dovoljenja-filter { display: flex; flex-wrap: wrap; gap: var(--s3) var(--s5); align-items: center; }
+.dovoljenja-filter input[type="search"] { flex: 1 1 260px; max-width: 420px; padding: var(--s2) var(--s4); border: 1px solid var(--border-strong); border-radius: var(--radius-pill); background: var(--bg); color: var(--fg); font: 400 15px/1.5 var(--sans); }
+.dovoljenja-filter input[type="search"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.dovoljenja-izbira { display: flex; gap: var(--s4); flex-wrap: wrap; color: var(--muted); font-size: 14px; }
+.dovoljenja-izbira label { display: inline-flex; gap: var(--s2); align-items: center; cursor: pointer; }
+.dovoljenja-izbira input { accent-color: var(--accent); }
+.tabela-dovoljenja td:first-child { display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; min-width: 220px; }
+.dovoljenje-email { color: var(--subtle); font-size: 13px; flex-basis: 100%; padding-left: 0; }
+.tabela-dovoljenja img.clan-majhna + span + .dovoljenje-email { padding-left: 32px; }
+.dovoljenje-rok, .dovoljenje-opomba { padding: 6px 10px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--bg); color: var(--fg); font: 400 14px/1.4 var(--sans); color-scheme: dark; }
+.dovoljenje-opomba { width: 180px; }
+.dovoljenje-rok:focus-visible, .dovoljenje-opomba:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.dovoljenje-rok:disabled, .dovoljenje-opomba:disabled, .stikalo:disabled { opacity: 0.5; cursor: default; }
+.tabela-dovoljenja tr[hidden] { display: none; }

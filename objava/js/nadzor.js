@@ -66,10 +66,18 @@ function dostopClana(c) {
   if (c.id === stanje.admin.id) return ["admin", "stanje-aktiven"];
   if (n) return [`naročnik do ${kratekDan(n.obdobje_do)}${n.preklic_ob_koncu ? " (preklic)" : ""}`, "stanje-aktiven"];
   if (c.dostop_vrsta === "podarjen" && (!c.dostop_do || Date.parse(c.dostop_do) > Date.now())) {
-    return [`podarjen${c.dostop_do ? ` do ${kratekDan(c.dostop_do)}` : ""}${c.dostop_opomba ? ` · ${c.dostop_opomba}` : ""}`, "stanje-aktiven"];
+    return [`podarjen${c.dostop_do ? ` do ${kratekRok(c.dostop_do)}` : ""}${c.dostop_opomba ? ` · ${c.dostop_opomba}` : ""}`, "stanje-aktiven"];
   }
   if (c.dostop_vrsta === "podarjen") return ["podarjen, potekel", "stanje-odjavljen"];
   return ["—", ""];
+}
+
+function pojdiNaDovoljenje(c) {
+  isciDovoljenja.value = c.email;
+  koren.querySelector('input[name="dovoljenja-kaj"][value="vsi"]').checked = true;
+  filtrirajDovoljenja();
+  $("#dovoljenja").scrollIntoView({ behavior: "smooth", block: "start" });
+  $("[data-dostopi] tbody tr:not([hidden]) .stikalo")?.focus({ preventScroll: true });
 }
 
 async function dostopDejanje(c, kaj) {
@@ -100,9 +108,7 @@ function vrsticaClana(c) {
   const dejanja = el("td");
   if (!jaz) {
     dejanja.append(
-      c.dostop_vrsta === "podarjen"
-        ? el("button", { type: "button", class: "tabela-gumb", onclick: () => dostopDejanje(c, "odvzemi") }, "Odvzemi dostop")
-        : el("button", { type: "button", class: "tabela-gumb", onclick: () => dostopDejanje(c, "podari") }, "Podari dostop"),
+      el("button", { type: "button", class: "tabela-gumb", onclick: () => pojdiNaDovoljenje(c) }, "Dovoljenje"),
       " ",
       el("button", { type: "button", class: "tabela-gumb", onclick: () => dejanjeClana(c, c.blokiran ? "odblokiraj" : "blokiraj") }, c.blokiran ? "Odblokiraj" : "Blokiraj"),
       " ",
@@ -311,22 +317,108 @@ dostopObrazec.addEventListener("submit", async (e) => {
   gumb.disabled = false;
 });
 
-function narisiDostope() {
-  const s = stanje.clani.filter((c) => c.dostop_vrsta === "podarjen" || (stanje.narocnine || []).some((n) => n.clan_id === c.id && narocninaVelja(n)));
-  const vrstice = s.map((c) => {
-    const [oznaka, razred] = dostopClana(c);
-    return el("tr", {},
-      el("td", { class: "naslov" }, c.ime ? `${c.ime} (${c.email})` : c.email),
-      el("td", { class: razred }, oznaka),
-      el("td", {}, c.potrjen_at ? datum(c.potrjen_at) : "še ne (dostop ga čaka)"),
-      el("td", { class: "naslov" }, c.dostop_opomba || "—"),
-      el("td", {}, c.dostop_vrsta === "podarjen"
-        ? el("button", { type: "button", class: "tabela-gumb tabela-gumb-rdec", onclick: () => dostopDejanje(c, "odvzemi") }, "Odvzemi dostop")
-        : null),
-    );
+// Dovoljenja za ogled: vsi člani s stikalom (takoj vklopi ali izklopi), rokom in
+// opombo. Datum in opomba se pri vklopljenem dovoljenju shranita ob spremembi;
+// pri izklopljenem počakata na vklop.
+const danIso = (iso) => (iso ? iso.slice(0, 10) : "");
+// rok dovoljenja je konec dneva v UTC (23:59:59Z): pokaži dan iz zapisa, ne po lokalnem času
+const kratekRok = (iso) => (iso ? new Date(iso.slice(0, 10) + "T12:00:00Z").toLocaleDateString("sl-SI", { day: "numeric", month: "numeric", year: "numeric" }) : "");
+const podarjenVelja = (c) => c.dostop_vrsta === "podarjen" && (!c.dostop_do || Date.parse(c.dostop_do) > Date.now());
+const imaNarocnino = (c) => (stanje.narocnine || []).some((n) => n.clan_id === c.id && narocninaVelja(n));
+
+function stanjeDovoljenja(c) {
+  if (c.id === stanje.admin.id) return ["admin, vedno", "stanje-aktiven"];
+  const deli = [];
+  let razred = "stanje-odjavljen";
+  if (imaNarocnino(c)) { deli.push("naročnik"); razred = "stanje-aktiven"; }
+  if (podarjenVelja(c)) { deli.push(c.dostop_do ? `gleda do ${kratekRok(c.dostop_do)}` : "gleda, brez roka"); razred = "stanje-aktiven"; }
+  else if (c.dostop_vrsta === "podarjen") deli.push(`poteklo ${kratekRok(c.dostop_do)}`);
+  if (!deli.length) deli.push("ne more gledati");
+  if (!c.potrjen_at) deli.push("čaka na prvo prijavo");
+  if (c.blokiran) { deli.push("blokiran"); razred = "stanje-blokiran"; }
+  return [deli.join(" · "), razred];
+}
+
+async function shraniDovoljenje(c, { vklop, do_, opomba }) {
+  const telo = vklop ? { id: c.id, dejanje: "podari", opomba: opomba ?? "" } : { id: c.id, dejanje: "odvzemi" };
+  if (vklop && do_) telo.do = do_;
+  await klic("/api/nadzor/dostop", telo);
+}
+
+function vrsticaDovoljenja(c) {
+  const admin = c.id === stanje.admin.id;
+  const vklopljeno = admin || podarjenVelja(c);
+  const stikalo = el("input", { type: "checkbox", class: "stikalo", role: "switch", "aria-label": `Lahko gleda: ${c.email}`, checked: vklopljeno, disabled: admin });
+  const rok = el("input", { type: "date", class: "dovoljenje-rok", value: danIso(c.dostop_do), "aria-label": `Do dne: ${c.email}`, disabled: admin });
+  const opomba = el("input", { type: "text", class: "dovoljenje-opomba", maxlength: 200, value: c.dostop_opomba || "", placeholder: "—", "aria-label": `Opomba: ${c.email}`, disabled: admin });
+  const [oznaka, razred] = stanjeDovoljenja(c);
+  const stanjeTd = el("td", { class: `naslov ${razred}` }, oznaka);
+  const ime = el("td", { class: "naslov" });
+  if (c.slika_url) ime.append(el("img", { class: "clan-majhna", src: c.slika_url, alt: "", width: 24, height: 24, referrerpolicy: "no-referrer" }));
+  ime.append(el("span", {}, c.ime || "—"), el("span", { class: "dovoljenje-email" }, c.email));
+
+  async function shrani(vklop, opis) {
+    for (const p of [stikalo, rok, opomba]) p.disabled = true;
+    try {
+      await shraniDovoljenje(c, { vklop, do_: rok.value || null, opomba: opomba.value.trim() });
+      povej(opis);
+      await nalozi();
+    } catch (e) {
+      povej(e.message, true);
+      stikalo.checked = vklopljeno;
+      for (const p of [stikalo, rok, opomba]) p.disabled = false;
+    }
+  }
+  stikalo.addEventListener("change", () => {
+    if (stikalo.checked) {
+      if (rok.value && Date.parse(rok.value + "T23:59:59Z") < Date.now()) {
+        povej(`Datum ${kratekRok(rok.value)} je že mimo: izbriši ga ali izberi poznejšega.`, true);
+        stikalo.checked = false;
+        rok.focus();
+        return;
+      }
+      shrani(true, `${c.email} lahko gleda${rok.value ? ` do ${kratekRok(rok.value)}` : ""}.`);
+    } else {
+      if (!confirm(`${c.email} ne bo več mogel gledati filmov. Izklopim?`)) { stikalo.checked = true; return; }
+      shrani(false, `${c.email} ne more več gledati.`);
+    }
   });
-  $("[data-dostopi] tbody").replaceChildren(...vrstice);
-  if (!vrstice.length) $("[data-dostopi] tbody").append(prazno(5, "Še nihče nima dostopa."));
+  rok.addEventListener("change", () => { if (stikalo.checked) shrani(true, `Rok za ${c.email}: ${rok.value ? kratekRok(rok.value) : "brez roka"}.`); });
+  opomba.addEventListener("change", () => { if (stikalo.checked) shrani(true, `Opomba za ${c.email} je shranjena.`); });
+
+  const tr = el("tr", { "data-dovoljenje": vklopljeno || imaNarocnino(c) ? "da" : "ne", "data-isci": `${c.ime || ""} ${c.email} ${c.dostop_opomba || ""}`.toLowerCase() },
+    ime, el("td", {}, stikalo), el("td", {}, rok), el("td", {}, opomba), stanjeTd);
+  return tr;
+}
+
+const isciDovoljenja = $("[data-dovoljenja-isci]");
+function filtrirajDovoljenja() {
+  const niz = isciDovoljenja.value.trim().toLowerCase();
+  const kaj = koren.querySelector('input[name="dovoljenja-kaj"]:checked')?.value || "vsi";
+  let vidnih = 0;
+  for (const tr of $("[data-dostopi] tbody").querySelectorAll("tr[data-isci]")) {
+    const vidno = (!niz || tr.dataset.isci.includes(niz)) && (kaj === "vsi" || tr.dataset.dovoljenje === kaj);
+    tr.hidden = !vidno;
+    if (vidno) vidnih++;
+  }
+  $("[data-dostopi] tbody [data-prazno-filter]")?.remove();
+  if (!vidnih) $("[data-dostopi] tbody").append(el("tr", { "data-prazno-filter": "" }, el("td", { colspan: 5, class: "naslov prazno" }, "Nikogar ni.")));
+}
+isciDovoljenja.addEventListener("input", filtrirajDovoljenja);
+for (const r of koren.querySelectorAll('input[name="dovoljenja-kaj"]')) r.addEventListener("change", filtrirajDovoljenja);
+
+function narisiDostope() {
+  // najprej tisti, ki lahko gledajo, nato ostali; znotraj po imenu
+  const clani = [...stanje.clani].sort((a, b) => {
+    const da = (c) => (c.id === stanje.admin.id ? 0 : podarjenVelja(c) || imaNarocnino(c) ? 1 : 2);
+    return da(a) - da(b) || String(a.ime || a.email).localeCompare(String(b.ime || b.email), "sl");
+  });
+  // med pisanjem v vrstico je ne nariši znova (izgubil bi se kazalec)
+  const a = document.activeElement;
+  if ($("[data-dostopi]").contains(a) && a.matches('input[type="text"], input[type="date"]') && !a.disabled) return;
+  $("[data-dostopi] tbody").replaceChildren(...clani.map(vrsticaDovoljenja));
+  if (!clani.length) $("[data-dostopi] tbody").append(prazno(5, "Še ni članov."));
+  filtrirajDovoljenja();
 }
 
 // ---------------------------------------------------------------- naročnine (Stripe; vidno le, ko so ključi nastavljeni)
