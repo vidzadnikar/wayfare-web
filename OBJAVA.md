@@ -136,6 +136,8 @@ naslov za odgovor pa ostaneta tvoja.
      aplikaciji vsak ponedeljek pošlje adminu statistiko TikToka in
      Instagrama (isti je doma v `~/.wayfare/porocilo.json`; nastavljen
      20. 10. 2026);
+   - `POROCILO_PREJEMNIKI`: dodatni naslovi za to poročilo poleg
+     ADMIN_EMAIL, z vejico ločeni (20. 10. 2026: e-naslov računov Wayfare);
    - `ADMIN_EMAIL`: tvoj Googlov e-naslov (kdo vidi `/nadzor`); ne piši ga v
      repozitorij, ker je javen;
    - `EMAIL_FROM`: pošiljatelj, potrjen pri Brevu (tvoj Gmail; lahko tudi
