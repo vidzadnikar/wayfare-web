@@ -223,6 +223,21 @@ export function sestaviKomentarAdminu({ ime, vlog, besedilo, odgovor, url, koren
   };
 }
 
+// Pošta adminu: tedensko poročilo o objavah na TikToku in Instagramu (urnik v
+// aplikaciji). Besedilo pride sestavljeno; prazna vrstica loči odstavke,
+// vrstice v odstavku ostanejo (ena objava na vrstico).
+export function sestaviPorocilo({ zadeva, naslov, besedilo, koren }) {
+  return {
+    zadeva,
+    html: ovoj({
+      jezik: "sl", koren: String(koren || "").replace(/\/$/, ""), naslov: naslov || zadeva, predogled: besedilo.slice(0, 140),
+      odstavki: odstavkiIz(besedilo).map(odstavekHtml),
+      noga: "To pošto dobiš vsak teden, ker urnik objav v Wayfare Studiu pošilja statistiko TikToka in Instagrama.",
+    }),
+    besedilo: [naslov || zadeva, "", besedilo].join("\n"),
+  };
+}
+
 // Pošta adminu: nov odziv s strani ali iz aplikacije.
 export function sestaviOdzivAdminu({ vrsta, besedilo, email, vir, razlicica, sistem, koren }) {
   const ime = { napaka: "Napaka", predlog: "Predlog", pohvala: "Pohvala" }[vrsta] || "Odziv";

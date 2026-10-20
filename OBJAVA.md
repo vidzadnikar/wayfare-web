@@ -132,6 +132,10 @@ naslov za odgovor pa ostaneta tvoja.
    Settings → Variables and Secrets, okolje Production):
    - `SESSION_SECRET`: dolg naključen niz (`openssl rand -base64 48`);
    - `OBVESTI_SECRET`: drug naključen niz (isti je v GitHub secrets);
+   - `POROCILO_SECRET`: niz za `/api/porocilo`, po katerem urnik objav v
+     aplikaciji vsak ponedeljek pošlje adminu statistiko TikToka in
+     Instagrama (isti je doma v `~/.wayfare/porocilo.json`; nastavljen
+     20. 10. 2026);
    - `ADMIN_EMAIL`: tvoj Googlov e-naslov (kdo vidi `/nadzor`); ne piši ga v
      repozitorij, ker je javen;
    - `EMAIL_FROM`: pošiljatelj, potrjen pri Brevu (tvoj Gmail; lahko tudi
