@@ -85,7 +85,7 @@ const gumbHtml = (gumb) => `<table role="presentation" cellpadding="0" cellspaci
 // Temna pošta v slogu strani. `odstavki` so že HTML (odstavekHtml), drugo se
 // pobegne tu. Struktura s tabelami in slogi v vrstici, ker jo tako pokaže
 // vsak odjemalec (Gmail, Apple Mail, Outlook).
-function ovoj({ jezik, koren, naslov, predogled, slika, slikaUrl, uvod, odstavki, gumb, opomba, noga, odjavaUrl }) {
+function ovoj({ jezik, koren, naslov, predogled, slika, slikaUrl, uvod, odstavki, vsebina = "", gumb, opomba, noga, odjavaUrl }) {
   const t = T[jezik];
   const domov = `${koren}${jezik === "sl" ? "/sl/" : "/"}`;
   const vlogi = `${koren}${jezik === "sl" ? "/sl/vlogi/" : "/vlogi/"}`;
@@ -131,6 +131,7 @@ ${slikaVrstica}
 <h1 class="naslov" style="margin:0 0 20px;font:400 36px/40px ${SERIF};color:${B.fg};letter-spacing:-0.01em">${pobegni(naslov).replace(/ (\S+)$/, "&nbsp;$1")}</h1>
 ${uvod ? p(pobegni(uvod), B.fg) : ""}
 ${odstavki.map((o) => p(o)).join("\n")}
+${vsebina}
 ${gumb ? gumbHtml(gumb) : ""}
 ${opomba ? `<p style="margin:32px 0 0;padding:24px 0 0;border-top:1px solid ${B.border};font:400 13px/20px ${SANS};color:${B.subtle}">${opomba}</p>` : ""}
 </td></tr>
@@ -223,15 +224,16 @@ export function sestaviKomentarAdminu({ ime, vlog, besedilo, odgovor, url, koren
   };
 }
 
-// Pošta adminu: tedensko poročilo o objavah na TikToku in Instagramu (urnik v
-// aplikaciji). Besedilo pride sestavljeno; prazna vrstica loči odstavke,
-// vrstice v odstavku ostanejo (ena objava na vrstico).
-export function sestaviPorocilo({ zadeva, naslov, besedilo, koren }) {
+// Pošta: tedensko poročilo o objavah na TikToku in Instagramu (urnik v
+// aplikaciji). Grafični del (vsebinaHtml: ploščice, grafi, objave tedna) sestavi
+// urnik sam in pride po klicu s skrivnostjo; brez njega so odstavki iz
+// besedila (prazna vrstica loči odstavke, vrstice v odstavku ostanejo).
+export function sestaviPorocilo({ zadeva, naslov, besedilo, vsebinaHtml = "", koren }) {
   return {
     zadeva,
     html: ovoj({
       jezik: "sl", koren: String(koren || "").replace(/\/$/, ""), naslov: naslov || zadeva, predogled: besedilo.slice(0, 140),
-      odstavki: odstavkiIz(besedilo).map(odstavekHtml),
+      odstavki: vsebinaHtml ? [] : odstavkiIz(besedilo).map(odstavekHtml), vsebina: vsebinaHtml,
       noga: "To pošto dobiš vsak teden, ker urnik objav v Wayfare Studiu pošilja statistiko TikToka in Instagrama.",
     }),
     besedilo: [naslov || zadeva, "", besedilo].join("\n"),
