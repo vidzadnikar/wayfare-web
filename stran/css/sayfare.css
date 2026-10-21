@@ -1,0 +1,131 @@
+/* Stran Sayfare (predloga-sayfare.html), od 21. 10. 2026. Isti svet in barve
+   Svinčnik kot ostala stran (slog.css); tu so le uvod s prikazom nareka,
+   koraki, lastnosti in prenos. Brez malih oznak nad naslovi. */
+
+.sayfare-stran { overflow-x: clip; }
+
+/* -------------------------------------------------- uvod: besedilo levo, prikaz desno */
+.sf-uvod {
+  display: grid; gap: var(--s8); align-items: center;
+  min-height: 100svh; max-width: 1320px; margin-inline: auto;
+  padding: calc(var(--glava) + clamp(var(--s7), 9svh, var(--s9))) var(--rob) var(--s9);
+}
+@media (min-width: 1000px) { .sf-uvod { grid-template-columns: minmax(0, 11fr) minmax(0, 10fr); gap: var(--s8); } }
+.sf-uvod-besedilo { display: grid; gap: var(--s5); justify-items: start; }
+.sf-ikona { width: 88px; height: 88px; border-radius: 22%; box-shadow: 0 18px 40px -18px rgba(var(--crnilo), 0.35); }
+.sf-uvod h1 { font-size: clamp(48px, 7.2vw, 116px); letter-spacing: -0.045em; line-height: 0.98; }
+.sf-uvod .uvodnik { font-size: clamp(17px, 1.5vw, 20px); color: var(--muted); max-width: 42ch; }
+
+/* -------------------------------------------------- prikaz nareka */
+.sf-prikaz { margin: 0; }
+.sf-zaslon {
+  position: relative; aspect-ratio: 5 / 4; overflow: hidden; isolation: isolate;
+  display: grid; align-content: center; justify-items: center; gap: var(--s6);
+  padding: var(--s9) var(--s6) var(--s6);
+  border-radius: 26px; border: 1px solid var(--border);
+  background: linear-gradient(160deg, #fbfaf7 0%, #efece5 100%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 40px 90px -40px rgba(var(--crnilo), 0.35);
+}
+@media (max-width: 640px) { .sf-zaslon { aspect-ratio: auto; min-height: 340px; padding-top: var(--s9); } .sf-uvod { padding-bottom: var(--s6); } }
+
+/* plošča ob zarezi: črna kot zareza, raste v širino */
+.sf-otok {
+  position: absolute; top: 0; left: 50%; z-index: 2; translate: -50% 0;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 128px; height: 36px; padding: 0 16px;
+  border-radius: 0 0 18px 18px; background: #000; color: #f5f5f4;
+  transition: width 420ms var(--ease-out);
+}
+.sf-otok > * { display: none; }
+.sf-otok-pika { width: 9px; height: 9px; border-radius: 50%; background: var(--signal); animation: sf-utrip 1.1s ease-in-out infinite; }
+@keyframes sf-utrip { 50% { opacity: 0.35; } }
+.sf-otok-val { align-items: center; gap: 3px; height: 16px; }
+.sf-otok-val i { width: 3px; height: 100%; border-radius: 2px; background: #f5f5f4; transform-origin: center; animation: sf-val 0.9s ease-in-out infinite; }
+.sf-otok-val i:nth-child(2) { animation-delay: -0.2s; } .sf-otok-val i:nth-child(3) { animation-delay: -0.5s; }
+.sf-otok-val i:nth-child(4) { animation-delay: -0.1s; } .sf-otok-val i:nth-child(5) { animation-delay: -0.7s; }
+.sf-otok-val i:nth-child(6) { animation-delay: -0.35s; } .sf-otok-val i:nth-child(7) { animation-delay: -0.6s; }
+@keyframes sf-val { 0%, 100% { transform: scaleY(0.25); } 50% { transform: scaleY(1); } }
+.sf-otok-cas { font: 500 13px/1 var(--sans); font-variant-numeric: tabular-nums; color: #a3a19c; }
+.sf-otok-vrtavka { width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(245, 245, 244, 0.25); border-top-color: #f5f5f4; animation: sf-vrti 0.8s linear infinite; }
+@keyframes sf-vrti { to { transform: rotate(1turn); } }
+.sf-otok-kljukica { width: 7px; height: 12px; border: solid #f5f5f4; border-width: 0 2px 2px 0; transform: translateY(-2px) rotate(45deg); }
+[data-stanje="snema"] .sf-otok { width: 232px; }
+[data-stanje="snema"] .sf-otok-pika, [data-stanje="snema"] .sf-otok-val { display: flex; }
+[data-stanje="snema"] .sf-otok-cas { display: block; }
+[data-stanje="pise"] .sf-otok, [data-stanje="koncano"] .sf-otok { width: 156px; }
+[data-stanje="pise"] .sf-otok-vrtavka, [data-stanje="koncano"] .sf-otok-kljukica { display: block; }
+
+/* sporočilo, v katero pride besedilo */
+.sf-sporocilo {
+  width: min(100%, 480px); padding: var(--s4) var(--s5) var(--s6);
+  border-radius: 16px; background: #ffffff; border: 1px solid var(--border);
+  box-shadow: 0 24px 50px -26px rgba(var(--crnilo), 0.35);
+}
+.sf-okno-glava { display: flex; gap: 7px; margin-bottom: var(--s5); }
+.sf-okno-glava i { width: 11px; height: 11px; border-radius: 50%; background: var(--border-strong); }
+.sf-besedilo { min-height: 4.5em; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; letter-spacing: -0.01em; color: var(--fg); }
+/* besede pridejo ena za drugo, ko je narek končan; prej jih ni (kazalka čaka na začetku) */
+[data-stanje="koncano"] .sf-beseda { animation: sf-beseda 280ms ease both; animation-delay: calc(var(--i, 0) * 32ms); }
+@keyframes sf-beseda { from { opacity: 0; filter: blur(4px); } }
+[data-stanje="miruje"] .sf-beseda, [data-stanje="snema"] .sf-beseda, [data-stanje="pise"] .sf-beseda { display: none; }
+[data-stanje="pocisti"] .sf-besedilo { opacity: 0; transition: opacity 400ms ease; }
+.sf-kazalka { display: inline-block; width: 2px; height: 1.15em; margin-left: 2px; vertical-align: -0.2em; background: var(--fg); animation: sf-kazalka 1s steps(2) infinite; }
+
+/* tipke spodaj: ob začetku in koncu snemanja se pritisneta */
+kbd {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 34px; padding: 0 10px;
+  border-radius: 8px; background: #ffffff; border: 1px solid var(--border-strong); box-shadow: 0 2px 0 var(--border-strong);
+  font: 600 15px/1 var(--sans); color: var(--fg);
+}
+.sf-tipke { display: flex; gap: 8px; }
+.sf-tipke kbd { height: 40px; min-width: 40px; font-size: 16px; }
+.sf-presledek { min-width: 132px !important; }
+[data-stanje="snema"] .sf-tipke kbd { animation: sf-pritisk 340ms ease; }
+[data-stanje="pise"] .sf-tipke kbd { animation: sf-pritisk-2 340ms ease; }
+@keyframes sf-pritisk { 40% { transform: translateY(2px); box-shadow: 0 0 0 var(--border-strong); } }
+@keyframes sf-pritisk-2 { 40% { transform: translateY(2px); box-shadow: 0 0 0 var(--border-strong); } }
+
+/* -------------------------------------------------- koraki */
+.sf-koraki-odsek { padding: clamp(var(--s8), 12vw, var(--s10)) var(--rob) var(--s9); display: grid; gap: var(--s8); max-width: 1320px; margin-inline: auto; }
+.sf-koraki-odsek h2, .sf-lastnosti-odsek h2 { font-size: clamp(40px, 5.6vw, 88px); max-width: 16ch; }
+.sf-koraki { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s4); grid-template-columns: 1fr; }
+@media (min-width: 860px) { .sf-koraki { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.sf-koraki li {
+  display: grid; align-content: start; gap: var(--s3); padding: var(--s6);
+  border-radius: var(--radius-lg); background: rgba(255, 255, 255, 0.72); border: 1px solid var(--border);
+}
+.sf-koraki h3 { font-size: clamp(22px, 2vw, 28px); font-weight: 600; letter-spacing: -0.025em; line-height: 1.1; margin: var(--s3) 0 0; }
+.sf-koraki p { color: var(--muted); }
+.sf-korak-tipke { display: flex; gap: 6px; height: 40px; align-items: center; }
+.sf-korak-val { display: flex; align-items: center; gap: 5px; height: 40px; }
+.sf-korak-val i { width: 5px; height: 32px; border-radius: 3px; background: var(--fg); animation: sf-val 1s ease-in-out infinite; }
+.sf-korak-val i:nth-child(1) { background: var(--signal); animation-delay: -0.3s; }
+.sf-korak-val i:nth-child(2) { animation-delay: -0.6s; } .sf-korak-val i:nth-child(4) { animation-delay: -0.15s; } .sf-korak-val i:nth-child(5) { animation-delay: -0.45s; }
+.sf-korak-kazalka { display: flex; align-items: center; height: 40px; font: 600 30px/1 var(--sans); letter-spacing: -0.03em; }
+.sf-korak-kazalka b { width: 2px; height: 30px; margin-left: 3px; background: var(--fg); animation: sf-kazalka 1s steps(2) infinite; }
+
+/* -------------------------------------------------- lastnosti */
+.sf-lastnosti-odsek { padding: var(--s9) var(--rob); display: grid; gap: var(--s7); max-width: 1320px; margin-inline: auto; }
+.sf-lastnosti { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; column-gap: var(--s8); }
+@media (min-width: 760px) { .sf-lastnosti { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.sf-lastnosti li { display: grid; gap: var(--s3); align-content: start; padding: var(--s6) 0 var(--s7); border-top: 1px solid var(--border-strong); }
+.sf-lastnosti h3 { font-size: clamp(24px, 2.4vw, 34px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; margin: 0; }
+.sf-lastnosti p { color: var(--muted); max-width: 44ch; }
+
+/* -------------------------------------------------- prenos */
+.sf-cilj { min-height: 0; padding: var(--s9) var(--rob) var(--s10); }
+.sf-cilj h2 { max-width: 14ch; }
+.naprava.sf-kmalu { cursor: default; background: rgba(255, 255, 255, 0.45); }
+.naprava.sf-kmalu .naprava-ime, .naprava.sf-kmalu .naprava-opis { color: var(--subtle); }
+.naprava.sf-kmalu:hover { border-color: var(--border-strong); }
+.naprava.sf-kmalu:active { transform: none; }
+.sf-cilj .naprava[data-priporoceno]:hover { background: #000000; border-color: #000000; }
+.sf-cilj .obvestilo-koraki li { font-size: 15px; }
+.sf-cilj code { font: 500 12px/1.5 var(--mono); color: var(--fg); background: rgba(var(--crnilo), 0.06); padding: 2px 6px; border-radius: var(--radius-sm); overflow-wrap: anywhere; }
+.sf-druzina a { color: var(--muted); text-underline-offset: 3px; }
+.sf-druzina a:hover { color: var(--fg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sf-otok-pika, .sf-otok-val i, .sf-korak-val i, .sf-otok-vrtavka { animation: none; }
+}
+@keyframes sf-kazalka { 50% { opacity: 0; } }

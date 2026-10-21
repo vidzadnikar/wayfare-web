@@ -5,7 +5,7 @@
 // kot besedilo (textContent), nikoli kot HTML. Časi v komentarju (1:23)
 // skočijo v film, povezave so klikljive. Besedila strani so v data-*.
 const NAJVEC = 2000;
-const BARVE = ["#64e2d6", "#9d8cff", "#f2b880", "#7cc4f6", "#f2919f", "#a9d98f"];
+const BARVE = ["#0f7f73", "#5b47d6", "#a65a16", "#21689e", "#b8344f", "#457a26"];
 
 export function komentarji(koren, { skoci } = {}) {
   if (!koren) return;

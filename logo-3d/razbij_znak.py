@@ -104,8 +104,8 @@ def main():
             bpy.data.objects.remove(ob)
     znak.rotation_euler = (0, 0, 0)
     me = znak.data
-    ime_mat = [m.name for m in me.materials]  # ["Vijolicna", "Turkizna"]
-    barva_hex = {"Vijolicna": "#766bfb", "Turkizna": "#64e2d6"}
+    ime_mat = [m.name for m in me.materials]  # ["Grafit", "Rdeca"] (do 21. 10. 2026 Vijolicna, Turkizna)
+    barva_hex = {"Grafit": "#1a1a1c", "Rdeca": "#ff453a"}
     notranji = [material_notranjost(f"Notranjost_{ime}", barva_hex[ime]) for ime in ime_mat]
     vsi_mat = list(me.materials) + notranji
     zunanji_n = len(ime_mat)

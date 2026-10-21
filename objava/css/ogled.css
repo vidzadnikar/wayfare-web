@@ -12,38 +12,38 @@
 /* -------------------------------------------------- predvajalnik (oder) */
 .ogled-oder {
   position: relative; aspect-ratio: 16 / 9; overflow: hidden; isolation: isolate;
-  border-radius: var(--radius-lg); background: #060914;
-  box-shadow: 0 40px 120px -40px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(242, 242, 243, 0.08);
+  border-radius: var(--radius-lg); background: var(--temno);
+  box-shadow: 0 40px 120px -40px rgba(var(--crnilo), 0.45), 0 0 0 1px rgba(var(--crnilo), 0.08);
 }
 .ogled-oder-ozadje { position: absolute; inset: -10%; width: 120%; height: 120%; object-fit: cover; filter: blur(30px) brightness(0.45); opacity: 0; z-index: 0; }
 .ogled-oder[data-pokoncno="true"] .ogled-oder-ozadje { opacity: 1; }
 .ogled-oder-naslovnica { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; transition: opacity 300ms ease; }
 .ogled-oder[data-pokoncno="true"] .ogled-oder-naslovnica { object-fit: contain; }
 .ogled-oder-gumb {
-  position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; color: var(--fg); text-decoration: none;
-  background: radial-gradient(ellipse at center, rgba(6, 9, 20, 0) 30%, rgba(6, 9, 20, 0.45) 100%);
+  position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; color: var(--na-temnem); text-decoration: none;
+  background: radial-gradient(ellipse at center, rgba(16, 16, 17, 0) 30%, rgba(16, 16, 17, 0.45) 100%);
   transition: opacity 240ms ease, visibility 0s linear 0s;
 }
 .ogled-oder-ikona {
-  width: clamp(64px, 7vw, 92px); aspect-ratio: 1; border-radius: 50%; background: var(--accent); position: relative;
-  box-shadow: 0 18px 50px -12px rgba(100, 226, 214, 0.55), 0 0 0 10px rgba(100, 226, 214, 0.12);
+  width: clamp(64px, 7vw, 92px); aspect-ratio: 1; border-radius: 50%; background: var(--na-temnem); position: relative;
+  box-shadow: 0 18px 50px -12px rgba(0, 0, 0, 0.55), 0 0 0 10px rgba(255, 255, 255, 0.14);
   transition: transform 300ms var(--ease-out), box-shadow 300ms var(--ease-out);
 }
 .ogled-oder-ikona::after {
   content: ""; position: absolute; left: 54%; top: 50%; transform: translate(-50%, -50%);
-  border-left: clamp(18px, 2vw, 26px) solid var(--accent-fg);
+  border-left: clamp(18px, 2vw, 26px) solid var(--temno);
   border-top: clamp(11px, 1.2vw, 16px) solid transparent; border-bottom: clamp(11px, 1.2vw, 16px) solid transparent;
 }
 @media (hover: hover) and (pointer: fine) {
-  .ogled-oder-gumb:hover .ogled-oder-ikona { transform: scale(1.07); box-shadow: 0 22px 60px -12px rgba(100, 226, 214, 0.7), 0 0 0 14px rgba(100, 226, 214, 0.14); }
+  .ogled-oder-gumb:hover .ogled-oder-ikona { transform: scale(1.07); box-shadow: 0 22px 60px -12px rgba(0, 0, 0, 0.65), 0 0 0 14px rgba(255, 255, 255, 0.16); }
 }
 .ogled-oder-gumb:active .ogled-oder-ikona { transform: scale(0.96); }
 .ogled-oder-gumb:focus-visible { outline: none; }
-.ogled-oder-gumb:focus-visible .ogled-oder-ikona { outline: 3px solid var(--fg); outline-offset: 6px; }
+.ogled-oder-gumb:focus-visible .ogled-oder-ikona { outline: 3px solid var(--na-temnem); outline-offset: 6px; }
 .ogled-oder-cas {
   position: absolute; right: var(--s4); bottom: var(--s4); padding: 7px 12px; border-radius: var(--radius-pill);
-  background: rgba(11, 12, 15, 0.62); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  font: 500 14px/1 var(--sans); font-variant-numeric: tabular-nums;
+  background: rgba(16, 16, 17, 0.62); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  color: var(--na-temnem); font: 500 14px/1 var(--sans); font-variant-numeric: tabular-nums;
 }
 .ogled-oder-okvir { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 3; background: #000; }
 .ogled-oder[data-pokoncno="true"] .ogled-oder-okvir { left: 50%; width: auto; aspect-ratio: 9 / 16; transform: translateX(-50%); background: transparent; }
@@ -73,12 +73,12 @@
 .poglavja[hidden] { display: none; }
 .poglavje-gumb {
   display: inline-flex; align-items: center; gap: var(--s2); height: 40px; padding: 0 var(--s4);
-  border: 1px solid rgba(242, 242, 243, 0.16); border-radius: var(--radius-pill);
-  background: rgba(19, 20, 25, 0.55); color: var(--muted); font: 400 15px/1 var(--sans); cursor: pointer;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.7); color: var(--muted); font: 400 15px/1 var(--sans); cursor: pointer;
   transition: color 160ms ease, border-color 160ms ease, background 160ms ease, transform 160ms ease;
 }
 .poglavje-cas { color: var(--subtle); font-variant-numeric: tabular-nums; transition: color 160ms ease; }
-.poglavje-gumb:hover { color: var(--fg); border-color: rgba(242, 242, 243, 0.4); }
+.poglavje-gumb:hover { color: var(--fg); border-color: rgba(var(--crnilo), 0.4); }
 .poglavje-gumb:active { transform: scale(0.97); }
 .poglavje-gumb:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .poglavje-gumb[aria-current="true"] { background: var(--fg); border-color: var(--fg); color: var(--bg); }
@@ -125,13 +125,13 @@
   height: 38px; padding: 0 var(--s4); border: 0; border-radius: var(--radius-pill); background: var(--accent); color: var(--accent-fg);
   font: 600 14px/1 var(--sans); cursor: pointer; transition: background 160ms ease, color 160ms ease, transform 160ms ease, opacity 160ms ease;
 }
-.komentar-gumb:hover:not(:disabled) { background: #8cefe5; }
+.komentar-gumb:hover:not(:disabled) { background: #000000; }
 .komentar-gumb:active:not(:disabled) { transform: scale(0.97); }
 .komentar-gumb:disabled { background: var(--surface-2); color: var(--subtle); cursor: not-allowed; }
 .komentar-gumb:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .komentar-gumb-tih { background: transparent; color: var(--fg); }
 .komentar-gumb-tih:hover:not(:disabled) { background: var(--surface-2); }
-.komentar-napaka { color: #ff9c8a; font-size: 15px; }
+.komentar-napaka { color: #c42b1c; font-size: 15px; }
 .komentar-napaka[hidden] { display: none; }
 
 .komentar-gost {
@@ -158,9 +158,9 @@
 .komentar-urejeno { color: var(--subtle); font-size: 14px; }
 .komentar-besedilo { color: var(--fg); font-size: 16px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
 .komentar-besedilo[hidden] { display: none; }
-.komentar-besedilo a { color: var(--accent); text-decoration: underline; text-decoration-color: rgba(100, 226, 214, 0.4); text-underline-offset: 3px; }
+.komentar-besedilo a { color: var(--accent); text-decoration: underline; text-decoration-color: rgba(var(--crnilo), 0.35); text-underline-offset: 3px; }
 .komentar-besedilo a:hover { text-decoration-color: var(--accent); }
-.komentar-skok { display: inline; padding: 0; border: 0; background: none; color: var(--accent); font: inherit; font-variant-numeric: tabular-nums; cursor: pointer; text-decoration: underline; text-decoration-color: rgba(100, 226, 214, 0.4); text-underline-offset: 3px; }
+.komentar-skok { display: inline; padding: 0; border: 0; background: none; color: var(--accent); font: inherit; font-variant-numeric: tabular-nums; cursor: pointer; text-decoration: underline; text-decoration-color: rgba(var(--crnilo), 0.35); text-underline-offset: 3px; }
 .komentar-skok:hover { text-decoration-color: var(--accent); }
 .komentar-skok:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
 
@@ -172,7 +172,7 @@
 }
 .komentar-dejanje:hover { background: var(--surface-2); color: var(--fg); }
 .komentar-dejanje:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-.komentar-dejanje-rdece:hover { color: #ff9c8a; }
+.komentar-dejanje-rdece:hover { color: #c42b1c; }
 .komentar-ikona { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linejoin: round; transition: transform 200ms var(--ease-out), fill 160ms ease; }
 .komentar-vsec[aria-pressed="true"] { color: var(--accent); }
 .komentar-vsec[aria-pressed="true"] .komentar-ikona { fill: var(--accent); }
@@ -183,7 +183,7 @@
 .komentar-odgovor-mesto:not(:empty) { margin-top: var(--s3); }
 
 /* nov ali povezan komentar se za trenutek poudari; izbrisan zbledi */
-.komentar::before { content: ""; position: absolute; inset: calc(-1 * var(--s3)); border-radius: var(--radius-lg); background: rgba(100, 226, 214, 0.08); opacity: 0; pointer-events: none; }
+.komentar::before { content: ""; position: absolute; inset: calc(-1 * var(--s3)); border-radius: var(--radius-lg); background: rgba(var(--crnilo), 0.05); opacity: 0; pointer-events: none; }
 .komentar-nov::before { animation: poudarek 2.6s ease forwards; }
 @keyframes poudarek { 0%, 25% { opacity: 1; } 100% { opacity: 0; } }
 .komentar-nov { animation: pride 420ms var(--ease-out); }
@@ -215,7 +215,7 @@
 /* kartice Naprej so takoj v pogledu: brez čakanja na drsenje */
 .gibanje .naprej .kartica { animation: none; }
 /* glava na strani ogleda: polna, da film in komentarji pod njo ostanejo berljivi */
-body:has(.ogled-stran) .glava { background: rgba(11, 12, 15, 0.82); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); box-shadow: 0 1px 0 0 rgba(242, 242, 243, 0.06); }
+body:has(.ogled-stran) .glava { background: rgba(var(--papir), 0.85); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); box-shadow: 0 1px 0 0 rgba(var(--crnilo), 0.08); }
 /* film brez serije (en sam film s potovanja): brez stranskega stolpca, na sredini */
 .naprej[hidden] { display: none; }
 @media (min-width: 1100px) { .ogled.ogled-sam { grid-template-columns: minmax(0, 1fr); max-width: 1180px; } }
@@ -228,7 +228,7 @@ body:has(.ogled-stran) .glava { background: rgba(11, 12, 15, 0.82); backdrop-fil
 
 .ogled-zaklep {
   position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; padding: var(--s4);
-  background: linear-gradient(to top, rgba(6, 9, 20, 0.92), rgba(6, 9, 20, 0.62)); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  background: linear-gradient(to top, rgba(var(--papir), 0.96), rgba(var(--papir), 0.82)); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
   animation: zaklep-pride 300ms var(--ease-out);
 }
 .ogled-zaklep[hidden] { display: none; }

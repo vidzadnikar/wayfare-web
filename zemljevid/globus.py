@@ -6,7 +6,7 @@ Izhod v ../stran/media/zemljevid/:
   meje.json          {"okvir": [lon0, lon1, lat0, lat1], "obale": ..., "obale_fino": ..., "svet": ..., "fino": ...}
                      lomljenke [lon, lat, ...]: obale in meje držav za svet (110m) ter podrobne
                      (50m) le v okvirju okoli krajev (privzeto −14…30, 34…54)
-  relief-4096.webp   senčen relief sveta v barvah strani (ocean temen, kopno svetlejše), 4096 × 2048
+  relief-4096.webp   (do 21. 10. 2026; zdaj ga dela relief.py) senčen relief v starih temnih barvah
   relief-2048.webp   isto za telefon
 
 Vir: Natural Earth (javna last, naturalearthdata.com): geojson iz
@@ -67,8 +67,8 @@ def main(mapa, tif=None, okvir=(-14, 30, 34, 54)):
     pot = CILJ / "meje.json"
     pot.write_text(json.dumps(meje, separators=(",", ":")), encoding="utf-8")
     print(f"meje.json: {pot.stat().st_size // 1000} kB ({len(meje['obale'])} obal, {len(meje['svet'])} mej)")
-    if tif:
-        relief(tif)
+    if tif:  # od 21. 10. 2026 relief v barvah Svinčnik dela relief.py; ta bi ga prepisal s starim
+        raise SystemExit("Relief dela relief.py (višine NASA GEBCO), ne globus.py.")
 
 
 if __name__ == "__main__":

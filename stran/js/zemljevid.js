@@ -1,5 +1,6 @@
-// Zemljevid krajev s filmi: 3D globus (Three.js) s senčenim reliefom v barvah
-// strani, obalami in mejami držav kot črtami, zvezdami in potjo med kraji po vrsti
+// Zemljevid krajev s filmi: 3D globus (Three.js) kot reliefni globus na papirju
+// (od 21. 10. 2026: relief iz višin NASA GEBCO v barvah Svinčnik, zemljevid/relief.py),
+// obale in meje držav kot grafitne črte, rdeča pot med kraji po vrsti
 // potovanj. Vrti se sam, z miško ali prstom ga vlečeš; približaš z gumboma, s
 // ščipom ali s ⌘/Ctrl + koleščkom (navaden kolešček drsi po strani naprej, da
 // globus ne ujame obiskovalca); klik na kraj ga obrne in približa ter pod
@@ -74,29 +75,28 @@ export function zemljevid(obmocje, { gsap, koren }) {
     scene.add(skupina);
 
     // relief: senčena karta sveta v barvah strani, na telefonu manjša; UV krogle se ujema s tocka()
-    const relief = new THREE.TextureLoader().load(koren + (innerWidth < 640 ? "media/zemljevid/relief-2048.webp" : "media/zemljevid/relief-4096.webp"));
+    const relief = new THREE.TextureLoader().load(koren + (innerWidth < 640 ? "media/zemljevid/relief-4096.webp" : "media/zemljevid/relief-8192.webp"));
     relief.colorSpace = THREE.SRGBColorSpace; relief.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
     skupina.add(new THREE.Mesh(new THREE.SphereGeometry(1, 160, 120), new THREE.MeshStandardMaterial({ map: relief, roughness: 1, metalness: 0 })));
-    const luc = new THREE.DirectionalLight(0xffffff, 1.5); luc.position.set(-2, 2.5, 3); scene.add(luc);
-    scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+    // luč z leve zgoraj kot okno ob mizi; ambient je močan, da ostane tudi senčna stran papirnata
+    const luc = new THREE.DirectionalLight(0xfff8ef, 1.35); luc.position.set(-2.2, 2.4, 3); scene.add(luc);
+    scene.add(new THREE.AmbientLight(0xffffff, 1.85));
 
-    // sij ob robu (fresnel na zadnji strani malo večje krogle)
-    skupina.add(new THREE.Mesh(new THREE.SphereGeometry(1.07, 96, 64), new THREE.ShaderMaterial({
-      transparent: true, side: THREE.BackSide, depthWrite: false, blending: THREE.AdditiveBlending,
-      uniforms: { barva: { value: new THREE.Color(0x64e2d6) } },
-      vertexShader: `varying vec3 n; varying vec3 p; void main(){ n = normalize(normalMatrix * normal); p = (modelViewMatrix * vec4(position,1.0)).xyz; gl_Position = projectionMatrix * vec4(p,1.0); }`,
-      fragmentShader: `uniform vec3 barva; varying vec3 n; varying vec3 p; void main(){ float f = pow(1.0 - abs(dot(normalize(-p), n)), 3.2); gl_FragColor = vec4(barva, f * 0.5); }`,
-    })));
+    // mehka senca pod globusom: krog z mehkim robom za kroglo, malo pod njo na zaslonu
+    const senca = new THREE.Sprite(new THREE.SpriteMaterial({ depthWrite: false, transparent: true, map: (() => {
+      const c = document.createElement("canvas"); c.width = c.height = 256;
+      const x = c.getContext("2d"), g = x.createRadialGradient(128, 128, 0, 128, 128, 128);
+      g.addColorStop(0, "rgba(26,26,28,0.30)"); g.addColorStop(0.72, "rgba(26,26,28,0.20)"); g.addColorStop(1, "rgba(26,26,28,0)");
+      x.fillStyle = g; x.fillRect(0, 0, 256, 256);
+      return new THREE.CanvasTexture(c);
+    })() }));
+    senca.scale.setScalar(2.55); senca.renderOrder = -1;
+    scene.add(senca);
 
     const tocka = (lon, lat, r = 1) => {
       const fi = (90 - lat) * Math.PI / 180, th = (lon + 180) * Math.PI / 180;
       return new THREE.Vector3(-r * Math.sin(fi) * Math.cos(th), r * Math.cos(fi), r * Math.sin(fi) * Math.sin(th));
     };
-    const sprite = (() => {
-      const c = document.createElement("canvas"); c.width = c.height = 64;
-      const x = c.getContext("2d"); x.fillStyle = "#fff"; x.beginPath(); x.arc(32, 32, 28, 0, 6.2832); x.fill();
-      return new THREE.CanvasTexture(c);
-    })();
 
     // črte po krogli: dolgi odseki razdeljeni, da sledijo ukrivljenosti
     function crte(seznam, r, opacity) {
@@ -114,31 +114,22 @@ export function zemljevid(obmocje, { gsap, koren }) {
       }
       const g = new THREE.BufferGeometry();
       g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
-      const o = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: 0xefe9df, transparent: true, opacity }));
+      const o = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: 0x1a1a1c, transparent: true, opacity }));
       skupina.add(o);
       return o;
     }
     let obaleZnotraj, obaleFino, mejeZnotraj, mejeFino;
+    const OBALE = 0.32, MEJE = 0.16;  // grafitne črte na reliefu, meje tišje od obal
     fetch(koren + "media/zemljevid/meje.json").then((r) => r.json()).then((meje) => {
       const [l0, l1, b0, b1] = meje.okvir;
       const vOkviru = (l) => { for (let i = 0; i < l.length; i += 2) if (l[i] >= l0 && l[i] <= l1 && l[i + 1] >= b0 && l[i + 1] <= b1) return true; return false; };
-      crte(meje.obale.filter((l) => !vOkviru(l)), 1.003, 0.55);
-      obaleZnotraj = crte(meje.obale.filter(vOkviru), 1.003, 0.55);
+      crte(meje.obale.filter((l) => !vOkviru(l)), 1.003, OBALE);
+      obaleZnotraj = crte(meje.obale.filter(vOkviru), 1.003, OBALE);
       obaleFino = crte(meje.obale_fino, 1.003, 0);
-      crte(meje.svet.filter((l) => !vOkviru(l)), 1.003, 0.26);
-      mejeZnotraj = crte(meje.svet.filter(vOkviru), 1.003, 0.26);
+      crte(meje.svet.filter((l) => !vOkviru(l)), 1.003, MEJE);
+      mejeZnotraj = crte(meje.svet.filter(vOkviru), 1.003, MEJE);
       mejeFino = crte(meje.fino, 1.003, 0);
     }).catch(() => {});
-
-    // zvezde daleč zadaj, počasi plavajo
-    const zvezde = (() => {
-      const n = 1400, pos = new Float32Array(n * 3);
-      for (let i = 0; i < n; i++) { const v = new THREE.Vector3().randomDirection().multiplyScalar(40); pos[i * 3] = v.x; pos[i * 3 + 1] = v.y; pos[i * 3 + 2] = v.z; }
-      const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-      const p = new THREE.Points(g, new THREE.PointsMaterial({ size: 0.55, map: sprite, color: 0xefe9df, transparent: true, opacity: 0.55, alphaTest: 0.3, depthWrite: false }));
-      scene.add(p);
-      return p;
-    })();
 
     // pot med kraji po vrsti potovanj: loki po velikem krogu, malo dvignjeni, po njih potuje iskra
     const vrstni = [...kraji].sort((a, b) => (a.od < b.od ? -1 : 1));
@@ -147,8 +138,8 @@ export function zemljevid(obmocje, { gsap, koren }) {
       const a = tocka(vrstni[i - 1].lon, vrstni[i - 1].lat), b = tocka(vrstni[i].lon, vrstni[i].lat);
       const kot = a.angleTo(b), tocke = [];
       for (let k = 0; k <= 64; k++) { const t = k / 64; tocke.push(new THREE.Vector3().copy(a).lerp(b, t).normalize().multiplyScalar(1.006 + Math.sin(t * Math.PI) * kot * 0.12)); }
-      skupina.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(tocke), new THREE.LineBasicMaterial({ color: 0x64e2d6, transparent: true, opacity: 0.45 })));
-      const iskra = new THREE.Mesh(new THREE.SphereGeometry(0.007, 12, 12), new THREE.MeshBasicMaterial({ color: 0x64e2d6 }));
+      skupina.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(tocke), new THREE.LineBasicMaterial({ color: 0xff453a, transparent: true, opacity: 0.75 })));
+      const iskra = new THREE.Mesh(new THREE.SphereGeometry(0.007, 12, 12), new THREE.MeshBasicMaterial({ color: 0xff453a }));
       skupina.add(iskra);
       iskre.push({ tocke, iskra, zamik: i * 0.33 });
     }
@@ -156,9 +147,9 @@ export function zemljevid(obmocje, { gsap, koren }) {
     // kraji: krogla in utripajoč obroč
     const kroglice = kraji.map((k) => {
       const p = tocka(k.lon, k.lat, 1.008);
-      const m = new THREE.Mesh(new THREE.SphereGeometry(0.011, 16, 16), new THREE.MeshBasicMaterial({ color: 0x64e2d6 }));
+      const m = new THREE.Mesh(new THREE.SphereGeometry(0.011, 16, 16), new THREE.MeshBasicMaterial({ color: 0xff453a }));
       m.position.copy(p); skupina.add(m);
-      const o = new THREE.Mesh(new THREE.RingGeometry(0.018, 0.023, 40), new THREE.MeshBasicMaterial({ color: 0x64e2d6, transparent: true, opacity: 0.8, side: THREE.DoubleSide, depthWrite: false }));
+      const o = new THREE.Mesh(new THREE.RingGeometry(0.018, 0.023, 40), new THREE.MeshBasicMaterial({ color: 0xff453a, transparent: true, opacity: 0.8, side: THREE.DoubleSide, depthWrite: false }));
       o.position.copy(p); o.lookAt(p.clone().multiplyScalar(2)); skupina.add(o);
       return { kraj: k, krogla: m, obroc: o, faza: Math.random() * 3 };
     });
@@ -262,11 +253,12 @@ export function zemljevid(obmocje, { gsap, koren }) {
       skupina.rotation.set(vrt.x, vrt.y, 0);
       skupina.updateMatrixWorld();
       camera.position.set(0, Math.sin(NAGIB) * d, Math.cos(NAGIB) * d); camera.lookAt(0, 0, 0);
-      zvezde.rotation.y += 0.004 * dt;
+      // senca ostane pod globusom na zaslonu, ne glede na nagib kamere
+      senca.position.set(0, -0.07, 0).applyQuaternion(camera.quaternion).addScaledVector(camera.position, -0.12 / d);
 
       // v okvirju krajev ob približanju grobe črte (110m) zamenjajo podrobne (50m)
       const fino = 1 - smoothstep(d, 1.7, 2.2);
-      if (obaleFino) { obaleZnotraj.material.opacity = 0.55 * (1 - fino); obaleFino.material.opacity = 0.6 * fino; mejeZnotraj.material.opacity = 0.26 * (1 - fino); mejeFino.material.opacity = 0.3 * fino; }
+      if (obaleFino) { obaleZnotraj.material.opacity = OBALE * (1 - fino); obaleFino.material.opacity = (OBALE + 0.05) * fino; mejeZnotraj.material.opacity = MEJE * (1 - fino); mejeFino.material.opacity = (MEJE + 0.04) * fino; }
       gumbVse.hidden = d > DALEC() * 0.75;
       if (!namig.hidden && t > namigDo) namig.hidden = true;
 

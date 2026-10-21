@@ -367,8 +367,8 @@ function studio() {
   };
   plosca(7, 4, 6, 0xffffff, -6, 7, 5);
   plosca(1.2, 10, 4, 0xffffff, 8, 0, 1);
-  plosca(10, 2, 3, 0xdfe4ff, 0, 8, -6);
-  plosca(5, 5, 1.5, 0x8a7dff, -8, -2, -4);
+  plosca(10, 2, 3, 0xf3f1ec, 0, 8, -6);
+  plosca(5, 5, 1.5, 0xf3e6dc, -8, -2, -4);
   plosca(30, 4, 0.25, 0xffffff, 0, -9, 0);
   return okolje;
 }
@@ -377,7 +377,7 @@ function luci(scena) {
   // pri fizikalnih enotah da jakost π na beli ploskvi polno barvo
   const kljucna = new THREE.DirectionalLight(0xffffff, 3.2);
   kljucna.position.set(2.5, 3.5, 6);
-  const obrobna = new THREE.DirectionalLight(0xc4caff, 1.8);
+  const obrobna = new THREE.DirectionalLight(0xfff3ea, 1.8);
   obrobna.position.set(-4, 2.5, -3);
   const zadnja = new THREE.DirectionalLight(0xffffff, 2.0);
   zadnja.position.set(2, 2, -6);

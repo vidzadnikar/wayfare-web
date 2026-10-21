@@ -8,15 +8,15 @@ import { povezi } from "./kopiraj.js";
 
 const { gsap, ScrollTrigger, lenis } = zazeniDrsenje();
 if (!mirno) document.documentElement.classList.add("gibanje");
-const koren = document.querySelector('link[rel="icon"]').getAttribute("href").replace("media/logo.svg", "");
+const koren = document.querySelector('link[rel="icon"]').getAttribute("href").replace(/media\/logo\.svg.*$/, "");
 
 // 3D znak desno nad mestom: razmakne se pri kazalcu, z vlečenjem se vrti.
 // Naloži se šele, ko je stran prikazana (po dogodku load, ko je brskalnik
 // prost), da naslov in gumb ne čakata na three.js in model.
 function naloziZnak() {
   znak(document.querySelector("[data-znak]"), {
-    model: koren + "model/wayfare-znak-kosi.glb",
-    notranjost: { barva: 0x64e2d6, sij: 1.6 },
+    model: koren + "model/wayfare-znak-kosi.glb?v=2",  // ?v: nove barve (21. 10. 2026) mimo predpomnilnika
+    notranjost: { barva: 0xff453a, sij: 1.1 },  // razpoke žarijo rdeče (Svinčnik)
     velikost: (w, h) => (w / h < 0.8 ? 0.6 : 0.42),
     zamik: (w, h) => (w / h < 0.8 ? [0, 0.24] : [0.22, 0.1]),
   });

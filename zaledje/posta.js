@@ -45,13 +45,13 @@ export const T = {
   },
 };
 
-// Barve in pisave iz strani (stran/css/slog.css): temnomodra podlaga, kremno
-// besedilo, turkizna le na gumbu. Pošta je temna kot stran; color-scheme
-// "dark" odjemalcem pove, naj je ne obračajo.
+// Barve in pisave iz strani (stran/css/slog.css, Svinčnik od 21. 10. 2026):
+// papirnata podlaga, bela kartica, grafitno besedilo in gumb. Pošta je svetla
+// kot stran; color-scheme "light" odjemalcem pove, naj je ne obračajo.
 const B = {
-  bg: "#0b1020", surface: "#121a30", border: "#232c45",
-  fg: "#efe9df", muted: "#a3abbe", subtle: "#858ea6",
-  accent: "#64e2d6", accentFg: "#0b1020",
+  bg: "#f3f1ec", surface: "#ffffff", border: "#e4e0d8",
+  fg: "#1a1a1c", muted: "#6b6862", subtle: "#75716a",
+  accent: "#1a1a1c", accentFg: "#f5f5f4",
 };
 const SANS = "'Instrument Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 const SERIF = "'Instrument Serif','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif";
@@ -82,7 +82,7 @@ const gumbHtml = (gumb) => `<table role="presentation" cellpadding="0" cellspaci
 <a href="${pobegni(gumb.url)}" style="display:inline-block;padding:14px 28px;font:600 15px/20px ${SANS};color:${B.accentFg};text-decoration:none;border-radius:999px">${pobegni(gumb.besedilo)}&nbsp;&rarr;</a>
 </td></tr></table>`;
 
-// Temna pošta v slogu strani. `odstavki` so že HTML (odstavekHtml), drugo se
+// Svetla pošta v slogu strani. `odstavki` so že HTML (odstavekHtml), drugo se
 // pobegne tu. Struktura s tabelami in slogi v vrstici, ker jo tako pokaže
 // vsak odjemalec (Gmail, Apple Mail, Outlook).
 function ovoj({ jezik, koren, naslov, predogled, slika, slikaUrl, uvod, odstavki, vsebina = "", gumb, opomba, noga, odjavaUrl }) {
@@ -98,11 +98,11 @@ function ovoj({ jezik, koren, naslov, predogled, slika, slikaUrl, uvod, odstavki
   return `<!doctype html>
 <html lang="${jezik}" xmlns="http://www.w3.org/1999/xhtml"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="color-scheme" content="dark"><meta name="supported-color-schemes" content="dark">
+<meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light">
 <meta name="x-apple-disable-message-reformatting">
 <title>${pobegni(naslov)}</title>
 <style>
-:root{color-scheme:dark;supported-color-schemes:dark}
+:root{color-scheme:light;supported-color-schemes:light}
 body{margin:0!important;padding:0!important;-webkit-text-size-adjust:100%}
 a{color:${B.fg}}
 @media (max-width:600px){

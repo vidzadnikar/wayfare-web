@@ -42,10 +42,12 @@ TURKIZNA_VISINA = 50.0      # nižja od vijolične, da leži pod njo
 TURKIZNA_ROB = 24.0         # obroč okoli luknje je na vrhu širok le 59 px
 LOK_DELI = 10               # razdelki četrtine kroga na robu
 
+# Barve Svinčnik od 21. 10. 2026 (prej #10182b, #64e2d6, #766bfb). Ključa
+# »turkizna« (oznaka kraja) in »vijolicna« (V) sta ostala kot imeni oblik.
 BARVE = {
-    "ploscica": "#10182b",
-    "turkizna": "#64e2d6",
-    "vijolicna": "#766bfb",
+    "ploscica": "#f3f1ec",
+    "turkizna": "#ff453a",
+    "vijolicna": "#1a1a1c",
 }
 
 
@@ -359,8 +361,8 @@ def main():
     print(f"točk po glajenju: vijolična {len(vijolicna)}, turkizna {len(turkizna)}")
 
     mat_p = material("Ploscica", BARVE["ploscica"], 0.34, 1.0, 0.06)
-    mat_t = material("Turkizna", BARVE["turkizna"], 0.30, 0.6, 0.10)
-    mat_v = material("Vijolicna", BARVE["vijolicna"], 0.30, 0.6, 0.10)
+    mat_t = material("Rdeca", BARVE["turkizna"], 0.30, 0.6, 0.10)
+    mat_v = material("Grafit", BARVE["vijolicna"], 0.30, 0.6, 0.10)
 
     pol = PLOSCICA_DEBELINA / 2 * S
     vrh = pol  # zgornja ploskev ploščice; ploščica je središčena v z = 0

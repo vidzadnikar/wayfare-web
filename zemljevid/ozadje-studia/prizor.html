@@ -1,0 +1,81 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+html,body{margin:0;width:3840px;height:2160px;overflow:hidden;
+  background:radial-gradient(ellipse 75% 80% at 50% 45%,#fbfaf7 0%,#f2efe9 58%,#e6e2d9 100%)}
+canvas{display:block}
+</style>
+<script type="importmap">{"imports":{"three":"/js/knjiznice/three/three.module.min.js"}}</script>
+</head><body>
+<script type="module">
+import * as THREE from "three";
+const W = 3840, H = 2160;
+const KRAJI = [["Barcelona",2.173,41.385],["Rim",12.496,41.903],["Budimpešta",19.04,47.498],["Malta",14.51,35.9],["Madrid",-3.704,40.417],["Milano",9.19,45.464]];
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H); renderer.setClearColor(0, 0);
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(30, W / H, 0.05, 100);
+const skupina = new THREE.Group(); scene.add(skupina);
+const tocka = (lon, lat, r = 1) => {
+  const fi = (90 - lat) * Math.PI / 180, th = (lon + 180) * Math.PI / 180;
+  return new THREE.Vector3(-r * Math.sin(fi) * Math.cos(th), r * Math.cos(fi), r * Math.sin(fi) * Math.sin(th));
+};
+const tex = await new THREE.TextureLoader().loadAsync("/media/zemljevid/relief-8192.webp");
+tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+tex.generateMipmaps = true; tex.minFilter = THREE.LinearMipmapLinearFilter;
+skupina.add(new THREE.Mesh(new THREE.SphereGeometry(1, 384, 256), new THREE.MeshStandardMaterial({ map: tex, roughness: 1, metalness: 0 })));
+const luc = new THREE.DirectionalLight(0xfff8ef, 1.35); luc.position.set(-2.2, 2.4, 3); scene.add(luc);
+scene.add(new THREE.AmbientLight(0xffffff, 1.85));
+// mehka senca za globusom (kot na strani): temnejši rob na papirju
+const senca = new THREE.Sprite(new THREE.SpriteMaterial({ depthWrite: false, transparent: true, map: (() => {
+  const c = document.createElement("canvas"); c.width = c.height = 512;
+  const x = c.getContext("2d"), g = x.createRadialGradient(256, 256, 0, 256, 256, 256);
+  g.addColorStop(0, "rgba(26,26,28,0.30)"); g.addColorStop(0.76, "rgba(26,26,28,0.20)"); g.addColorStop(1, "rgba(26,26,28,0)");
+  x.fillStyle = g; x.fillRect(0, 0, 512, 512); return new THREE.CanvasTexture(c);
+})() }));
+senca.scale.setScalar(2.45); scene.add(senca);
+
+// pot med kraji po vrsti potovanj: rdeča cev v loku po velikem krogu
+const RDECA = 0xff453a;
+const vrstni = KRAJI;
+for (let i = 1; i < vrstni.length; i++) {
+  const a = tocka(vrstni[i - 1][1], vrstni[i - 1][2]), b = tocka(vrstni[i][1], vrstni[i][2]);
+  const kot = a.angleTo(b), tocke = [];
+  for (let k = 0; k <= 96; k++) { const t = k / 96; tocke.push(new THREE.Vector3().copy(a).lerp(b, t).normalize().multiplyScalar(1.003 + Math.sin(t * Math.PI) * kot * 0.14)); }
+  const krivulja = new THREE.CatmullRomCurve3(tocke);
+  skupina.add(new THREE.Mesh(new THREE.TubeGeometry(krivulja, 160, 0.0011, 8, false), new THREE.MeshBasicMaterial({ color: RDECA, transparent: true, opacity: 0.8 })));
+}
+const obroci = [];
+for (const [ime, lon, lat] of KRAJI) {
+  const p = tocka(lon, lat, 1.002);
+  const pika = new THREE.Mesh(new THREE.CircleGeometry(0.0062, 48), new THREE.MeshBasicMaterial({ color: RDECA }));
+  pika.position.copy(p); pika.lookAt(p.clone().multiplyScalar(2)); skupina.add(pika);
+  const obroc = new THREE.Mesh(new THREE.RingGeometry(0.0085, 0.0105, 64), new THREE.MeshBasicMaterial({ color: RDECA, transparent: true, opacity: 0.6, depthWrite: false }));
+  obroc.position.copy(p); obroc.lookAt(p.clone().multiplyScalar(2)); skupina.add(obroc);
+  obroci.push({ obroc, faza: obroci.length / KRAJI.length });
+}
+
+const NAGIB = 0.61, d = 2.75;
+const azimut = (lon, lat) => { const p = tocka(lon, lat); return Math.atan2(p.x, p.z); };
+const SREDISCE = [8, 44];   // Evropa med kraji
+camera.position.set(0, Math.sin(NAGIB) * d, Math.cos(NAGIB) * d);
+// pogled malo nad središče: globus leži nižje, zgoraj se vidi obzorje
+camera.lookAt(new THREE.Vector3(0, 0.44, 0));
+camera.updateMatrixWorld();
+senca.position.set(0, -0.05, 0).applyQuaternion(camera.quaternion).addScaledVector(camera.position, -0.12 / d);
+
+// t v sekundah; zanka traja T sekund (zibanje okoli Evrope, obroči utripajo)
+window.izrisi = (t, T = 24) => {
+  const nihaj = Math.sin(2 * Math.PI * t / T);
+  skupina.rotation.set(SREDISCE[1] * Math.PI / 180 - NAGIB + 0.012 * Math.sin(4 * Math.PI * t / T), -azimut(...SREDISCE) + 0.12 * nihaj, 0);
+  for (const o of obroci) {
+    const f = ((t / (T / 8)) + o.faza) % 1;
+    o.obroc.scale.setScalar(0.7 + f * 1.9); o.obroc.material.opacity = 0.65 * (1 - f);
+  }
+  renderer.render(scene, camera);
+};
+window.izrisi(0);
+window.pripravljeno = true;
+</script>
+</body></html>

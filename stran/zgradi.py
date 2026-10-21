@@ -10,6 +10,7 @@ Strani:
     predloga-odziv.html  → odziv/index.html in sl/odziv/index.html (obrazec za odziv testerjev)
     predloga-ogled.html  → vlogi/<oznaka>/index.html in sl/vlogi/<oznaka>/index.html (vsak vlog)
     predloga-pogoji.html → pogoji/index.html in sl/pogoji/index.html (pogoji naročnine)
+    predloga-sayfare.html → sayfare/index.html in sl/sayfare/index.html (aplikacija Sayfare)
 
 Besedila so v besedila.json; ključ {{x}} v predlogi se zamenja z vrednostjo.
 Vrednosti so zaupanja vredno besedilo z dovoljeno oznako (<em>, <br>).
@@ -47,6 +48,7 @@ STRANI = {
     "zasebnost": dict(predloga="predloga-zasebnost.html", izhod={"en": "zasebnost/index.html", "sl": "sl/zasebnost/index.html"}),
     "novosti": dict(predloga="predloga-novosti.html", izhod={"en": "novosti/index.html", "sl": "sl/novosti/index.html"}),
     "odziv": dict(predloga="predloga-odziv.html", izhod={"en": "odziv/index.html", "sl": "sl/odziv/index.html"}),
+    "sayfare": dict(predloga="predloga-sayfare.html", izhod={"en": "sayfare/index.html", "sl": "sl/sayfare/index.html"}),
     # pogoji naročnine (predloga-pogoji.html) se zgradijo šele, ko bo naročnina vklopljena:
     # "pogoji": dict(predloga="predloga-pogoji.html", izhod={"en": "pogoji/index.html", "sl": "sl/pogoji/index.html"}),
     "napaka": dict(predloga="predloga-404.html", izhod={"en": "404.html", "sl": "sl/404.html"}),
@@ -184,6 +186,34 @@ OBTAINIUM_HREF = ("https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/
                 "author": "vidzadnikar", "name": "Wayfare Studio"}, separators=(",", ":")), safe=""))
 
 
+# Sayfare (narekovanje, ~/Claude/claude/Sayfare): paket prenos/Sayfare-<različica>.dmg
+# je na isti strani GitHub Releases kot Wayfare, pod oznako sayfare-v<različica>.
+# Brez paketa doma velja zadnji zapis sayfare.json. Za Windows in Android ga še ni.
+SAYFARE_URL = "https://github.com/vidzadnikar/wayfare-web/releases/download/sayfare-v{razlicica}/{ime}"
+
+
+def sayfare_prenos():
+    zapis = Path(TU, "sayfare.json")
+    paketi = sorted(Path(TU, "prenos").glob("Sayfare-*.dmg"), key=lambda p: p.stat().st_mtime)
+    if not paketi:
+        if zapis.is_file():
+            return json.load(open(zapis, encoding="utf-8"))
+        raise SystemExit("Ni paketa Sayfare (prenos/Sayfare-<različica>.dmg) in ne sayfare.json.")
+    dmg = paketi[-1]
+    razlicica = re.search(r"Sayfare-(.+)\.dmg$", dmg.name)[1]
+    podatki = {"url": SAYFARE_URL.format(razlicica=razlicica, ime=dmg.name), "ime": dmg.name,
+               "razlicica": razlicica, "velikost": f"{max(1, round(dmg.stat().st_size / 1e6))} MB",
+               "sha256": vsota_sha256(dmg)}
+    zapis.write_text(json.dumps(podatki, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    return podatki
+
+
+# Gumb Prenos v glavi: na strani Sayfare skoči na njen prenos, drugje prenese Wayfare.
+GLAVA_PRENOS = ('<a class="gumb gumb-majhen" href="{{prenos_href}}" download data-prenos '
+                'data-prenos-windows="{{prenos_windows_href}}" data-prenos-android="{{prenos_android_href}}">{{nav_prenos}}</a>')
+GLAVA_PRENOS_SAYFARE = '<a class="gumb gumb-majhen" href="#prenos">{{nav_prenos}}</a>'
+
+
 def vsota_sha256(pot):
     vsota = hashlib.sha256()
     with open(pot, "rb") as f:
@@ -294,17 +324,20 @@ def poti(stran, jezik):
     zasebnost = STRANI["zasebnost"]["izhod"][jezik]
     novosti = STRANI["novosti"]["izhod"][jezik]
     odziv = STRANI["odziv"]["izhod"][jezik]
+    sayfare = STRANI["sayfare"]["izhod"][jezik]
     pogoji = STRANI["pogoji"]["izhod"][jezik] if "pogoji" in STRANI else zasebnost  # brez strani Pogoji kaže na zasebnost
     if stran == "napaka":
         absolutna = lambda do: "/" + do.removesuffix("index.html")
         koren, pot_dom = "/", absolutna(dom)
         url_en, url_sl, pot_vlogi, pot_zasebnost = absolutna(en), absolutna(sl), absolutna(vlogi), absolutna(zasebnost)
         pot_novosti, pot_odziv, pot_pogoji = absolutna(novosti), absolutna(odziv), absolutna(pogoji)
+        pot_sayfare = absolutna(sayfare)
     else:
         koren, pot_dom = relmapa(ta, "index.html"), relmapa(ta, dom)
         url_en, url_sl = relmapa(ta, en, "./"), relmapa(ta, sl, "./")
         pot_vlogi, pot_zasebnost = relmapa(ta, vlogi, "./"), relmapa(ta, zasebnost, "./")
         pot_novosti, pot_odziv, pot_pogoji = relmapa(ta, novosti, "./"), relmapa(ta, odziv, "./"), relmapa(ta, pogoji, "./")
+        pot_sayfare = relmapa(ta, sayfare, "./")
     return {
         "lang": jezik,
         "koren": koren,
@@ -316,6 +349,7 @@ def poti(stran, jezik):
         "pot_novosti": pot_novosti,
         "pot_odziv": pot_odziv,
         "pot_pogoji": pot_pogoji,
+        "pot_sayfare": pot_sayfare,
         "en_aktiven": 'aria-current="page"' if jezik == "en" else "",
         "sl_aktiven": 'aria-current="page"' if jezik == "sl" else "",
         "vlogi_aktiven": ' aria-current="page"' if stran == "vlogi" or stran.startswith("ogled:") else "",
@@ -323,6 +357,7 @@ def poti(stran, jezik):
         "novosti_aktiven": ' aria-current="page"' if stran == "novosti" else "",
         "odziv_aktiven": ' aria-current="page"' if stran == "odziv" else "",
         "pogoji_aktiven": ' aria-current="page"' if stran == "pogoji" else "",
+        "sayfare_aktiven": ' aria-current="page"' if stran == "sayfare" else "",
         "_drug": drug,
         "_ta": ta,
     }
@@ -750,7 +785,7 @@ def meta(html_, stran, jezik, b):
     dodatno += [
         '<link rel="apple-touch-icon" href="/media/apple-touch-icon.png">',
         '<link rel="manifest" href="/manifest.webmanifest">',
-        '<meta name="theme-color" content="#0b0c0f">',
+        '<meta name="theme-color" content="#f3f1ec">',
     ]
     podatki = strukturirani(stran, jezik, b, url, slika, opis)
     if podatki:
@@ -782,6 +817,13 @@ def strukturirani(stran, jezik, b, url, slika, opis):
             podatki["isAccessibleForFree"] = False
             podatki["hasPart"] = {"@type": "WebPageElement", "isAccessibleForFree": False, "cssSelector": ".ogled-oder"}
         return podatki
+    if stran == "sayfare":
+        return {
+            "@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Sayfare",
+            "applicationCategory": "UtilitiesApplication", "operatingSystem": "macOS 14+",
+            "softwareVersion": sayfare_prenos()["razlicica"], "description": opis, "url": url, "image": slika,
+            "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"},
+        }
     return None
 
 
@@ -803,7 +845,7 @@ def zemljevid_strani():
 
 MANIFEST = {
     "name": "Wayfare Studio", "short_name": "Wayfare", "start_url": "/", "display": "browser",
-    "background_color": "#0b0c0f", "theme_color": "#0b0c0f",
+    "background_color": "#f3f1ec", "theme_color": "#f3f1ec",
     "icons": [{"src": "/media/ikona-192.png", "sizes": "192x192", "type": "image/png"},
               {"src": "/media/ikona-512.png", "sizes": "512x512", "type": "image/png"}],
 }
@@ -962,6 +1004,9 @@ def main():
     # velikost brez pike spredaj (" · 312 MB" → "312 MB") za stavke na karticah naprav
     paket["prenos_windows_mb"] = paket["prenos_windows_velikost"].strip(" ·") or "Windows"
     paket["prenos_android_mb"] = paket["prenos_android_velikost"].strip(" ·") or "Android"
+    sf = sayfare_prenos()
+    sayfare = {"sayfare_href": sf["url"], "sayfare_razlicica": sf["razlicica"],
+               "sayfare_velikost": f", {sf['velikost']}" if sf.get("velikost") else ""}
     male_slike()
     # okvir YouTuba rabijo le brezplačni vlogi; plačljivi igrajo iz R2 (<video>)
     okvirji = any(v.get("youtube") and je_brezplacen(v) for v in vlogi_podatki())
@@ -977,7 +1022,8 @@ def main():
         predloga = open(os.path.join(TU, s["predloga"]), encoding="utf-8").read()
         for jezik in ("en", "sl"):
             p = poti(stran, jezik)
-            b = {**besedila[jezik], **{k: v for k, v in p.items() if not k.startswith("_")}, **podjetje}
+            b = {**besedila[jezik], **{k: v for k, v in p.items() if not k.startswith("_")}, **podjetje, **sayfare}
+            b["glava_prenos"] = GLAVA_PRENOS_SAYFARE if stran == "sayfare" else GLAVA_PRENOS
             if ANALITIKA:
                 b["zasebnost_6_besedilo"] += " " + b["zasebnost_analitika"]
             if stran == "vlogi":
