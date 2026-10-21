@@ -379,6 +379,8 @@ p { text-wrap: pretty; }
 /* Ovoj nosi prihod gumba ob drsenju (GSAP), gumb sam pa stanje predvajanja.
    Če bi oboje šlo na isti element, bi vrstični slog iz GSAP povozil skrivanje. */
 .kino-gumb-ovoj { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; pointer-events: none; }
+/* Naslovna slika filma je logotip na sredini, zato gumb stoji pod njim, ne čezenj. */
+.kino .kino-gumb-ovoj { place-items: end center; padding-bottom: 9%; }
 .kino-gumb {
   pointer-events: auto;
   display: inline-flex; align-items: center; gap: var(--s3);
@@ -396,6 +398,12 @@ p { text-wrap: pretty; }
 .kino-okvir[data-stanje="nalaga"] .kino-gumb { opacity: 0.6; }
 .kino-napaka { display: none; position: absolute; left: var(--s5); bottom: var(--s5); color: rgba(255, 255, 255, 0.7); font-size: 14px; }
 .kino-okvir[data-stanje="napaka"] .kino-napaka { display: block; }
+@media (max-width: 640px) {
+  .kino .kino-gumb-ovoj { padding-bottom: 4%; }
+  .kino .kino-gumb { height: 38px; gap: var(--s2); padding: 0 var(--s4) 0 6px; font-size: 13px; }
+  .kino .kino-ikona { width: 26px; height: 26px; }
+  .kino .kino-ikona::after { left: 10px; top: 8px; border-left-width: 8px; border-top-width: 5px; border-bottom-width: 5px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .kino-pin { height: auto; padding: var(--s10) var(--rob); gap: var(--s7); }
   .kino-naslov { position: static; }
