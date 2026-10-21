@@ -48,6 +48,7 @@ export const T = {
 // Barve in pisave iz strani (stran/css/slog.css, Svinčnik od 21. 10. 2026):
 // papirnata podlaga, bela kartica, grafitno besedilo in gumb. Pošta je svetla
 // kot stran; color-scheme "light" odjemalcem pove, naj je ne obračajo.
+// Logotip ima ?v=2: Gmail in stran (7 dni) hranita staro sliko pod istim naslovom.
 const B = {
   bg: "#f3f1ec", surface: "#ffffff", border: "#e4e0d8",
   fg: "#1a1a1c", muted: "#6b6862", subtle: "#75716a",
@@ -119,7 +120,7 @@ a{color:${B.fg}}
 
 <tr><td style="padding:0 0 24px">
 <a href="${pobegni(domov)}" style="text-decoration:none"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
-<td style="vertical-align:middle"><img src="${koren}/media/posta/logo.png" width="36" height="36" alt="" style="display:block;border:0;border-radius:9px"></td>
+<td style="vertical-align:middle"><img src="${koren}/media/posta/logo.png?v=2" width="36" height="36" alt="" style="display:block;border:0;border-radius:9px"></td>
 <td style="vertical-align:middle;padding-left:12px;font:600 16px/20px ${SANS};color:${B.fg};letter-spacing:-0.01em">Wayfare Studio</td>
 </tr></table></a>
 </td></tr>
