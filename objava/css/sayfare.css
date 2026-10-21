@@ -85,6 +85,21 @@ kbd {
 @keyframes sf-pritisk { 40% { transform: translateY(2px); box-shadow: 0 0 0 var(--border-strong); } }
 @keyframes sf-pritisk-2 { 40% { transform: translateY(2px); box-shadow: 0 0 0 var(--border-strong); } }
 
+/* -------------------------------------------------- film: platno iz kina na domači strani (slog.css), tu le postavitev */
+.sf-film { display: grid; gap: var(--s7); justify-items: center; max-width: 1320px; margin-inline: auto; padding: var(--s9) var(--rob) var(--s6); }
+.sf-film h2 { justify-self: start; font-size: clamp(40px, 5.6vw, 88px); max-width: 16ch; }
+.sf-film-okvir, .sf-film-okvir video { background: var(--bg); }
+.sf-film-okvir video { display: block; }
+.sf-film-okvir .kino-napaka { color: var(--muted); }
+/* gumb pod napisom na naslovni sliki, ne čezenj */
+.sf-film-okvir .kino-gumb-ovoj { place-items: end center; padding-bottom: 9%; }
+@media (max-width: 640px) {
+  .sf-film-okvir .kino-gumb-ovoj { padding-bottom: 4%; }
+  .sf-film-okvir .kino-gumb { height: 38px; gap: var(--s2); padding: 0 var(--s4) 0 6px; font-size: 13px; }
+  .sf-film-okvir .kino-ikona { width: 26px; height: 26px; }
+  .sf-film-okvir .kino-ikona::after { left: 10px; top: 8px; border-left-width: 8px; border-top-width: 5px; border-bottom-width: 5px; }
+}
+
 /* -------------------------------------------------- koraki */
 .sf-koraki-odsek { padding: clamp(var(--s8), 12vw, var(--s10)) var(--rob) var(--s9); display: grid; gap: var(--s8); max-width: 1320px; margin-inline: auto; }
 .sf-koraki-odsek h2, .sf-lastnosti-odsek h2 { font-size: clamp(40px, 5.6vw, 88px); max-width: 16ch; }

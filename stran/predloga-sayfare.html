@@ -61,6 +61,21 @@
     </figure>
   </section>
 
+  <!-- Promo film v jeziku strani: naslovna slika in gumb, ob kliku z zvokom. -->
+  <section class="sf-film" id="film" aria-labelledby="sf-film-naslov">
+    <h2 id="sf-film-naslov" class="serif" data-naslov>{{sayfare_film_naslov}}</h2>
+    <div class="kino-okvir sf-film-okvir" data-promo data-sf-film data-stanje="pripravljen">
+      <video preload="none" playsinline poster="{{koren}}media/sayfare/film-{{lang}}.jpg" aria-label="{{sayfare_film_oznaka}}">
+        <source src="{{koren}}media/sayfare/film-{{lang}}-4k.mp4" type="video/mp4" media="(min-width: 1100px)">
+        <source src="{{koren}}media/sayfare/film-{{lang}}.mp4" type="video/mp4">
+      </video>
+      <div class="kino-gumb-ovoj">
+        <button class="kino-gumb" type="button" data-predvajaj><span class="kino-ikona" aria-hidden="true"></span>{{kino_gumb}}</button>
+      </div>
+      <p class="kino-napaka" role="status">{{kino_napaka}} <a href="{{koren}}media/sayfare/film-{{lang}}.mp4">{{kino_napaka_povezava}}</a>.</p>
+    </div>
+  </section>
+
   <section class="sf-koraki-odsek" id="kako" aria-labelledby="sf-koraki-naslov">
     <h2 id="sf-koraki-naslov" class="serif" data-naslov>{{sayfare_koraki_naslov}}</h2>
     <ol class="sf-koraki">

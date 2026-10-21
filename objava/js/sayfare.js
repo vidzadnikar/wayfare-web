@@ -3,7 +3,19 @@
 // (vrtavka), na koncu kljukica in besedilo se vstavi v sporočilo naenkrat, kot
 // v aplikaciji (⌘V). Krog se ponavlja, dokler je prikaz na zaslonu.
 import "./besedilo.js";
-import { mirno } from "./gibanje.js";
+import { mirno, promoPredvajalnik } from "./gibanje.js";
+
+// Film: naslovna slika in gumb, ob kliku z zvokom. Med prihodom na zaslon se
+// platno dvigne iz rahlega nagiba (kot kino na domači strani, le mirneje).
+const film = document.querySelector("[data-sf-film]");
+if (film) {
+  promoPredvajalnik(film);
+  if (!mirno && window.gsap) {
+    window.gsap.fromTo(film, { scale: 0.88, rotationX: 14, y: 50, transformPerspective: 1600 },
+      { scale: 1, rotationX: 0, y: 0, ease: "none",
+        scrollTrigger: { trigger: film, start: "top bottom", end: "center 60%", scrub: true } });
+  }
+}
 
 const prikaz = document.querySelector("[data-prikaz]");
 const besedilo = prikaz?.querySelector("[data-prikaz-besedilo]");
