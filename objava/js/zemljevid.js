@@ -74,10 +74,14 @@ export function zemljevid(obmocje, { gsap, koren }) {
     const skupina = new THREE.Group();
     scene.add(skupina);
 
-    // relief: senčena karta sveta v barvah strani, na telefonu manjša; UV krogle se ujema s tocka()
-    const relief = new THREE.TextureLoader().load(koren + (innerWidth < 640 ? "media/zemljevid/relief-4096.webp" : "media/zemljevid/relief-8192.webp"));
-    relief.colorSpace = THREE.SRGBColorSpace; relief.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-    skupina.add(new THREE.Mesh(new THREE.SphereGeometry(1, 160, 120), new THREE.MeshStandardMaterial({ map: relief, roughness: 1, metalness: 0 })));
+    // relief: senčena karta sveta v barvah strani, na telefonu manjša; UV krogle se ujema s tocka().
+    // Dokler se relief nalaga (do 3 MB), je krogla papirnata, ne črna.
+    const povrsina = new THREE.MeshStandardMaterial({ color: 0xe3e1db, roughness: 1, metalness: 0 });
+    new THREE.TextureLoader().load(koren + (innerWidth < 640 ? "media/zemljevid/relief-4096.webp" : "media/zemljevid/relief-8192.webp"), (relief) => {
+      relief.colorSpace = THREE.SRGBColorSpace; relief.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+      povrsina.map = relief; povrsina.color.set(0xffffff); povrsina.needsUpdate = true;
+    });
+    skupina.add(new THREE.Mesh(new THREE.SphereGeometry(1, 160, 120), povrsina));
     // luč z leve zgoraj kot okno ob mizi; ambient je močan, da ostane tudi senčna stran papirnata
     const luc = new THREE.DirectionalLight(0xfff8ef, 1.35); luc.position.set(-2.2, 2.4, 3); scene.add(luc);
     scene.add(new THREE.AmbientLight(0xffffff, 1.85));
