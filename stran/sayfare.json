@@ -3,5 +3,19 @@
  "ime": "Sayfare-0.1.0.dmg",
  "razlicica": "0.1.0",
  "velikost": "4 MB",
- "sha256": "c010c91015efb6530f8568994fc07fa125278d37578cce907d15f316eddc3db5"
+ "sha256": "c010c91015efb6530f8568994fc07fa125278d37578cce907d15f316eddc3db5",
+ "android": {
+  "url": "https://github.com/vidzadnikar/wayfare-web/releases/download/sayfare-v0.1.0/Sayfare-0.1.0.apk",
+  "ime": "Sayfare-0.1.0.apk",
+  "razlicica": "0.1.0",
+  "velikost": "1 MB",
+  "sha256": "242e46abcfc826ac068cfa416b0b0084d74971614363ad84270ca04320e2efdd"
+ },
+ "windows": {
+  "url": "https://github.com/vidzadnikar/wayfare-web/releases/download/sayfare-v0.1.0/Sayfare-0.1.0-Setup.exe",
+  "ime": "Sayfare-0.1.0-Setup.exe",
+  "razlicica": "0.1.0",
+  "velikost": "64 MB",
+  "sha256": "f875aa5945b8d9a7bec10d79578ddb4c3c74de8d26f7ce59d79af53271eda1c3"
+ }
 }

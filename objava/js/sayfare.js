@@ -5,6 +5,20 @@
 import "./besedilo.js";
 import { mirno, promoPredvajalnik } from "./gibanje.js";
 
+// Prenos za napravo, na kateri je stran odprta: gumb na vrhu prenese njen paket, njena kartica je črna.
+// iPhone ostane pri Macu (Sayfare za iPhone ni na strani).
+const naprava = /Android/i.test(navigator.userAgent) ? "android" : /Windows/i.test(navigator.userAgent) ? "windows" : "mac";
+const kartica = document.querySelector(`.naprava[data-naprava="${naprava}"]`);
+const vrhPrenos = document.querySelector("[data-sf-prenos]");
+if (kartica && naprava !== "mac") {
+  document.querySelectorAll(".naprava[data-priporoceno]").forEach((k) => k.removeAttribute("data-priporoceno"));
+  kartica.setAttribute("data-priporoceno", "");
+  if (vrhPrenos) {
+    vrhPrenos.href = kartica.href;
+    vrhPrenos.lastChild.textContent = vrhPrenos.dataset[naprava];
+  }
+}
+
 // Film: naslovna slika in gumb, ob kliku z zvokom. Med prihodom na zaslon se
 // platno dvigne iz rahlega nagiba (kot kino na domači strani, le mirneje).
 const film = document.querySelector("[data-sf-film]");

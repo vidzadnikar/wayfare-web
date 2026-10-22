@@ -36,7 +36,7 @@
       <h1 id="sf-naslov" class="serif" data-naslov-uvod>{{sayfare_naslov}}</h1>
       <p class="uvodnik" data-uvod>{{sayfare_uvod}}</p>
       <div class="akcije" data-uvod>
-        <a class="gumb" href="{{sayfare_href}}" download><svg class="gumb-ikona" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m-4.5-4.5L12 15l4.5-4.5M5 19.5h14"/></svg>{{sayfare_prenesi}}</a>
+        <a class="gumb" href="{{sayfare_href}}" download data-sf-prenos data-mac="{{sayfare_prenesi}}" data-windows="{{sayfare_prenesi_windows}}" data-android="{{sayfare_prenesi_android}}"><svg class="gumb-ikona" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m-4.5-4.5L12 15l4.5-4.5M5 19.5h14"/></svg>{{sayfare_prenesi}}</a>
         <a class="gumb gumb-tihi" href="#kako">{{sayfare_kako_gumb}}</a>
       </div>
       <p class="uvod-opomba" data-uvod>{{sayfare_opomba}}</p>
@@ -100,14 +100,18 @@
     <h2 id="sf-prenos-naslov" class="serif" data-naslov>{{sayfare_prenos_naslov}}</h2>
     <p class="uvodnik">{{sayfare_prenos_uvod}}</p>
     <ul class="naprave">
-      <li><a class="naprava" href="{{sayfare_href}}" download data-priporoceno><span class="naprava-ime"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6a1.5 1.5 0 0 1 1.5-1.5h14A1.5 1.5 0 0 1 20.5 6v10h-17z"/><path d="M1.5 18.5h21"/></svg>macOS</span><span class="naprava-opis">{{sayfare_naprava_mac}}</span></a></li>
-      <li><div class="naprava sf-kmalu" aria-disabled="true"><span class="naprava-ime"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3.5" width="18" height="17" rx="2"/><path d="M3 12h18M12 3.5v17"/></svg>Windows</span><span class="naprava-opis">{{sayfare_kmalu}}</span></div></li>
-      <li><div class="naprava sf-kmalu" aria-disabled="true"><span class="naprava-ime"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><path d="M10.5 18h3"/></svg>Android</span><span class="naprava-opis">{{sayfare_kmalu}}</span></div></li>
+      <li><a class="naprava" href="{{sayfare_href}}" download data-priporoceno data-naprava="mac"><span class="naprava-ime"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6a1.5 1.5 0 0 1 1.5-1.5h14A1.5 1.5 0 0 1 20.5 6v10h-17z"/><path d="M1.5 18.5h21"/></svg>macOS</span><span class="naprava-opis">{{sayfare_naprava_mac}}</span></a></li>
+      <li><a class="naprava" href="{{sayfare_windows_href}}" download data-naprava="windows"><span class="naprava-ime"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3.5" width="18" height="17" rx="2"/><path d="M3 12h18M12 3.5v17"/></svg>Windows</span><span class="naprava-opis">{{sayfare_naprava_windows}}</span></a></li>
+      <li><a class="naprava" href="{{sayfare_android_href}}" download data-naprava="android"><span class="naprava-ime"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><path d="M10.5 18h3"/></svg>Android</span><span class="naprava-opis">{{sayfare_naprava_android}}</span></a></li>
     </ul>
     <div class="namesti">
       <p class="namesti-sistem">{{sayfare_namesti_naslov}}</p>
       <ol class="obvestilo-koraki"><li>{{sayfare_namesti_1}}</li><li>{{sayfare_namesti_2}}</li><li>{{sayfare_namesti_3}}</li></ol>
       <p class="drobno">{{sayfare_namesti_opomba}} <code>xattr -dr com.apple.quarantine /Applications/Sayfare.app</code></p>
+      <p class="namesti-sistem">{{sayfare_namesti_windows_naslov}}</p>
+      <ol class="obvestilo-koraki"><li>{{sayfare_namesti_windows_1}}</li><li>{{sayfare_namesti_windows_2}}</li></ol>
+      <p class="namesti-sistem">{{sayfare_namesti_android_naslov}}</p>
+      <ol class="obvestilo-koraki"><li>{{sayfare_namesti_android_1}}</li><li>{{sayfare_namesti_android_2}}</li></ol>
     </div>
     <p class="drobno sf-druzina">{{sayfare_druzina}}</p>
   </section>

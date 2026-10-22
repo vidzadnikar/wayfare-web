@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sayfare — narekovanje v slovenščini za Mac</title>
-<meta name="description" content="Pritisni bližnjico in govori. Sayfare tvoj govor prepiše na Macu in ga vstavi tja, kjer pišeš. Zastonj; Windows in Android kmalu.">
+<title>Sayfare — narekovanje v slovenščini za Mac, Windows in Android</title>
+<meta name="description" content="Pritisni bližnjico in govori. Sayfare tvoj govor prepiše in ga vstavi tja, kjer pišeš. Zastonj, za Mac, Windows in Android.">
 <link rel="alternate" hreflang="en" href="https://wayfarestudio.pages.dev/sayfare/">
 <link rel="alternate" hreflang="sl" href="https://wayfarestudio.pages.dev/sl/sayfare/">
 <link rel="alternate" hreflang="x-default" href="https://wayfarestudio.pages.dev/sayfare/">
 <meta property="og:image" content="https://wayfarestudio.pages.dev/media/sayfare/deljenje.jpg">
 <link rel="icon" href="../../media/sayfare/logo.svg" type="image/svg+xml">
-<meta property="og:title" content="Sayfare — narekovanje v slovenščini za Mac">
-<meta property="og:description" content="Pritisni bližnjico in govori. Sayfare tvoj govor prepiše na Macu in ga vstavi tja, kjer pišeš. Zastonj; Windows in Android kmalu.">
+<meta property="og:title" content="Sayfare — narekovanje v slovenščini za Mac, Windows in Android">
+<meta property="og:description" content="Pritisni bližnjico in govori. Sayfare tvoj govor prepiše in ga vstavi tja, kjer pišeš. Zastonj, za Mac, Windows in Android.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://wayfarestudio.pages.dev/sl/sayfare/">
 <meta property="og:site_name" content="Wayfare Studio">
@@ -23,7 +23,7 @@
 <link rel="apple-touch-icon" href="/media/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#f3f1ec">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Sayfare", "applicationCategory": "UtilitiesApplication", "operatingSystem": "macOS 14+", "softwareVersion": "0.1.0", "description": "Pritisni bližnjico in govori. Sayfare tvoj govor prepiše na Macu in ga vstavi tja, kjer pišeš. Zastonj; Windows in Android kmalu.", "url": "https://wayfarestudio.pages.dev/sl/sayfare/", "image": "https://wayfarestudio.pages.dev/media/sayfare/deljenje.jpg", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Sayfare", "applicationCategory": "UtilitiesApplication", "operatingSystem": "macOS 14+", "softwareVersion": "0.1.0", "description": "Pritisni bližnjico in govori. Sayfare tvoj govor prepiše in ga vstavi tja, kjer pišeš. Zastonj, za Mac, Windows in Android.", "url": "https://wayfarestudio.pages.dev/sl/sayfare/", "image": "https://wayfarestudio.pages.dev/media/sayfare/deljenje.jpg", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}}</script>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-WZRJfWvsnNCPcxzZwvyhovnZGqhZaC+8gPGPRbx6wTk=' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; media-src 'self'; font-src 'self'; connect-src 'self' blob: https://cloudflareinsights.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; worker-src 'none'; manifest-src 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="preload" href="../../pisave/instrument-sans-latin-11aa49.woff2" as="font" type="font/woff2" crossorigin>
@@ -104,10 +104,10 @@
       <h1 id="sf-naslov" class="serif" data-naslov-uvod>Ti govoriš. <em>Sayfare napiše.</em></h1>
       <p class="uvodnik" data-uvod>Pritisni bližnjico in povej, kar bi sicer tipkal. Besedilo se pojavi tam, kjer pišeš: v pošti, sporočilu ali dokumentu.</p>
       <div class="akcije" data-uvod>
-        <a class="gumb" href="https://github.com/vidzadnikar/wayfare-web/releases/download/sayfare-v0.1.0/Sayfare-0.1.0.dmg" download><svg class="gumb-ikona" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m-4.5-4.5L12 15l4.5-4.5M5 19.5h14"/></svg>Prenesi za macOS</a>
+        <a class="gumb" href="https://github.com/vidzadnikar/wayfare-web/releases/download/sayfare-v0.1.0/Sayfare-0.1.0.dmg" download data-sf-prenos data-mac="Prenesi za macOS" data-windows="Prenesi za Windows" data-android="Prenesi za Android"><svg class="gumb-ikona" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m-4.5-4.5L12 15l4.5-4.5M5 19.5h14"/></svg>Prenesi za macOS</a>
         <a class="gumb gumb-tihi" href="#kako">Kako deluje</a>
       </div>
-      <p class="uvod-opomba" data-uvod>Zastonj. Za Mac z Apple silicon in macOS 14 ali novejši. Windows in Android kmalu.</p>
+      <p class="uvod-opomba" data-uvod>Zastonj. Za Mac z Apple silicon, Windows 10 in 11 ter Android 8 ali novejši.</p>
     </div>
 
     <!-- Prikaz nareka: plošča ob zarezi snema, nato piše, besedilo se vstavi v sporočilo. -->
@@ -147,9 +147,9 @@
   <section class="sf-koraki-odsek" id="kako" aria-labelledby="sf-koraki-naslov">
     <h2 id="sf-koraki-naslov" class="serif" data-naslov>Trije koraki. <em>Brez tipkanja.</em></h2>
     <ol class="sf-koraki">
-      <li><span class="sf-korak-tipke"><kbd>⌥</kbd><kbd>Presledek</kbd></span><h3>Pritisni bližnjico</h3><p>⌥ Presledek dela v vsaki aplikaciji. Če ti bolj ustreza, izbereš svojo, tudi samo tipko Fn.</p></li>
+      <li><span class="sf-korak-tipke"><kbd>⌥</kbd><kbd>Presledek</kbd></span><h3>Pritisni bližnjico</h3><p>⌥ Presledek na Macu, Alt + Presledek na Windows: dela v vsaki aplikaciji, izbereš lahko tudi svojo. Na Androidu narekuješ s tipkovnico Sayfare.</p></li>
       <li><span class="sf-korak-val" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><h3>Govori</h3><p>Kot bi govoril prijatelju. Pike in vejice postavi sam, »nov odstavek« lahko tudi poveš.</p></li>
-      <li><span class="sf-korak-kazalka" aria-hidden="true">Aa<b></b></span><h3>Pritisni še enkrat</h3><p>Besedilo se vstavi tja, kjer je kazalka. Med snemanjem vidiš le majhno ploščo ob zarezi zaslona.</p></li>
+      <li><span class="sf-korak-kazalka" aria-hidden="true">Aa<b></b></span><h3>Pritisni še enkrat</h3><p>Besedilo se vstavi tja, kjer je kazalka. Med snemanjem vidiš le majhno ploščo.</p></li>
     </ol>
   </section>
 
@@ -158,24 +158,28 @@
     <ul class="sf-lastnosti">
       <li><h3>Razume slovensko</h3><p>Govor prepiše Whisper large-v3-turbo, ki zna sklone, dvojino in imena. Besede, ki jih pogosto rečeš, dodaš v slovar.</p></li>
       <li><h3>Piše že med govorom</h3><p>Sayfare prepisuje, medtem ko govoriš. Ko končaš, je besedilo tam v sekundi ali dveh, tudi po minuti govora.</p></li>
-      <li><h3>Lektor s Claudom</h3><p>Če imaš Claude Code, besedilo za tabo prebere še lektor: vejice, velike začetnice, tipkarske napake. Brez njega dobiš čist prepis.</p></li>
-      <li><h3>Ostane na tvojem Macu</h3><p>Govor prepiše model na tvojem računalniku. Posnetki se po dveh urah izbrišejo sami.</p></li>
+      <li><h3>Lektor s Claudom</h3><p>Če imaš Claude Code ali ključ Claude API, besedilo za tabo prebere še lektor: vejice, velike začetnice, tipkarske napake. Brez njega dobiš čist prepis.</p></li>
+      <li><h3>Ostane na tvojem računalniku</h3><p>Na Macu in Windows govor prepiše model na tvojem računalniku. Posnetki se po dveh urah izbrišejo sami.</p></li>
     </ul>
   </section>
 
   <section class="cilj sf-cilj" id="prenos" aria-labelledby="sf-prenos-naslov">
     <span class="cilj-pin" aria-hidden="true"></span>
     <h2 id="sf-prenos-naslov" class="serif" data-naslov>Prenesi <em>Sayfare.</em></h2>
-    <p class="uvodnik">Različica 0.1.0 je zastonj. Ob prvem zagonu preneseš še model za prepis (1,6 GB).</p>
+    <p class="uvodnik">Različica 0.1.0 je zastonj. Ob prvem zagonu na računalniku preneseš še model za prepis: na Macu 1,6 GB, na Windows 0,6 GB.</p>
     <ul class="naprave">
-      <li><a class="naprava" href="https://github.com/vidzadnikar/wayfare-web/releases/download/sayfare-v0.1.0/Sayfare-0.1.0.dmg" download data-priporoceno><span class="naprava-ime"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6a1.5 1.5 0 0 1 1.5-1.5h14A1.5 1.5 0 0 1 20.5 6v10h-17z"/><path d="M1.5 18.5h21"/></svg>macOS</span><span class="naprava-opis">Apple silicon, macOS 14 ali novejši, 4 MB</span></a></li>
-      <li><div class="naprava sf-kmalu" aria-disabled="true"><span class="naprava-ime"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3.5" width="18" height="17" rx="2"/><path d="M3 12h18M12 3.5v17"/></svg>Windows</span><span class="naprava-opis">Kmalu</span></div></li>
-      <li><div class="naprava sf-kmalu" aria-disabled="true"><span class="naprava-ime"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><path d="M10.5 18h3"/></svg>Android</span><span class="naprava-opis">Kmalu</span></div></li>
+      <li><a class="naprava" href="https://github.com/vidzadnikar/wayfare-web/releases/download/sayfare-v0.1.0/Sayfare-0.1.0.dmg" download data-priporoceno data-naprava="mac"><span class="naprava-ime"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6a1.5 1.5 0 0 1 1.5-1.5h14A1.5 1.5 0 0 1 20.5 6v10h-17z"/><path d="M1.5 18.5h21"/></svg>macOS</span><span class="naprava-opis">Apple silicon, macOS 14 ali novejši, 4 MB</span></a></li>
+      <li><a class="naprava" href="https://github.com/vidzadnikar/wayfare-web/releases/download/sayfare-v0.1.0/Sayfare-0.1.0-Setup.exe" download data-naprava="windows"><span class="naprava-ime"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3.5" width="18" height="17" rx="2"/><path d="M3 12h18M12 3.5v17"/></svg>Windows</span><span class="naprava-opis">Windows 10 ali 11, 64-bitni, 64 MB</span></a></li>
+      <li><a class="naprava" href="https://github.com/vidzadnikar/wayfare-web/releases/download/sayfare-v0.1.0/Sayfare-0.1.0.apk" download data-naprava="android"><span class="naprava-ime"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><path d="M10.5 18h3"/></svg>Android</span><span class="naprava-opis">Android 8 ali novejši, 1 MB</span></a></li>
     </ul>
     <div class="namesti">
       <p class="namesti-sistem">Namestitev na Macu</p>
       <ol class="obvestilo-koraki"><li>Odpri preneseno datoteko in povleci Sayfare v mapo Aplikacije.</li><li>Prvič: odpri aplikacijo. Mac jo ustavi, ker še ni notarizirana pri Applu. V Sistemskih nastavitvah → Zasebnost in varnost klikni »Vseeno odpri« in potrdi.</li><li>Dovoli mikrofon in dostopnost. Brez dostopnosti ostane besedilo na odložišču in ga prilepiš s ⌘V.</li></ol>
       <p class="drobno">Če Mac pravi, da je aplikacija poškodovana, v Terminalu zaženi: <code>xattr -dr com.apple.quarantine /Applications/Sayfare.app</code></p>
+      <p class="namesti-sistem">Namestitev na Windows</p>
+      <ol class="obvestilo-koraki"><li>Odpri preneseni namestitveni program. Ker še ni podpisan, Windows pokaže »Windows je zaščitil vaš računalnik«: klikni Več informacij in nato Vseeno zaženi.</li><li>Sayfare se namesti brez skrbniških pravic in ob prvem zagonu prenese model za prepis. Nato pritisni Alt + Presledek v katerikoli aplikaciji.</li></ol>
+      <p class="namesti-sistem">Namestitev na Androidu</p>
+      <ol class="obvestilo-koraki"><li>Odpri preneseno datoteko in dovoli namestitev aplikacij iz brskalnika.</li><li>V Sayfare › Nastavitve vklopi tipkovnico Sayfare in dodaj ploščico v hitre nastavitve. Prepisuje Googlova prepoznava govora; s ključem ElevenLabs je prepis natančnejši.</li></ol>
     </div>
     <p class="drobno sf-druzina">Sayfare je iz iste delavnice kot <a href="../">Wayfare Studio</a>, ki iz posnetkov s potovanja zmontira vlog.</p>
   </section>

@@ -186,24 +186,35 @@ OBTAINIUM_HREF = ("https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/
                 "author": "vidzadnikar", "name": "Wayfare Studio"}, separators=(",", ":")), safe=""))
 
 
-# Sayfare (narekovanje, ~/Claude/claude/Sayfare): paket prenos/Sayfare-<različica>.dmg
-# je na isti strani GitHub Releases kot Wayfare, pod oznako sayfare-v<različica>.
-# Brez paketa doma velja zadnji zapis sayfare.json. Za Windows in Android ga še ni.
+# Sayfare (narekovanje): paketi v prenos/ so Sayfare-<različica>.dmg (Mac, ~/Claude/claude/Sayfare),
+# Sayfare-<različica>-Setup.exe (Windows, ~/Claude/claude/Sayfare-Windows) in Sayfare-<različica>.apk
+# (Android, ~/Claude/claude/Sayfare-Android). Vsi so na isti strani GitHub Releases kot Wayfare, pod
+# oznako sayfare-v<različica>. Paketa, ki ga doma ni, velja zadnji zapis v sayfare.json.
 SAYFARE_URL = "https://github.com/vidzadnikar/wayfare-web/releases/download/sayfare-v{razlicica}/{ime}"
+
+
+def sayfare_paket(vzorec, izraz):
+    paketi = sorted(Path(TU, "prenos").glob(vzorec), key=lambda p: p.stat().st_mtime)
+    if not paketi:
+        return None
+    paket = paketi[-1]
+    razlicica = re.search(izraz, paket.name)[1]
+    return {"url": SAYFARE_URL.format(razlicica=razlicica, ime=paket.name), "ime": paket.name,
+            "razlicica": razlicica, "velikost": f"{max(1, round(paket.stat().st_size / 1e6))} MB",
+            "sha256": vsota_sha256(paket)}
 
 
 def sayfare_prenos():
     zapis = Path(TU, "sayfare.json")
-    paketi = sorted(Path(TU, "prenos").glob("Sayfare-*.dmg"), key=lambda p: p.stat().st_mtime)
-    if not paketi:
-        if zapis.is_file():
-            return json.load(open(zapis, encoding="utf-8"))
+    podatki = json.load(open(zapis, encoding="utf-8")) if zapis.is_file() else {}
+    mac = sayfare_paket("Sayfare-*.dmg", r"Sayfare-(.+)\.dmg$")
+    if not mac and not podatki:
         raise SystemExit("Ni paketa Sayfare (prenos/Sayfare-<različica>.dmg) in ne sayfare.json.")
-    dmg = paketi[-1]
-    razlicica = re.search(r"Sayfare-(.+)\.dmg$", dmg.name)[1]
-    podatki = {"url": SAYFARE_URL.format(razlicica=razlicica, ime=dmg.name), "ime": dmg.name,
-               "razlicica": razlicica, "velikost": f"{max(1, round(dmg.stat().st_size / 1e6))} MB",
-               "sha256": vsota_sha256(dmg)}
+    podatki.update(mac or {})
+    for naprava, vzorec, izraz in (("windows", "Sayfare-*-Setup.exe", r"Sayfare-(.+)-Setup\.exe$"),
+                                   ("android", "Sayfare-*.apk", r"Sayfare-(.+)\.apk$")):
+        if paket := sayfare_paket(vzorec, izraz):
+            podatki[naprava] = paket
     zapis.write_text(json.dumps(podatki, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     return podatki
 
@@ -1007,6 +1018,10 @@ def main():
     sf = sayfare_prenos()
     sayfare = {"sayfare_href": sf["url"], "sayfare_razlicica": sf["razlicica"],
                "sayfare_velikost": f", {sf['velikost']}" if sf.get("velikost") else ""}
+    for naprava in ("windows", "android"):
+        p = sf.get(naprava, {})
+        sayfare[f"sayfare_{naprava}_href"] = p.get("url", "#prenos")
+        sayfare[f"sayfare_{naprava}_velikost"] = f", {p['velikost']}" if p.get("velikost") else ""
     male_slike()
     # okvir YouTuba rabijo le brezplačni vlogi; plačljivi igrajo iz R2 (<video>)
     okvirji = any(v.get("youtube") and je_brezplacen(v) for v in vlogi_podatki())
