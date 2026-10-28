@@ -95,6 +95,18 @@ zastonj in brez lastne domene: Brevo brez potrjene domene pošiljatelja prepiše
 v `<lokalni-del>@<id>.brevosend.com`, ime pošiljatelja (»Wayfare Studio«) in
 naslov za odgovor pa ostaneta tvoja.
 
+Katere poti gredo skozi funkcije, določa `objava/_routes.json`, ki ga napiše
+`zgradi.py`: `/api/*`, `/nadzor` in vsak film `.mp4` v `media/`. Pages na
+statičnih datotekah prezre glavo `Range` in vedno vrne celo datoteko (200),
+Safari (tudi na iPhonu) pa film predvaja le, če dobi kos (206). Zato filme
+pošilja `functions/media/[[pot]].js`; slike gredo mimo funkcij. Nova pot v
+`functions/` zunaj `/api/` mora v `poti_funkcij()` v `zgradi.py`, sicer je
+Pages ne pokliče. Po objavi preveri:
+
+    curl -sI -H "Range: bytes=0-1" https://wayfarestudio.pages.dev/media/hero-mesta-1080.mp4
+
+Prva vrstica mora biti `HTTP/2 206`.
+
 ### Prvič (koraki)
 
 1. **Brevo** (brevo.com): brezplačen račun. Senders, Domains & Dedicated IPs →

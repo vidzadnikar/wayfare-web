@@ -22,6 +22,8 @@ ker jo strežnik pošlje na poljubnem naslovu.
 Objava: mapa ../objava je stran, kot gre na Cloudflare Pages (izhodna mapa
 `objava`, brez ukaza za gradnjo). Vlogi igrajo z YouTuba, paket za prenos je
 na GitHub Releases; oboje je za gostovanje strani preveliko (25 MB na datoteko).
+objava/_routes.json pove, katere poti gredo skozi Pages Functions (zaledje in
+filmi, ki jih functions/media/ pošlje po kosih za Safari).
 """
 
 import base64
@@ -918,6 +920,21 @@ GLAVE = """/*
 # predvajalnik na objavljeni strani pove, da film še ni na spletu.
 SPLETNI_VIDEO = re.compile(r"^media/vlogi/.+-(1080|720)\.mp4$")
 NAJVEC_MB = 25  # meja Cloudflare Pages za eno datoteko
+NAJVEC_POTI = 100  # meja Cloudflare Pages za pravila v _routes.json
+
+
+def poti_funkcij(objava):
+    """_routes.json: katere poti gredo skozi Pages Functions.
+
+    Zaledje (/api/*, /nadzor) in vsak film v media/, ki ga functions/media/
+    pošlje po kosih (Safari). Slike in ostale datoteke gredo mimo funkcij.
+    Ob preveč filmih za mejo pravil gre skozi funkcijo cela /media/*
+    (funkcija slike vrne nespremenjene)."""
+    filmi = sorted("/" + p.relative_to(objava).as_posix() for p in (objava / "media").rglob("*.mp4"))
+    zaledje = ["/api/*", "/nadzor"]
+    if len(zaledje) + len(filmi) > NAJVEC_POTI:
+        filmi = ["/media/*"]
+    return json.dumps({"version": 1, "include": zaledje + filmi, "exclude": []}, indent=1) + "\n"
 
 
 def objavi(zgoscene, strani, okvirji):
@@ -977,6 +994,7 @@ def objavi(zgoscene, strani, okvirji):
             raise SystemExit(f"{ime} ima nezamenjano oznako.")
         (objava / ime).write_text(namesti, encoding="utf-8")
     (objava / "sitemap.xml").write_text(zemljevid_strani(), encoding="utf-8")
+    (objava / "_routes.json").write_text(poti_funkcij(objava))
     (objava / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /nadzor\n\nSitemap: {STRAN_URL}/sitemap.xml\n")
     (objava / "manifest.webmanifest").write_text(json.dumps(MANIFEST, ensure_ascii=False, indent=1))
     shutil.copy2(Path(TU, "favicon.ico"), objava / "favicon.ico")
