@@ -78,6 +78,11 @@ def postavka_izdaje():
         print("osnutek ali predizdaja: ne pošljem nič")
         return None
     oznaka = izdaja.get("tag_name") or ""
+    # Izdaje Sayfare (sayfare-v…) so v istem repozitoriju, a niso za člane
+    # Wayfare; naročnike Sayfare obvesti stran Sayfare (sayfare-web/obvesti.py).
+    if oznaka.startswith("sayfare-"):
+        print(f"{oznaka} je izdaja Sayfare: članom Wayfare ne pošljem nič")
+        return None
     ime = izdaja.get("name") or f"Wayfare Studio {oznaka}"
     opombe = (izdaja.get("body") or "").strip()
     if len(opombe) > 1500:
