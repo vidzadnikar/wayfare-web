@@ -1,1 +1,5 @@
 /android https://github.com/vidzadnikar/wayfare-web/releases/download/v0.2.0/Wayfare-Studio-0.2.0.apk 302
+/sayfare https://sayfare.pages.dev/en/ 301
+/sayfare/* https://sayfare.pages.dev/en/ 301
+/sl/sayfare https://sayfare.pages.dev/ 301
+/sl/sayfare/* https://sayfare.pages.dev/ 301

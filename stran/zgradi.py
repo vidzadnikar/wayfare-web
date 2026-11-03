@@ -10,7 +10,8 @@ Strani:
     predloga-odziv.html  → odziv/index.html in sl/odziv/index.html (obrazec za odziv testerjev)
     predloga-ogled.html  → vlogi/<oznaka>/index.html in sl/vlogi/<oznaka>/index.html (vsak vlog)
     predloga-pogoji.html → pogoji/index.html in sl/pogoji/index.html (pogoji naročnine)
-    predloga-sayfare.html → sayfare/index.html in sl/sayfare/index.html (aplikacija Sayfare)
+    predloga-sayfare.html se ne gradi več: Sayfare ima svojo stran (sayfare.pages.dev),
+                         /sayfare/ in /sl/sayfare/ preusmeri _redirects
 
 Besedila so v besedila.json; ključ {{x}} v predlogi se zamenja z vrednostjo.
 Vrednosti so zaupanja vredno besedilo z dovoljeno oznako (<em>, <br>).
@@ -50,7 +51,9 @@ STRANI = {
     "zasebnost": dict(predloga="predloga-zasebnost.html", izhod={"en": "zasebnost/index.html", "sl": "sl/zasebnost/index.html"}),
     "novosti": dict(predloga="predloga-novosti.html", izhod={"en": "novosti/index.html", "sl": "sl/novosti/index.html"}),
     "odziv": dict(predloga="predloga-odziv.html", izhod={"en": "odziv/index.html", "sl": "sl/odziv/index.html"}),
-    "sayfare": dict(predloga="predloga-sayfare.html", izhod={"en": "sayfare/index.html", "sl": "sl/sayfare/index.html"}),
+    # Sayfare ima od 3. 11. 2026 svojo stran (SAYFARE_STRAN), da jo Google najde pod svojim imenom;
+    # stari naslovi /sayfare/ in /sl/sayfare/ trajno (301) preusmerijo tja (SAYFARE_PREUSMERITVE):
+    # "sayfare": dict(predloga="predloga-sayfare.html", izhod={"en": "sayfare/index.html", "sl": "sl/sayfare/index.html"}),
     # pogoji naročnine (predloga-pogoji.html) se zgradijo šele, ko bo naročnina vklopljena:
     # "pogoji": dict(predloga="predloga-pogoji.html", izhod={"en": "pogoji/index.html", "sl": "sl/pogoji/index.html"}),
     "napaka": dict(predloga="predloga-404.html", izhod={"en": "404.html", "sl": "sl/404.html"}),
@@ -193,6 +196,10 @@ OBTAINIUM_HREF = ("https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/
 # (Android, ~/Claude/claude/Sayfare-Android). Vsi so na isti strani GitHub Releases kot Wayfare, pod
 # oznako sayfare-v<različica>. Paketa, ki ga doma ni, velja zadnji zapis v sayfare.json.
 SAYFARE_URL = "https://github.com/vidzadnikar/wayfare-web/releases/download/sayfare-v{razlicica}/{ime}"
+# Sayfare ima svojo stran; povezave Sayfare v glavi, nogi in na domači strani kažejo tja
+SAYFARE_STRAN = {"en": "https://sayfare.pages.dev/en/", "sl": "https://sayfare.pages.dev/"}
+SAYFARE_PREUSMERITVE = [("/sayfare", SAYFARE_STRAN["en"]), ("/sayfare/*", SAYFARE_STRAN["en"]),
+                        ("/sl/sayfare", SAYFARE_STRAN["sl"]), ("/sl/sayfare/*", SAYFARE_STRAN["sl"])]
 
 
 def sayfare_paket(vzorec, izraz):
@@ -337,20 +344,18 @@ def poti(stran, jezik):
     zasebnost = STRANI["zasebnost"]["izhod"][jezik]
     novosti = STRANI["novosti"]["izhod"][jezik]
     odziv = STRANI["odziv"]["izhod"][jezik]
-    sayfare = STRANI["sayfare"]["izhod"][jezik]
-    pogoji = STRANI["pogoji"]["izhod"][jezik] if "pogoji" in STRANI else zasebnost  # brez strani Pogoji kaže na zasebnost
+    pogoji =STRANI["pogoji"]["izhod"][jezik] if "pogoji" in STRANI else zasebnost  # brez strani Pogoji kaže na zasebnost
     if stran == "napaka":
         absolutna = lambda do: "/" + do.removesuffix("index.html")
         koren, pot_dom = "/", absolutna(dom)
         url_en, url_sl, pot_vlogi, pot_zasebnost = absolutna(en), absolutna(sl), absolutna(vlogi), absolutna(zasebnost)
         pot_novosti, pot_odziv, pot_pogoji = absolutna(novosti), absolutna(odziv), absolutna(pogoji)
-        pot_sayfare = absolutna(sayfare)
     else:
         koren, pot_dom = relmapa(ta, "index.html"), relmapa(ta, dom)
         url_en, url_sl = relmapa(ta, en, "./"), relmapa(ta, sl, "./")
         pot_vlogi, pot_zasebnost = relmapa(ta, vlogi, "./"), relmapa(ta, zasebnost, "./")
         pot_novosti, pot_odziv, pot_pogoji = relmapa(ta, novosti, "./"), relmapa(ta, odziv, "./"), relmapa(ta, pogoji, "./")
-        pot_sayfare = relmapa(ta, sayfare, "./")
+    pot_sayfare = SAYFARE_STRAN[jezik]
     return {
         "lang": jezik,
         "koren": koren,
@@ -974,8 +979,9 @@ def objavi(zgoscene, strani, okvirji):
         cilj.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(Path(TU, rel), cilj)
     (objava / "_headers").write_text(GLAVE.format(csp=csp(zgoscene, okvirji)))
-    # /android (QR koda na strani) vodi na zadnji paket za Android
-    (objava / "_redirects").write_text(f"{ANDROID_POT} {prenos()['prenos_android_href']} 302\n")
+    # /android (QR koda na strani) vodi na zadnji paket za Android; stara podstran Sayfare trajno na njeno stran
+    (objava / "_redirects").write_text(f"{ANDROID_POT} {prenos()['prenos_android_href']} 302\n"
+                                       + "".join(f"{od} {do} 301\n" for od, do in SAYFARE_PREUSMERITVE))
     # install.sh (Mac) in install.ps1 (Windows): namestitev z enim ukazom, z
     # naslovom in vsoto paketa iz izdaje
     paket = prenos()
