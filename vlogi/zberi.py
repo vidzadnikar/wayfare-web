@@ -51,7 +51,7 @@ VLOGI = [
     dict(oznaka="milano-recap", izvor="Milano recap/milano-recap-v1.mp4", projekt="Milano recap",
          naslov=dict(en="Milan Recap", sl="Recap Milano"),
          kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
-         datum=("2026-10-09", "2026-10-12"), naslovna=17.45, objavljen=True),
+         datum=("2026-10-09", "2026-10-12"), naslovna="~/Video/Milano recap/naslovnica.webp", objavljen=True),
     dict(oznaka="milano-4", izvor="Milano vlog day 4.mp4", projekt="Milano day 4",
          naslov=dict(en="Milan — Day 4", sl="Milano — 4. dan"),
          kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
