@@ -46,7 +46,12 @@ JSON = TU.parent / "stran" / "vlogi.json"
 # privzeti (po deležih filma) padejo na prazne kadre.
 # youtube (po želji): oznaka videa na YouTubu, kamor gre izvorni izvoz iz ~/Video
 # (lahko kot Neobjavljen). Oznaka, ki je že v vlogi.json, se ohrani.
+# objavljen=True (po želji): vlog je na strani brez YouTuba, film igra le iz R2.
 VLOGI = [
+    dict(oznaka="milano-recap", izvor="Milano recap/milano-recap-v1.mp4", projekt="Milano recap",
+         naslov=dict(en="Milan Recap", sl="Recap Milano"),
+         kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
+         datum=("2026-10-09", "2026-10-12"), naslovna=17.45, objavljen=True),
     dict(oznaka="milano-4", izvor="Milano vlog day 4.mp4", projekt="Milano day 4",
          naslov=dict(en="Milan — Day 4", sl="Milano — 4. dan"),
          kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
@@ -319,6 +324,7 @@ def main(argv):
             trajanje=info["trajanje"], sirina=info["sirina"], visina=info["visina"],
             posnetkov=posnetkov(v), poglavja=poglavja(v), jezik="sl", youtube=youtube,
             **({"brezplacen": True} if v.get("brezplacen") else {}),
+            **({"objavljen": True} if v.get("objavljen") else {}),
         ))
     # vlogi in kraji, ki jih je dodal samodejno.py (GitHub Actions), ostanejo,
     # dokler jih ne prevzameš v VLOGI oziroma KRAJI

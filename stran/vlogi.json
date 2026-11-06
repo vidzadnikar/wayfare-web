@@ -1,6 +1,27 @@
 {
  "vlogi": [
   {
+   "oznaka": "milano-recap",
+   "naslov": {
+    "en": "Milan Recap",
+    "sl": "Recap Milano"
+   },
+   "kraj": {
+    "en": "Milan, Italy",
+    "sl": "Milano, Italija"
+   },
+   "datum": "2026-10-09",
+   "datum_do": "2026-10-12",
+   "trajanje": 89.967,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": null,
+   "poglavja": [],
+   "jezik": "sl",
+   "youtube": null,
+   "objavljen": true
+  },
+  {
    "oznaka": "milano-4",
    "naslov": {
     "en": "Milan — Day 4",
