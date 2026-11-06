@@ -574,13 +574,24 @@ def poglavja_html(poglavja, jezik):
     )
 
 
+def razlicica(*deli):
+    """'?v=' s kratko zgoščeno vrednostjo datoteke pod stran/ ali '', če je ni.
+
+    Brskalnik hrani medije teden dni (_headers), zato bi zamenjana naslovnica
+    z istim imenom ostala stara. Nova vsebina da nov naslov in brskalnik jo
+    naloži takoj."""
+    pot = Path(TU, *deli)
+    return f"?v={hashlib.sha256(pot.read_bytes()).hexdigest()[:10]}" if pot.is_file() else ""
+
+
 def opis_vloga(v, jezik, media):
     """Vrednosti enega vloga za kartico, predvajalnik in skript strani."""
     yt = v.get("youtube") or ""
     return dict(
         oznaka=v["oznaka"], naslov=v["naslov"][jezik], kraj=v["kraj"][jezik],
         trajanje=cas(v["trajanje"]),
-        slika=f"{media}{v['oznaka']}.jpg", v1080=f"{media}{v['oznaka']}-1080.mp4",
+        slika=f"{media}{v['oznaka']}.jpg" + razlicica("media", "vlogi", f"{v['oznaka']}.jpg"),
+        v1080=f"{media}{v['oznaka']}-1080.mp4",
         v720=f"{media}{v['oznaka']}-720.mp4",
         zanka=f"{media}{v['oznaka']}-zanka.mp4" if Path(TU, "media", "vlogi", f"{v['oznaka']}-zanka.mp4").is_file() else "",
         youtube=yt, okvir=youtube_okvir(yt) if yt else "",
@@ -608,7 +619,8 @@ def male_slike():
 
 
 def slika_kartice(o, sirina, visina, velikosti):
-    mala = o["slika"].replace("media/vlogi/", "media/vlogi/male/").removesuffix(".jpg") + ".webp"
+    mala = (o["slika"].split("?")[0].replace("media/vlogi/", "media/vlogi/male/").removesuffix(".jpg") + ".webp"
+            + razlicica("media", "vlogi", "male", o["oznaka"] + ".webp"))
     if not Path(TU, "media", "vlogi", "male", o["oznaka"] + ".webp").is_file():
         return f'<img src="{o["slika"]}" alt="" width="{sirina}" height="{visina}" loading="lazy" decoding="async">', o["slika"]
     return (f'<img src="{mala}" srcset="{mala} 640w, {o["slika"]} 1280w" sizes="{velikosti}" alt="" '
