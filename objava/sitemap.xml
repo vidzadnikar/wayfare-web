@@ -40,6 +40,14 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://wayfarestudio.pages.dev/odziv/"/>
     <xhtml:link rel="alternate" hreflang="sl" href="https://wayfarestudio.pages.dev/sl/odziv/"/>
   </url>
+  <url><loc>https://wayfarestudio.pages.dev/vlogi/potovanja-recap/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://wayfarestudio.pages.dev/vlogi/potovanja-recap/"/>
+    <xhtml:link rel="alternate" hreflang="sl" href="https://wayfarestudio.pages.dev/sl/vlogi/potovanja-recap/"/>
+  </url>
+  <url><loc>https://wayfarestudio.pages.dev/sl/vlogi/potovanja-recap/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://wayfarestudio.pages.dev/vlogi/potovanja-recap/"/>
+    <xhtml:link rel="alternate" hreflang="sl" href="https://wayfarestudio.pages.dev/sl/vlogi/potovanja-recap/"/>
+  </url>
   <url><loc>https://wayfarestudio.pages.dev/vlogi/milano-recap/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://wayfarestudio.pages.dev/vlogi/milano-recap/"/>
     <xhtml:link rel="alternate" hreflang="sl" href="https://wayfarestudio.pages.dev/sl/vlogi/milano-recap/"/>

@@ -15,6 +15,11 @@ export async function seznamVlogov(env, request) {
   }
 }
 
+// Prost film: brez prijave in dostopa (vlogi/seznam.json, "prost": true).
+export async function jeProst(env, request, oznaka) {
+  return (await seznamVlogov(env, request)).some((v) => v.oznaka === oznaka && v.prost === true);
+}
+
 export async function vlogIzOznake(env, request, oznaka) {
   if (!/^[a-z0-9-]{2,60}$/.test(String(oznaka || ""))) throw new Napaka(400, "oznaka", "Neznan vlog.");
   const vlog = (await seznamVlogov(env, request)).find((v) => v.oznaka === oznaka);

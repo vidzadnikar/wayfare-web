@@ -20,7 +20,9 @@ najnovejši prvi.
 
 Vlogi so na strani plačljivi (film iz zasebnega R2, nalaganje zaledje/videi.py),
 zato spletni različici nastaneta za vsak vlog, tudi z oznako youtube. Le vlog z
-brezplacen=True v VLOGI igra z YouTuba in spletnih različic ne rabi.
+brezplacen=True in oznako youtube igra z YouTuba in spletnih različic ne rabi.
+Vlog z brezplacen=True brez oznake youtube (prost film) igra iz R2 za vsakogar,
+tudi za goste (promo, recap vseh potovanj).
 """
 
 import json
@@ -47,7 +49,23 @@ JSON = TU.parent / "stran" / "vlogi.json"
 # youtube (po želji): oznaka videa na YouTubu, kamor gre izvorni izvoz iz ~/Video
 # (lahko kot Neobjavljen). Oznaka, ki je že v vlogi.json, se ohrani.
 # objavljen=True (po želji): vlog je na strani brez YouTuba, film igra le iz R2.
+# vse=True (po želji): film zajame vsa potovanja (recap); na strani je izpostavljen,
+# a ni v nobeni skupini krajev, ne na globusu in ne šteje kot potovanje.
+# poglavja (po želji): [[sekunde, ime], …] za film brez paketa za objavo.
+# opis (po želji): prvi stavek na strani ogleda namesto kraja, en in sl.
+# glasba (po želji): pripis skladbe pod licenco CC BY na strani ogleda.
 VLOGI = [
+    dict(oznaka="potovanja-recap", izvor="Potovanja recap/potovanja-recap-v3.mp4", projekt=None,
+         naslov=dict(en="Every Trip So Far", sl="Vsa potovanja doslej"),
+         kraj=dict(en="Europe", sl="Evropa"),
+         opis=dict(en="Seven trips in one film, from Barcelona to Milan",
+                   sl="Sedem potovanj v enem filmu, od Barcelone do Milana"),
+         datum=("2025-04-29", "2026-10-12"), naslovna=88.4, brezplacen=True, objavljen=True, vse=True,
+         poglavja=[[0.0, "Barcelona"], [13.7, "Rim"], [27.4, "Budimpešta"], [37.7, "Malta"],
+                   [51.4, "Rifnik"], [58.3, "Madrid"], [72.0, "Milano"]],
+         glasba=dict(naslov="Fear", avtor="MAITTRE", avtor_url="https://www.youtube.com/c/maittreofficial",
+                     vir="free-stock-music.com", vir_url="https://www.free-stock-music.com",
+                     licenca="CC BY 3.0", licenca_url="https://creativecommons.org/licenses/by/3.0/deed.en_US")),
     dict(oznaka="milano-recap", izvor="Milano recap/milano-recap-v1.mp4", projekt="Milano recap",
          naslov=dict(en="Milan Recap", sl="Recap Milano"),
          kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
@@ -195,6 +213,8 @@ def probe(pot):
 
 
 def poglavja(v):
+    if v.get("poglavja"):
+        return [[float(t), ime] for t, ime in v["poglavja"]]
     if not v["projekt"]:
         return []
     p = VIDEO / v["projekt"] / "_izris" / "objava" / "objava.json"
@@ -280,6 +300,10 @@ def naslovnica(v, izvor, youtube):
                     "-q:v", "3", "-map_metadata", "-1", str(cilj)], check=True)
 
 
+def rabi_splet(v):
+    """Spletni različici rabi vsak film iz R2; brezplačen vlog z YouTuba ju ne rabi."""
+    return not (v.get("brezplacen") and v.get("youtube"))
+
 def manjkajoci_splet(v):
     return [r for r in ("1080", "720") if not (CILJ / f"{v['oznaka']}-{r}.mp4").is_file()]
 
@@ -292,7 +316,7 @@ def main(argv):
     if "--splet" in argv:
         # le spletni različici plačljivih vlogov, ki jih še ni (za R2); vlogi.json ostane
         for v in VLOGI:
-            if v.get("brezplacen") or not manjkajoci_splet(v) or samo not in (None, v["oznaka"]):
+            if not rabi_splet(v) or not manjkajoci_splet(v) or samo not in (None, v["oznaka"]):
                 continue
             izvor = VIDEO / v["izvor"]
             if not izvor.is_file():
@@ -315,7 +339,7 @@ def main(argv):
         print(f"{v['oznaka']}: {info['sirina']}×{info['visina']} {info['fps']} fps, {info['trajanje']:.0f} s"
               + (f", YouTube {youtube}" if youtube else ""))
         if not samo_slike and samo in (None, v["oznaka"]):
-            video(v, izvor, info, splet=not v.get("brezplacen"))
+            video(v, izvor, info, splet=rabi_splet({**v, "youtube": youtube}))
         if not samo_video:
             naslovnica(v, izvor, youtube)
         zapis.append(dict(
@@ -325,6 +349,9 @@ def main(argv):
             posnetkov=posnetkov(v), poglavja=poglavja(v), jezik="sl", youtube=youtube,
             **({"brezplacen": True} if v.get("brezplacen") else {}),
             **({"objavljen": True} if v.get("objavljen") else {}),
+            **({"vse": True} if v.get("vse") else {}),
+            **({"opis": v["opis"]} if v.get("opis") else {}),
+            **({"glasba": v["glasba"]} if v.get("glasba") else {}),
         ))
     # vlogi in kraji, ki jih je dodal samodejno.py (GitHub Actions), ostanejo,
     # dokler jih ne prevzameš v VLOGI oziroma KRAJI
@@ -335,7 +362,7 @@ def main(argv):
         zapis = sorted(zapis + samodejni, key=lambda z: z["datum"], reverse=True)
         print("ohranjeni samodejni vlogi:", ", ".join(z["oznaka"] for z in samodejni))
     if not samo_video:
-        brez = sorted({v["kraj"]["en"] for v in VLOGI if v["kraj"]["en"] not in KRAJI})
+        brez = sorted({v["kraj"]["en"] for v in VLOGI if v["kraj"]["en"] not in KRAJI and not v.get("vse")})
         if brez:
             print("brez koordinat za globus (dodaj v KRAJI):", ", ".join(brez))
         kraji = [dict(kljuc=k, **v) for k, v in KRAJI.items()]

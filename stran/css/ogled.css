@@ -62,6 +62,10 @@
 .ogled-podatki > .poglavja { justify-self: stretch; min-width: 0; }
 .ogled-podatki h1 { font-size: clamp(36px, 3.6vw, 56px); line-height: 1.02; max-width: 22ch; }
 .ogled-opis { color: var(--muted); font-size: 17px; max-width: 60ch; }
+/* pripis glasbe (CC BY) tik pod opisom, manjši; povezave v barvi besedila */
+.ogled-glasba { font-size: 15px; margin-top: calc(var(--s1) - var(--s4)); }
+.ogled-glasba a { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.ogled-glasba a:hover { color: var(--fg); }
 .ogled-dejanja { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s1); }
 .ogled-dejanja .gumb { gap: var(--s2); }
 .ogled-ikona { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }

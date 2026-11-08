@@ -9,7 +9,7 @@ pošilja naročnikom (/api/video/<oznaka>-1080.mp4 in -720.mp4).
 
 Vir so spletni različici iz stran/media/vlogi/ (naredi jih vlogi/zberi.py
 --video). Plačljiv je vsak vlog brez "brezplacen": true v stran/vlogi.json;
-nalagajo se le plačljivi. stran/videi.json hrani, kaj je naloženo (ime,
+nalagajo se plačljivi in prosti (brezplacen brez oznake youtube, igrajo iz R2 za vse). stran/videi.json hrani, kaj je naloženo (ime,
 velikost, čas), da se ista datoteka ne nalaga dvakrat; spremenjena datoteka
 (druga velikost) se naloži znova.
 
@@ -60,7 +60,7 @@ def shrani_manifest(m):
 
 def placljivi_vlogi():
     vlogi = json.loads(VLOGI.read_text(encoding="utf-8"))["vlogi"]
-    return [v for v in vlogi if (v.get("youtube") or v.get("objavljen")) and not v.get("brezplacen")]
+    return [v for v in vlogi if (v.get("youtube") or v.get("objavljen")) and not (v.get("brezplacen") and v.get("youtube"))]
 
 
 def zeton_r2():

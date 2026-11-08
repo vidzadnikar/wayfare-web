@@ -79,6 +79,29 @@ def je_brezplacen(v):
     return bool(v.get("brezplacen"))
 
 
+# Prost film: brezplačen vlog brez oznake youtube (recap vseh potovanj kot promo).
+# Igra iz R2 kot plačljiv, a /api/vlog in /api/video ga dasta vsakomur, tudi
+# gostu (zaledje bere "prost" iz vlogi/seznam.json).
+def je_prost(v):
+    return je_brezplacen(v) and not v.get("youtube")
+
+
+# Pripis glasbe pod licenco CC BY na strani ogleda ("glasba" v vlogi.json).
+def pripis_glasbe(v, jezik):
+    g = v.get("glasba")
+    if not g:
+        return ""
+    e = html.escape
+    a = lambda url, besedilo: f'<a href="{e(url)}" rel="noopener" target="_blank">{e(besedilo)}</a>'
+    if jezik == "sl":
+        besedilo = (f'Glasba: »{e(g["naslov"])}«, {a(g["avtor_url"], g["avtor"])} ({a(g["vir_url"], g["vir"])}), '
+                    f'licenca {a(g["licenca_url"], g["licenca"])}.')
+    else:
+        besedilo = (f'Music: “{e(g["naslov"])}” by {a(g["avtor_url"], g["avtor"])} ({a(g["vir_url"], g["vir"])}), '
+                    f'licensed under {a(g["licenca_url"], g["licenca"])}.')
+    return f'<p class="ogled-opis ogled-glasba">{besedilo}</p>'
+
+
 # 24 sličic surovih posnetkov v časovnem zaporedju; poletijo v sled V1 časovnice
 _VSE = [f"t{n:02d}" for n in range(1, 45) if n != 36]  # t36 je pokončen
 SLICICE = [_VSE[round(i * (len(_VSE) - 1) / 23)] for i in range(24)]
@@ -493,7 +516,7 @@ def _opis_ogleda(v, jezik):
     M = MESECI_DOLGI[jezik]
     l1, m1, d1 = map(int, v["datum"].split("-"))
     do = v.get("datum_do")
-    kraj = v["kraj"][jezik]
+    kraj = (v.get("opis") or {}).get(jezik) or v["kraj"][jezik]
     if jezik == "sl":
         if not do or do == v["datum"]:
             return f"{kraj}. Posneto {d1}. {M[m1 - 1]} {l1}."
@@ -527,6 +550,7 @@ def ogled_stran(oznaka, jezik, b, p):
                      for x in serija)
     brezplacen = je_brezplacen(v)
     youtube_javen = o["youtube"] if brezplacen else ""
+    # "placljiv" v skriptu pomeni: film iz R2, dostop pove /api/vlog (prost film ga da vsem)
     return {
         "ogled_naslov_strani": html.escape(f"{o['naslov']} — Wayfare Studio"),
         "ogled_opis_meta": html.escape(opis),
@@ -535,7 +559,8 @@ def ogled_stran(oznaka, jezik, b, p):
         "ogled_slika": o["slika"],
         # plačljiv vlog: oznaka youtube ostane doma, film pride iz R2 prek /api/video
         "ogled_youtube_id": youtube_javen,
-        "ogled_placljiv": "false" if brezplacen else "true",
+        "ogled_placljiv": "false" if youtube_javen else "true",
+        "ogled_glasba": pripis_glasbe(v, jezik),
         "ogled_youtube_skrito": "" if youtube_javen else " hidden",
         "ogled_gumb_href": f"https://www.youtube.com/watch?v={youtube_javen}" if youtube_javen else p["pot_pogoji"],
         "ogled_pot_absolutna": "/" + izhod_ogleda(oznaka, jezik).removesuffix("index.html"),
@@ -659,7 +684,7 @@ def vlogi_dom(jezik, p):
                                         velikosti="340px", skrita=skrita) for v in del_)
         vrste.append(f'      <div class="zid-vrsta" data-smer="{smer}"><ul class="zid-niz">{niz(False)}</ul>'
                      f'<ul class="zid-niz" aria-hidden="true" inert>{niz(True)}</ul></div>')
-    krajev = len({v["kraj"]["en"] for v in vlogi})
+    krajev = len({v["kraj"]["en"] for v in vlogi if not v.get("vse")})
     return {"zid": "\n".join(vrste), "st_filmov": mnozina(len(vlogi), jezik, "film"),
             "st_potovanj": mnozina(krajev, jezik, "potovanje")}
 
@@ -692,6 +717,8 @@ def vlogi_stran(jezik, b, p):
     # skupine po kraju, v vrstnem redu prvega pojava (najnovejše potovanje prvo)
     skupine = {}
     for v, o in zip(vlogi, opisi):
+        if v.get("vse"):  # recap vseh potovanj je izpostavljen, v skupinah krajev ga ni
+            continue
         skupine.setdefault(o["kraj"], []).append((v, o))
     deli = []
     for i, (kraj, filmi) in enumerate(skupine.items(), 1):
@@ -843,6 +870,8 @@ def strukturirani(stran, jezik, b, url, slika, opis):
         }
         if je_brezplacen(v) and v.get("youtube"):
             podatki["embedUrl"] = f"https://www.youtube.com/embed/{v['youtube']}"
+        elif je_prost(v):
+            podatki["isAccessibleForFree"] = True
         else:
             podatki["isAccessibleForFree"] = False
             podatki["hasPart"] = {"@type": "WebPageElement", "isAccessibleForFree": False, "cssSelector": ".ogled-oder"}
@@ -1022,7 +1051,8 @@ def objavi(zgoscene, strani, okvirji):
     # imena vlogov za nadzor (ogledi): le oznaka in slovenski naslov
     (objava / "vlogi").mkdir(parents=True, exist_ok=True)
     (objava / "vlogi" / "seznam.json").write_text(json.dumps(
-        [{"oznaka": v["oznaka"], "naslov": v["naslov"]["sl"]} for v in vlogi_podatki()], ensure_ascii=False))
+        [{"oznaka": v["oznaka"], "naslov": v["naslov"]["sl"], **({"prost": True} if je_prost(v) else {})}
+         for v in vlogi_podatki()], ensure_ascii=False))
     neuporabljeni = sorted(str(p.relative_to(TU)) for p in Path(TU, "media").rglob("*")
                            if p.is_file() and str(p.relative_to(TU)) not in uporabljeni
                            and p.name != ".DS_Store" and not SPLETNI_VIDEO.match(str(p.relative_to(TU))))
@@ -1036,7 +1066,9 @@ def objavi(zgoscene, strani, okvirji):
     if brez:
         print("brez oznake youtube ali objavljen (na strani jih ni):", ", ".join(brez))
     placljivi = [v["oznaka"] for v in vlogi_podatki() if not je_brezplacen(v)]
-    print(f"plačljivi vlogi (film iz R2, nalaganje: python3 zaledje/videi.py): {len(placljivi)}, brezplačni: {len(vlogi_podatki()) - len(placljivi)}")
+    prosti = [v["oznaka"] for v in vlogi_podatki() if je_prost(v)]
+    print(f"plačljivi vlogi (film iz R2, nalaganje: python3 zaledje/videi.py): {len(placljivi)}, "
+          f"prosti (iz R2 za vse): {len(prosti)}, z YouTuba: {len(vlogi_podatki()) - len(placljivi) - len(prosti)}")
     if BREZ_PREVODA:
         print("poglavja brez angleškega imena (dodaj v stran/poglavja-en.json):", ", ".join(sorted(BREZ_PREVODA)))
     if prevelike:

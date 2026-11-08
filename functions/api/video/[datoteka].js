@@ -1,9 +1,11 @@
 // Film za naročnike iz zasebnega vedra R2 (vezava VIDEI): le za prijavljenega
-// člana z dostopom. Podpira Range (iskanje po filmu) in HEAD.
+// člana z dostopom; prost film ("prost" v vlogi/seznam.json) za vsakogar.
+// Podpira Range (iskanje po filmu) in HEAD.
 import { Napaka, json } from "../../../zaledje/osnova.js";
 import { clanIzSeje } from "../../../zaledje/seja.js";
 import { dostopClana } from "../../../zaledje/narocnine.js";
 import { obravnavaj } from "../../../zaledje/strani.js";
+import { jeProst } from "../../../zaledje/komentarji.js";
 
 const IME = /^[a-z0-9-]{2,60}-(1080|720)\.mp4$/;
 
@@ -26,14 +28,17 @@ async function obdelaj({ request, env, params }, samoGlava) {
   const ime = String(params.datoteka || "");
   if (!IME.test(ime)) throw new Napaka(404, "ni");
   if (!env.VIDEI) throw new Error("Manjka vezava R2 VIDEI (wrangler.toml).");
-  const clan = await clanIzSeje(env, request);
-  const d = await dostopClana(env, env.DB, clan);
-  if (!d.dostop) return json({ napaka: clan ? "brez_dostopa" : "prijava" }, clan ? 403 : 401);
+  const prost = await jeProst(env, request, ime.replace(/-(1080|720)\.mp4$/, ""));
+  if (!prost) {
+    const clan = await clanIzSeje(env, request);
+    const d = await dostopClana(env, env.DB, clan);
+    if (!d.dostop) return json({ napaka: clan ? "brez_dostopa" : "prijava" }, clan ? 403 : 401);
+  }
   const glava = await env.VIDEI.head(ime);
   if (!glava) throw new Napaka(404, "ni", "Filma še ni.");
   const velikost = glava.size;
   const skupne = {
-    "Content-Type": "video/mp4", "Accept-Ranges": "bytes", "Cache-Control": "private, max-age=3600",
+    "Content-Type": "video/mp4", "Accept-Ranges": "bytes", "Cache-Control": prost ? "public, max-age=3600" : "private, max-age=3600",
     "Content-Disposition": "inline", "X-Content-Type-Options": "nosniff", ETag: glava.httpEtag,
   };
   const r = obseg(request.headers.get("Range"), velikost);

@@ -1,6 +1,71 @@
 {
  "vlogi": [
   {
+   "oznaka": "potovanja-recap",
+   "naslov": {
+    "en": "Every Trip So Far",
+    "sl": "Vsa potovanja doslej"
+   },
+   "kraj": {
+    "en": "Europe",
+    "sl": "Evropa"
+   },
+   "datum": "2025-04-29",
+   "datum_do": "2026-10-12",
+   "trajanje": 91.821,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": null,
+   "poglavja": [
+    [
+     0.0,
+     "Barcelona"
+    ],
+    [
+     13.7,
+     "Rim"
+    ],
+    [
+     27.4,
+     "Budimpešta"
+    ],
+    [
+     37.7,
+     "Malta"
+    ],
+    [
+     51.4,
+     "Rifnik"
+    ],
+    [
+     58.3,
+     "Madrid"
+    ],
+    [
+     72.0,
+     "Milano"
+    ]
+   ],
+   "jezik": "sl",
+   "youtube": null,
+   "brezplacen": true,
+   "objavljen": true,
+   "vse": true,
+   "opis": {
+    "en": "Seven trips in one film, from Barcelona to Milan",
+    "sl": "Sedem potovanj v enem filmu, od Barcelone do Milana"
+   },
+   "glasba": {
+    "naslov": "Fear",
+    "avtor": "MAITTRE",
+    "avtor_url": "https://www.youtube.com/c/maittreofficial",
+    "vir": "free-stock-music.com",
+    "vir_url": "https://www.free-stock-music.com",
+    "licenca": "CC BY 3.0",
+    "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+   }
+  },
+  {
    "oznaka": "milano-recap",
    "naslov": {
     "en": "Milan Recap",
