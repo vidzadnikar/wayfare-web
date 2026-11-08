@@ -86,20 +86,23 @@ def je_prost(v):
     return je_brezplacen(v) and not v.get("youtube")
 
 
-# Pripis glasbe pod licenco CC BY na strani ogleda ("glasba" v vlogi.json).
+# Pripis glasbe pod licenco CC BY na strani ogleda ("glasba" v vlogi.json: ena
+# skladba ali seznam skladb; vsaka dobi svoj stavek).
 def pripis_glasbe(v, jezik):
     g = v.get("glasba")
     if not g:
         return ""
     e = html.escape
     a = lambda url, besedilo: f'<a href="{e(url)}" rel="noopener" target="_blank">{e(besedilo)}</a>'
-    if jezik == "sl":
-        besedilo = (f'Glasba: »{e(g["naslov"])}«, {a(g["avtor_url"], g["avtor"])} ({a(g["vir_url"], g["vir"])}), '
-                    f'licenca {a(g["licenca_url"], g["licenca"])}.')
-    else:
-        besedilo = (f'Music: “{e(g["naslov"])}” by {a(g["avtor_url"], g["avtor"])} ({a(g["vir_url"], g["vir"])}), '
-                    f'licensed under {a(g["licenca_url"], g["licenca"])}.')
-    return f'<p class="ogled-opis ogled-glasba">{besedilo}</p>'
+    stavki = []
+    for g in (g if isinstance(g, list) else [g]):
+        if jezik == "sl":
+            stavki.append(f'Glasba: »{e(g["naslov"])}«, {a(g["avtor_url"], g["avtor"])} '
+                          f'({a(g["vir_url"], g["vir"])}), licenca {a(g["licenca_url"], g["licenca"])}.')
+        else:
+            stavki.append(f'Music: “{e(g["naslov"])}” by {a(g["avtor_url"], g["avtor"])} '
+                          f'({a(g["vir_url"], g["vir"])}), licensed under {a(g["licenca_url"], g["licenca"])}.')
+    return f'<p class="ogled-opis ogled-glasba">{"<br>".join(stavki)}</p>'
 
 
 # 24 sličic surovih posnetkov v časovnem zaporedju; poletijo v sled V1 časovnice

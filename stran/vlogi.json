@@ -305,7 +305,7 @@
    },
    "datum": "2026-10-09",
    "datum_do": null,
-   "trajanje": 452.767,
+   "trajanje": 407.352,
    "sirina": 1920,
    "visina": 1080,
    "posnetkov": 68,
@@ -315,36 +315,86 @@
      "Uvod"
     ],
     [
-     12.4,
-     "Day 1 Milano"
+     12.0,
+     "Jutro"
     ],
     [
-     81.6,
-     "Dopoldne"
+     58.4,
+     "Vlak do Milana"
     ],
     [
-     102.5,
-     "Milano"
+     87.2,
+     "Stavka v Milanu"
     ],
     [
-     141.5,
+     121.9,
      "Duomo di Milano"
     ],
     [
-     177.3,
+     154.0,
      "Strehe Duoma"
     ],
     [
-     273.9,
+     202.5,
      "Galleria Vittorio Emanuele II"
     ],
     [
-     311.8,
+     221.7,
+     "Teatro alla Scala"
+    ],
+    [
+     238.8,
      "Večer"
+    ],
+    [
+     261.8,
+     "Stanovanje"
+    ],
+    [
+     389.4,
+     "Lahko noč"
     ]
    ],
    "jezik": "sl",
-   "youtube": "9tV9cIBiw8w"
+   "youtube": "9tV9cIBiw8w",
+   "glasba": [
+    {
+     "naslov": "Dark Trap | DARKNESS",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Morning Espresso",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Take Care",
+     "avtor": "Rexlambo",
+     "avtor_url": "https://soundcloud.com/rexlambo",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Breakfast in Paris",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    }
+   ]
   },
   {
    "oznaka": "madrid-recap",
@@ -806,11 +856,44 @@
    },
    "datum": "2025-12-26",
    "datum_do": null,
-   "trajanje": 132.6,
+   "trajanje": 153.634,
    "sirina": 1080,
    "visina": 1920,
-   "posnetkov": 30,
-   "poglavja": [],
+   "posnetkov": 31,
+   "poglavja": [
+    [
+     0.0,
+     "Uvod"
+    ],
+    [
+     13.1,
+     "Budimpešta"
+    ],
+    [
+     27.3,
+     "Dopoldne"
+    ],
+    [
+     40.3,
+     "Parlament"
+    ],
+    [
+     70.3,
+     "Budapest Eye"
+    ],
+    [
+     83.0,
+     "Božični sejem"
+    ],
+    [
+     106.8,
+     "Bazilika sv. Štefana"
+    ],
+    [
+     132.9,
+     "Fashion Street"
+    ]
+   ],
    "jezik": "sl",
    "youtube": null
   },
