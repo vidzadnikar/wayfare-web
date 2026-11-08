@@ -55,14 +55,14 @@ JSON = TU.parent / "stran" / "vlogi.json"
 # opis (po želji): prvi stavek na strani ogleda namesto kraja, en in sl.
 # glasba (po želji): pripis skladbe pod licenco CC BY na strani ogleda.
 VLOGI = [
-    dict(oznaka="potovanja-recap", izvor="Potovanja recap/potovanja-recap-v3.mp4", projekt=None,
+    dict(oznaka="potovanja-recap", izvor="Potovanja recap/potovanja-recap-v4.mp4", projekt=None,
          naslov=dict(en="Every Trip So Far", sl="Vsa potovanja doslej"),
          kraj=dict(en="Europe", sl="Evropa"),
-         opis=dict(en="Seven trips in one film, from Barcelona to Milan",
-                   sl="Sedem potovanj v enem filmu, od Barcelone do Milana"),
-         datum=("2025-04-29", "2026-10-12"), naslovna=88.4, brezplacen=True, objavljen=True, vse=True,
-         poglavja=[[0.0, "Barcelona"], [13.7, "Rim"], [27.4, "Budimpešta"], [37.7, "Malta"],
-                   [51.4, "Rifnik"], [58.3, "Madrid"], [72.0, "Milano"]],
+         opis=dict(en="Eight trips in one film, from Valencia to Milan",
+                   sl="Osem potovanj v enem filmu, od Valencije do Milana"),
+         datum=("2024-04-28", "2026-10-12"), naslovna=102.1, brezplacen=True, objavljen=True, vse=True,
+         poglavja=[[0.0, "Valencija"], [13.7, "Barcelona"], [27.4, "Rim"], [41.1, "Budimpešta"],
+                   [51.4, "Malta"], [65.1, "Rifnik"], [72.0, "Madrid"], [85.7, "Milano"]],
          glasba=dict(naslov="Fear", avtor="MAITTRE", avtor_url="https://www.youtube.com/c/maittreofficial",
                      vir="free-stock-music.com", vir_url="https://www.free-stock-music.com",
                      licenca="CC BY 3.0", licenca_url="https://creativecommons.org/licenses/by/3.0/deed.en_US")),

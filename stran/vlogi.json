@@ -10,39 +10,43 @@
     "en": "Europe",
     "sl": "Evropa"
    },
-   "datum": "2025-04-29",
+   "datum": "2024-04-28",
    "datum_do": "2026-10-12",
-   "trajanje": 91.821,
+   "trajanje": 105.536,
    "sirina": 1920,
    "visina": 1080,
    "posnetkov": null,
    "poglavja": [
     [
      0.0,
-     "Barcelona"
+     "Valencija"
     ],
     [
      13.7,
-     "Rim"
+     "Barcelona"
     ],
     [
      27.4,
+     "Rim"
+    ],
+    [
+     41.1,
      "Budimpešta"
     ],
     [
-     37.7,
+     51.4,
      "Malta"
     ],
     [
-     51.4,
+     65.1,
      "Rifnik"
     ],
     [
-     58.3,
+     72.0,
      "Madrid"
     ],
     [
-     72.0,
+     85.7,
      "Milano"
     ]
    ],
@@ -52,8 +56,8 @@
    "objavljen": true,
    "vse": true,
    "opis": {
-    "en": "Seven trips in one film, from Barcelona to Milan",
-    "sl": "Sedem potovanj v enem filmu, od Barcelone do Milana"
+    "en": "Eight trips in one film, from Valencia to Milan",
+    "sl": "Osem potovanj v enem filmu, od Valencije do Milana"
    },
    "glasba": {
     "naslov": "Fear",
