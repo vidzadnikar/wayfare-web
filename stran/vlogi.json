@@ -102,7 +102,7 @@
    },
    "datum": "2026-10-12",
    "datum_do": null,
-   "trajanje": 499.45,
+   "trajanje": 454.95,
    "sirina": 1920,
    "visina": 1080,
    "posnetkov": 57,
@@ -112,44 +112,104 @@
      "Uvod"
     ],
     [
-     14.4,
-     "Day 4 Milano"
+     13.6,
+     "Jutro"
     ],
     [
-     68.1,
+     68.5,
      "Caffè Napoli"
     ],
     [
-     87.1,
+     87.5,
      "Basilica di Sant'Ambrogio"
     ],
     [
-     161.7,
+     126.2,
      "Slovo od stanovanja"
     ],
     [
-     243.4,
+     207.1,
      "Piazza del Duomo"
     ],
     [
-     298.5,
+     235.2,
      "Kosilo"
     ],
     [
-     352.9,
+     289.2,
      "Milano Centrale"
     ],
     [
-     429.5,
+     367.0,
      "Proti domu"
     ],
     [
-     441.9,
+     379.4,
      "Prihod domov"
+    ],
+    [
+     436.9,
+     "Se vidimo naslednjič"
     ]
    ],
    "jezik": "sl",
-   "youtube": "oV69oloS8Bk"
+   "youtube": "oV69oloS8Bk",
+   "glasba": [
+    {
+     "naslov": "Dark Trap | DARKNESS",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Morning Espresso",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Take Care",
+     "avtor": "Rexlambo",
+     "avtor_url": "https://soundcloud.com/rexlambo",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Bicycles",
+     "avtor": "Scandinavianz",
+     "avtor_url": "https://soundcloud.com/scandinavianz",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "City Life",
+     "avtor": "Artificial.Music",
+     "avtor_url": "https://soundcloud.com/artificial-music",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Breakfast in Paris",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    }
+   ]
   },
   {
    "oznaka": "milano-3",
@@ -163,7 +223,7 @@
    },
    "datum": "2026-10-11",
    "datum_do": null,
-   "trajanje": 775.088,
+   "trajanje": 772.173,
    "sirina": 1920,
    "visina": 1080,
    "posnetkov": 53,
@@ -173,56 +233,112 @@
      "Uvod"
     ],
     [
-     14.4,
-     "Day 3 Milano"
+     13.8,
+     "Jutro"
     ],
     [
-     87.8,
+     80.2,
      "Ofelé"
     ],
     [
-     124.7,
+     122.1,
      "Piazza Gae Aulenti"
     ],
     [
-     173.0,
+     170.4,
      "Bosco Verticale"
     ],
     [
-     193.7,
+     191.5,
      "Isola"
     ],
     [
-     279.6,
+     258.7,
      "Galleria Vittorio Emanuele II"
     ],
     [
-     288.6,
+     267.7,
      "Aperitivo"
     ],
     [
-     354.4,
+     333.4,
      "Nakupi"
     ],
     [
-     388.7,
+     367.8,
      "Ogled nakupov"
     ],
     [
-     495.3,
+     474.4,
      "Okušanje"
     ],
     [
-     732.7,
+     711.8,
      "Lahko noč"
     ],
     [
-     761.2,
+     740.2,
      "Pozna večerja"
     ]
    ],
    "jezik": "sl",
-   "youtube": "WkgzNkAhiWg"
+   "youtube": "WkgzNkAhiWg",
+   "glasba": [
+    {
+     "naslov": "Dark Trap | DARKNESS",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Morning Espresso",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Take Care",
+     "avtor": "Rexlambo",
+     "avtor_url": "https://soundcloud.com/rexlambo",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Bicycles",
+     "avtor": "Scandinavianz",
+     "avtor_url": "https://soundcloud.com/scandinavianz",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "City Life",
+     "avtor": "Artificial.Music",
+     "avtor_url": "https://soundcloud.com/artificial-music",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Breakfast in Paris",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    }
+   ]
   },
   {
    "oznaka": "milano-2",
@@ -236,7 +352,7 @@
    },
    "datum": "2026-10-10",
    "datum_do": null,
-   "trajanje": 614.92,
+   "trajanje": 611.405,
    "sirina": 1920,
    "visina": 1080,
    "posnetkov": 73,
@@ -246,56 +362,116 @@
      "Uvod"
     ],
     [
-     13.1,
-     "Day 2 Milano"
+     12.5,
+     "Jutro"
     ],
     [
-     82.6,
+     78.5,
      "Dopoldne"
     ],
     [
-     107.0,
+     97.7,
      "Santa Maria delle Grazie"
     ],
     [
-     152.5,
+     141.5,
      "Castello Sforzesco"
     ],
     [
-     204.0,
+     193.0,
      "Arco della Pace"
     ],
     [
-     251.6,
+     228.5,
      "Popoldne"
     ],
     [
-     290.3,
+     268.4,
      "Piazza del Duomo"
     ],
     [
-     306.4,
+     284.9,
      "Spùn"
     ],
     [
-     318.4,
+     295.9,
      "Test tiramisuja"
     ],
     [
-     375.3,
+     353.8,
      "Ogled nakupov"
     ],
     [
-     516.4,
+     494.9,
      "Večer"
     ],
     [
-     542.2,
+     520.3,
      "Navigli"
+    ],
+    [
+     593.4,
+     "Lahko noč"
     ]
    ],
    "jezik": "sl",
-   "youtube": "byRexCDP6DA"
+   "youtube": "byRexCDP6DA",
+   "glasba": [
+    {
+     "naslov": "Dark Trap | DARKNESS",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Morning Espresso",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Take Care",
+     "avtor": "Rexlambo",
+     "avtor_url": "https://soundcloud.com/rexlambo",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Bicycles",
+     "avtor": "Scandinavianz",
+     "avtor_url": "https://soundcloud.com/scandinavianz",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "City Life",
+     "avtor": "Artificial.Music",
+     "avtor_url": "https://soundcloud.com/artificial-music",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Breakfast in Paris",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    }
+   ]
   },
   {
    "oznaka": "milano-1",

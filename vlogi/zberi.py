@@ -54,6 +54,18 @@ JSON = TU.parent / "stran" / "vlogi.json"
 # poglavja (po želji): [[sekunde, ime], …] za film brez paketa za objavo.
 # opis (po želji): prvi stavek na strani ogleda namesto kraja, en in sl.
 # glasba (po želji): pripis skladbe pod licenco CC BY na strani ogleda.
+# Music of the hybrid Milano days (beat montages + lo-fi beds), all CC BY 3.0 from
+# free-stock-music.com; the full list is in opis-glasba.txt of each beat project.
+MILANO_GLASBA = [dict(naslov=n, avtor=a, avtor_url=u, vir="free-stock-music.com",
+                      vir_url="https://www.free-stock-music.com", licenca="CC BY 3.0",
+                      licenca_url="https://creativecommons.org/licenses/by/3.0/deed.en_US")
+                 for n, a, u in (("Dark Trap | DARKNESS", "Alex-Productions", "https://onsound.eu/"),
+                                 ("Morning Espresso", "Alex-Productions", "https://onsound.eu/"),
+                                 ("Take Care", "Rexlambo", "https://soundcloud.com/rexlambo"),
+                                 ("Bicycles", "Scandinavianz", "https://soundcloud.com/scandinavianz"),
+                                 ("City Life", "Artificial.Music", "https://soundcloud.com/artificial-music"),
+                                 ("Breakfast in Paris", "Alex-Productions", "https://onsound.eu/"))]
+
 VLOGI = [
     dict(oznaka="potovanja-recap", izvor="Potovanja recap/potovanja-recap-v4.mp4", projekt=None,
          naslov=dict(en="Every Trip So Far", sl="Vsa potovanja doslej"),
@@ -70,36 +82,51 @@ VLOGI = [
          naslov=dict(en="Milan Recap", sl="Recap Milano"),
          kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
          datum=("2026-10-09", "2026-10-12"), naslovna="~/Video/Milano recap/naslovnica.webp", objavljen=True),
-    dict(oznaka="milano-4", izvor="Milano vlog day 4.mp4", projekt="Milano day 4",
+    # Milano days 1–4: since 8–9 Nov 2026 the hybrid cuts (talk at the places, beat
+    # montages between them). The covers are the original YouTube thumbnails, kept as
+    # naslovnica.jpg in each beat project. The YouTube ids stay only so samodejno.py
+    # does not add the old uploads again.
+    dict(oznaka="milano-4", izvor="Milano vlog day 4.mp4", projekt="Milano day 4 beat",
          naslov=dict(en="Milan — Day 4", sl="Milano — 4. dan"),
          kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
-         datum=("2026-10-12", None), naslovna=1, youtube="oV69oloS8Bk"),
-    dict(oznaka="milano-3", izvor="Milano vlog day 3.mp4", projekt="Milano day 3",
+         datum=("2026-10-12", None), naslovna="~/Video/Milano day 4 beat/naslovnica.jpg",
+         youtube="oV69oloS8Bk",
+         poglavja=[[0.0, "Uvod"], [13.6, "Jutro"], [68.5, "Caffè Napoli"],
+                   [87.5, "Basilica di Sant'Ambrogio"], [126.2, "Slovo od stanovanja"],
+                   [207.1, "Piazza del Duomo"], [235.2, "Kosilo"], [289.2, "Milano Centrale"],
+                   [367.0, "Proti domu"], [379.4, "Prihod domov"], [436.9, "Se vidimo naslednjič"]],
+         glasba=MILANO_GLASBA),
+    dict(oznaka="milano-3", izvor="Milano vlog day 3.mp4", projekt="Milano day 3 beat",
          naslov=dict(en="Milan — Day 3", sl="Milano — 3. dan"),
          kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
-         datum=("2026-10-11", None), naslovna=1, youtube="WkgzNkAhiWg"),
-    dict(oznaka="milano-2", izvor="Milano vlog day 2.mp4", projekt="Milano day 2",
+         datum=("2026-10-11", None), naslovna="~/Video/Milano day 3 beat/naslovnica.jpg",
+         youtube="WkgzNkAhiWg",
+         poglavja=[[0.0, "Uvod"], [13.8, "Jutro"], [80.2, "Ofelé"], [122.1, "Piazza Gae Aulenti"],
+                   [170.4, "Bosco Verticale"], [191.5, "Isola"],
+                   [258.7, "Galleria Vittorio Emanuele II"], [267.7, "Aperitivo"], [333.4, "Nakupi"],
+                   [367.8, "Ogled nakupov"], [474.4, "Okušanje"], [711.8, "Lahko noč"],
+                   [740.2, "Pozna večerja"]],
+         glasba=MILANO_GLASBA),
+    dict(oznaka="milano-2", izvor="Milano vlog day 2.mp4", projekt="Milano day 2 beat",
          naslov=dict(en="Milan — Day 2", sl="Milano — 2. dan"),
          kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
-         datum=("2026-10-10", None), naslovna=1, youtube="byRexCDP6DA"),
-    # 8. 11. 2026 replaced by the hybrid cut (talk at the places, beat montages between
-    # them); the YouTube id stays only so samodejno.py does not add the old upload again
+         datum=("2026-10-10", None), naslovna="~/Video/Milano day 2 beat/naslovnica.jpg",
+         youtube="byRexCDP6DA",
+         poglavja=[[0.0, "Uvod"], [12.5, "Jutro"], [78.5, "Dopoldne"], [97.7, "Santa Maria delle Grazie"],
+                   [141.5, "Castello Sforzesco"], [193.0, "Arco della Pace"], [228.5, "Popoldne"],
+                   [268.4, "Piazza del Duomo"], [284.9, "Spùn"], [295.9, "Test tiramisuja"],
+                   [353.8, "Ogled nakupov"], [494.9, "Večer"], [520.3, "Navigli"], [593.4, "Lahko noč"]],
+         glasba=MILANO_GLASBA),
     dict(oznaka="milano-1", izvor="Milano vlog day 1.mp4", projekt="Milano day 1 beat",
          naslov=dict(en="Milan — Day 1", sl="Milano — 1. dan"),
          kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
-         datum=("2026-10-09", None), naslovna="~/Video/Milano day 1 beat/_izris/objava/naslovna-1.jpg",
+         datum=("2026-10-09", None), naslovna="~/Video/Milano day 1 beat/naslovnica.jpg",
          youtube="9tV9cIBiw8w",
          poglavja=[[0.0, "Uvod"], [12.0, "Jutro"], [58.4, "Vlak do Milana"], [87.2, "Stavka v Milanu"],
                    [121.9, "Duomo di Milano"], [154.0, "Strehe Duoma"],
                    [202.5, "Galleria Vittorio Emanuele II"], [221.7, "Teatro alla Scala"],
                    [238.8, "Večer"], [261.8, "Stanovanje"], [389.4, "Lahko noč"]],
-         glasba=[dict(naslov=n, avtor=a, avtor_url=u, vir="free-stock-music.com",
-                      vir_url="https://www.free-stock-music.com", licenca="CC BY 3.0",
-                      licenca_url="https://creativecommons.org/licenses/by/3.0/deed.en_US")
-                 for n, a, u in (("Dark Trap | DARKNESS", "Alex-Productions", "https://onsound.eu/"),
-                                 ("Morning Espresso", "Alex-Productions", "https://onsound.eu/"),
-                                 ("Take Care", "Rexlambo", "https://soundcloud.com/rexlambo"),
-                                 ("Breakfast in Paris", "Alex-Productions", "https://onsound.eu/"))]),
+         glasba=[s for s in MILANO_GLASBA if s["naslov"] not in ("Bicycles", "City Life")]),
     dict(oznaka="madrid-recap", izvor="Madrid vlog recap.mp4", projekt="Madrid recap",
          naslov=dict(en="Madrid — Recap", sl="Madrid — povzetek"),
          kraj=dict(en="Madrid, Spain", sl="Madrid, Španija"),
