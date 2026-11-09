@@ -1124,6 +1124,17 @@
    "kljuc": "Rome, Italy",
    "lon": 12.496,
    "lat": 41.903
+  },
+  {
+   "kljuc": "Valencia, Spain",
+   "lon": -0.376,
+   "lat": 39.47,
+   "ime": {
+    "en": "Valencia",
+    "sl": "Valencija"
+   },
+   "datum": "2024-04-28",
+   "film": "potovanja-recap"
   }
  ]
 }

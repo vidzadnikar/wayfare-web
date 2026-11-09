@@ -477,13 +477,26 @@ def zemljevid_dom(jezik, b, p):
     seznam = []
     for k in kraji_podatki():
         filmi = [v for v in vlogi if v["kraj"]["en"] == k["kljuc"]]
-        if not filmi:
+        if filmi:
+            od = min(v["datum"] for v in filmi)
+            do = max(v.get("datum_do") or v["datum"] for v in filmi)
+            ime = filmi[0]["kraj"][jezik].split(",")[0].strip()
+            opis = f"{mnozina(len(filmi), jezik, 'film')} · {obdobje(od, do, jezik)}"
+        elif k.get("film"):
+            # a place without its own vlog that appears in another film (Valencia in the
+            # recap of all trips): the pin shows that film and the day of the trip
+            filmi = [v for v in vlogi if v["oznaka"] == k["film"]]
+            if not filmi:
+                continue
+            od = do = k["datum"]
+            ime = k["ime"][jezik]
+            naslov = filmi[0]["naslov"][jezik]
+            opis = (f"V filmu »{naslov}« · " if jezik == "sl" else f"In “{naslov}” · ") + obdobje(od, do, jezik)
+        else:
             continue
-        od = min(v["datum"] for v in filmi)
-        do = max(v.get("datum_do") or v["datum"] for v in filmi)
         kartice = "".join(kartica_html(v, opis_vloga(v, jezik, media), pot_ogleda(p, v["oznaka"], jezik), izberi=False) for v in filmi)
-        seznam.append(dict(ime=filmi[0]["kraj"][jezik].split(",")[0].strip(), lon=k["lon"], lat=k["lat"], stran=k.get("stran"),
-                           od=od, opis=f"{mnozina(len(filmi), jezik, 'film')} · {obdobje(od, do, jezik)}", kartice=kartice))
+        seznam.append(dict(ime=ime, lon=k["lon"], lat=k["lat"], stran=k.get("stran"),
+                           od=od, opis=opis, kartice=kartice))
     seznam.sort(key=lambda k: k["od"], reverse=True)
     podatki = {"kraji": seznam, "besedila": {"kolescek": b["zemljevid_namig_kolescek"]}}
     return {"zemljevid_json": json.dumps(podatki, ensure_ascii=False).replace("</", "<\\/")}

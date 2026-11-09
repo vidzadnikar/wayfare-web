@@ -206,6 +206,11 @@ KRAJI = {
     "Budapest, Hungary": dict(lon=19.04,  lat=47.498),
     "Malta":             dict(lon=14.51,  lat=35.9),
     "Rome, Italy":       dict(lon=12.496, lat=41.903),
+    # Valencia (April 2024) has no vlog of its own, only photos in the recap of all
+    # trips. A place like this names the film it appears in (film = its oznaka), its
+    # own name per language and the day of the trip; its pin shows that film.
+    "Valencia, Spain":   dict(lon=-0.376, lat=39.47, ime=dict(en="Valencia", sl="Valencija"),
+                              datum="2024-04-28", film="potovanja-recap"),
 }
 
 # x264 kot pri zanki heroja; vlogi so 60 sličic/s, zato je zgornja meja višja
