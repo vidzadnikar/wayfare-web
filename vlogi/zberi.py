@@ -72,6 +72,16 @@ DUNAJ_GLASBA = [dict(naslov=n, avtor="Alex-Productions", avtor_url="https://onso
                      licenca_url="https://creativecommons.org/licenses/by/3.0/deed.en_US")
                 for n in ("Christmas Is Coming", "Christmas Snow")]
 
+# Music of Vienna day 2, both CC BY 4.0 from free-stock-music.com (LICENCA-IN-PRIPIS.md in ~/Video/_glasba).
+DUNAJ_2_GLASBA = [
+    dict(naslov="Merry Christmas and Happy New Year", avtor="FSM Team", avtor_url="https://www.free-stock-music.com",
+         vir="free-stock-music.com", vir_url="https://www.free-stock-music.com", licenca="CC BY 4.0",
+         licenca_url="https://creativecommons.org/licenses/by/4.0/"),
+    dict(naslov="Frankincense And Myrrh", avtor="Scott Buckley", avtor_url="https://soundcloud.com/scottbuckley",
+         vir="free-stock-music.com", vir_url="https://www.free-stock-music.com", licenca="CC BY 4.0",
+         licenca_url="https://creativecommons.org/licenses/by/4.0/"),
+]
+
 VLOGI = [
     dict(oznaka="potovanja-recap", izvor="Potovanja recap/potovanja-recap-v4.mp4", projekt=None,
          naslov=dict(en="Every Trip So Far", sl="Vsa potovanja doslej"),
@@ -84,6 +94,14 @@ VLOGI = [
          glasba=dict(naslov="Fear", avtor="MAITTRE", avtor_url="https://www.youtube.com/c/maittreofficial",
                      vir="free-stock-music.com", vir_url="https://www.free-stock-music.com",
                      licenca="CC BY 3.0", licenca_url="https://creativecommons.org/licenses/by/3.0/deed.en_US")),
+    # Vienna day 2 (21 Nov 2026): edited in Wayfare Studio, on the site from R2 only (no YouTube).
+    # Cover: thumbnail in the style of day 1 (Vid and Lara from the lift clip 002 in front of
+    # the Karlskirche at night), made with Qwen Image 3 Edit.
+    dict(oznaka="dunaj-2", izvor="Dunaj day 2/_izris/Dunaj day 2.mp4", projekt="Dunaj day 2",
+         naslov=dict(en="Vienna — Day 2", sl="Dunaj — 2. dan"),
+         kraj=dict(en="Vienna, Austria", sl="Dunaj, Avstrija"),
+         datum=("2026-11-21", None), naslovna="~/Video/Dunaj day 2/naslovnica.jpg", objavljen=True,
+         glasba=DUNAJ_2_GLASBA),
     # Vienna day 1 (20 Nov 2026): edited in Wayfare Studio, on the site from R2 only (no YouTube).
     # Cover: thumbnail in the style of the others (selfie in front of the Rathaus,
     # DUNAJ + DAY 1), made from photo 033 with Qwen Image 3 Edit on 21 Nov 2026.

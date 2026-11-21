@@ -70,6 +70,92 @@
    }
   },
   {
+   "oznaka": "dunaj-2",
+   "naslov": {
+    "en": "Vienna — Day 2",
+    "sl": "Dunaj — 2. dan"
+   },
+   "kraj": {
+    "en": "Vienna, Austria",
+    "sl": "Dunaj, Avstrija"
+   },
+   "datum": "2026-11-21",
+   "datum_do": null,
+   "trajanje": 381.533,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": 65,
+   "poglavja": [
+    [
+     0.0,
+     "Uvod"
+    ],
+    [
+     13.5,
+     "Day two"
+    ],
+    [
+     83.9,
+     "Stephansdom"
+    ],
+    [
+     99.7,
+     "Popoldne"
+    ],
+    [
+     133.4,
+     "Hofburg"
+    ],
+    [
+     146.8,
+     "Heldenplatz"
+    ],
+    [
+     163.3,
+     "Maria-Theresien-Platz"
+    ],
+    [
+     180.8,
+     "Parlament"
+    ],
+    [
+     253.2,
+     "Večer"
+    ],
+    [
+     269.7,
+     "Schwarzenbergplatz"
+    ],
+    [
+     324.5,
+     "Karlskirche"
+    ]
+   ],
+   "jezik": "sl",
+   "youtube": null,
+   "objavljen": true,
+   "glasba": [
+    {
+     "naslov": "Merry Christmas and Happy New Year",
+     "avtor": "FSM Team",
+     "avtor_url": "https://www.free-stock-music.com",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 4.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    {
+     "naslov": "Frankincense And Myrrh",
+     "avtor": "Scott Buckley",
+     "avtor_url": "https://soundcloud.com/scottbuckley",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 4.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/4.0/"
+    }
+   ]
+  },
+  {
    "oznaka": "dunaj-1",
    "naslov": {
     "en": "Vienna — Day 1",
