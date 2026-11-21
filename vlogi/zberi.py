@@ -85,11 +85,12 @@ VLOGI = [
                      vir="free-stock-music.com", vir_url="https://www.free-stock-music.com",
                      licenca="CC BY 3.0", licenca_url="https://creativecommons.org/licenses/by/3.0/deed.en_US")),
     # Vienna day 1 (20 Nov 2026): edited in Wayfare Studio, on the site from R2 only (no YouTube).
-    # Cover: the carousel at the Christkindlmarkt in front of the Rathaus (3:12).
+    # Cover: thumbnail in the style of the others (selfie in front of the Rathaus,
+    # DUNAJ + DAY 1), made from photo 033 with Qwen Image 3 Edit on 21 Nov 2026.
     dict(oznaka="dunaj-1", izvor="Dunaj day 1/_izris/Dunaj day 1.mp4", projekt="Dunaj day 1",
          naslov=dict(en="Vienna — Day 1", sl="Dunaj — 1. dan"),
          kraj=dict(en="Vienna, Austria", sl="Dunaj, Avstrija"),
-         datum=("2026-11-20", None), naslovna=192.0, objavljen=True,
+         datum=("2026-11-20", None), naslovna="~/Video/Dunaj day 1/naslovnica.jpg", objavljen=True,
          glasba=DUNAJ_GLASBA),
     dict(oznaka="milano-recap", izvor="Milano recap/milano-recap-v1.mp4", projekt="Milano recap",
          naslov=dict(en="Milan Recap", sl="Recap Milano"),
