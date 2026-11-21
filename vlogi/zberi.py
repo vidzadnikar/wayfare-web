@@ -66,6 +66,12 @@ MILANO_GLASBA = [dict(naslov=n, avtor=a, avtor_url=u, vir="free-stock-music.com"
                                  ("City Life", "Artificial.Music", "https://soundcloud.com/artificial-music"),
                                  ("Breakfast in Paris", "Alex-Productions", "https://onsound.eu/"))]
 
+# Music of Vienna day 1, both CC BY 3.0 from free-stock-music.com (opis-glasba.txt in the project).
+DUNAJ_GLASBA = [dict(naslov=n, avtor="Alex-Productions", avtor_url="https://onsound.eu/", vir="free-stock-music.com",
+                     vir_url="https://www.free-stock-music.com", licenca="CC BY 3.0",
+                     licenca_url="https://creativecommons.org/licenses/by/3.0/deed.en_US")
+                for n in ("Christmas Is Coming", "Christmas Snow")]
+
 VLOGI = [
     dict(oznaka="potovanja-recap", izvor="Potovanja recap/potovanja-recap-v4.mp4", projekt=None,
          naslov=dict(en="Every Trip So Far", sl="Vsa potovanja doslej"),
@@ -78,6 +84,13 @@ VLOGI = [
          glasba=dict(naslov="Fear", avtor="MAITTRE", avtor_url="https://www.youtube.com/c/maittreofficial",
                      vir="free-stock-music.com", vir_url="https://www.free-stock-music.com",
                      licenca="CC BY 3.0", licenca_url="https://creativecommons.org/licenses/by/3.0/deed.en_US")),
+    # Vienna day 1 (20 Nov 2026): edited in Wayfare Studio, on the site from R2 only (no YouTube).
+    # Cover: the carousel at the Christkindlmarkt in front of the Rathaus (3:12).
+    dict(oznaka="dunaj-1", izvor="Dunaj day 1/_izris/Dunaj day 1.mp4", projekt="Dunaj day 1",
+         naslov=dict(en="Vienna — Day 1", sl="Dunaj — 1. dan"),
+         kraj=dict(en="Vienna, Austria", sl="Dunaj, Avstrija"),
+         datum=("2026-11-20", None), naslovna=192.0, objavljen=True,
+         glasba=DUNAJ_GLASBA),
     dict(oznaka="milano-recap", izvor="Milano recap/milano-recap-v1.mp4", projekt="Milano recap",
          naslov=dict(en="Milan Recap", sl="Recap Milano"),
          kraj=dict(en="Milan, Italy", sl="Milano, Italija"),
@@ -231,6 +244,7 @@ KRAJI = {
     "Barcelona, Spain":  dict(lon=2.173,  lat=41.385),
     "Rifnik, Slovenia":  dict(lon=15.42,  lat=46.22,  stran="spodaj"),
     "Budapest, Hungary": dict(lon=19.04,  lat=47.498),
+    "Vienna, Austria":   dict(lon=16.373, lat=48.208, stran="levo"),
     "Malta":             dict(lon=14.51,  lat=35.9),
     "Rome, Italy":       dict(lon=12.496, lat=41.903),
     # Valencia (April 2024) has no vlog of its own, only photos in the recap of all
@@ -373,14 +387,26 @@ def main(argv):
         print("spletne različice narejene")
         return
     prej = {}  # oznake youtube iz prejšnjega vlogi.json ostanejo, če jih v VLOGI ni
+    prej_zapisi = {}
     if JSON.is_file():
-        prej = {z["oznaka"]: z.get("youtube") for z in json.load(open(JSON, encoding="utf-8"))["vlogi"]}
+        prej_zapisi = {z["oznaka"]: z for z in json.load(open(JSON, encoding="utf-8"))["vlogi"]}
+        prej = {o: z.get("youtube") for o, z in prej_zapisi.items()}
     zapis = []
     for v in VLOGI:
         izvor = VIDEO / v["izvor"]
-        if not izvor.is_file():
-            raise SystemExit(f"Ni izvora: {izvor}")
         youtube = v.get("youtube") or prej.get(v["oznaka"])
+        stari = prej_zapisi.get(v["oznaka"])
+        if not izvor.is_file():
+            # Since 18 Nov 2026 finished vlogs live on Drive, not in ~/Video. A vlog that
+            # is already on the site keeps its measured data, chapters and cover; only the
+            # vlog being (re)made with --samo needs its source.
+            if not stari or samo == v["oznaka"] or (samo is None and not samo_slike):
+                raise SystemExit(f"Ni izvora: {izvor}")
+            print(f"{v['oznaka']}: izvora ni v ~/Video, ostane prejšnji zapis")
+            zapis.append({**stari, **dict(
+                naslov=v["naslov"], kraj=v["kraj"], datum=v["datum"][0], datum_do=v["datum"][1],
+                youtube=youtube)})
+            continue
         info = probe(izvor)
         print(f"{v['oznaka']}: {info['sirina']}×{info['visina']} {info['fps']} fps, {info['trajanje']:.0f} s"
               + (f", YouTube {youtube}" if youtube else ""))

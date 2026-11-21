@@ -70,6 +70,104 @@
    }
   },
   {
+   "oznaka": "dunaj-1",
+   "naslov": {
+    "en": "Vienna — Day 1",
+    "sl": "Dunaj — 1. dan"
+   },
+   "kraj": {
+    "en": "Vienna, Austria",
+    "sl": "Dunaj, Avstrija"
+   },
+   "datum": "2026-11-20",
+   "datum_do": null,
+   "trajanje": 342.333,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": 51,
+   "poglavja": [
+    [
+     0.0,
+     "Uvod"
+    ],
+    [
+     12.5,
+     "Day one"
+    ],
+    [
+     29.7,
+     "Ljubljana"
+    ],
+    [
+     39.7,
+     "Kava s kapučinom"
+    ],
+    [
+     51.1,
+     "Čakamo Laro"
+    ],
+    [
+     71.7,
+     "Popoldne"
+    ],
+    [
+     88.5,
+     "Dunaj"
+    ],
+    [
+     112.3,
+     "Apartma"
+    ],
+    [
+     158.1,
+     "Gremo v center"
+    ],
+    [
+     181.8,
+     "Christkindlmarkt"
+    ],
+    [
+     203.3,
+     "Vroča čokolada in kuhano vino"
+    ],
+    [
+     219.6,
+     "Taste test"
+    ],
+    [
+     263.5,
+     "Burgtheater"
+    ],
+    [
+     287.8,
+     "Noč"
+    ]
+   ],
+   "jezik": "sl",
+   "youtube": null,
+   "objavljen": true,
+   "glasba": [
+    {
+     "naslov": "Christmas Is Coming",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    },
+    {
+     "naslov": "Christmas Snow",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    }
+   ]
+  },
+  {
    "oznaka": "milano-recap",
    "naslov": {
     "en": "Milan Recap",
@@ -1290,6 +1388,12 @@
    "kljuc": "Budapest, Hungary",
    "lon": 19.04,
    "lat": 47.498
+  },
+  {
+   "kljuc": "Vienna, Austria",
+   "lon": 16.373,
+   "lat": 48.208,
+   "stran": "levo"
   },
   {
    "kljuc": "Malta",
