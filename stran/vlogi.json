@@ -70,6 +70,80 @@
    }
   },
   {
+   "oznaka": "dunaj-3",
+   "naslov": {
+    "en": "Vienna — Day 3",
+    "sl": "Dunaj — 3. dan"
+   },
+   "kraj": {
+    "en": "Vienna, Austria",
+    "sl": "Dunaj, Avstrija"
+   },
+   "datum": "2026-11-22",
+   "datum_do": null,
+   "trajanje": 310.09,
+   "sirina": 1920,
+   "visina": 1080,
+   "posnetkov": 53,
+   "poglavja": [
+    [
+     0.0,
+     "Uvod"
+    ],
+    [
+     13.3,
+     "Day three"
+    ],
+    [
+     93.3,
+     "Parlament"
+    ],
+    [
+     105.2,
+     "Rathaus"
+    ],
+    [
+     141.0,
+     "Popoldne"
+    ],
+    [
+     160.1,
+     "Schönbrunn"
+    ],
+    [
+     226.5,
+     "Gloriette"
+    ],
+    [
+     259.1,
+     "Večer"
+    ]
+   ],
+   "jezik": "sl",
+   "youtube": null,
+   "objavljen": true,
+   "glasba": [
+    {
+     "naslov": "Deck the Halls B",
+     "avtor": "Kevin MacLeod",
+     "avtor_url": "https://incompetech.com",
+     "vir": "incompetech.com",
+     "vir_url": "https://incompetech.com",
+     "licenca": "CC BY 4.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    {
+     "naslov": "Christmas Mood",
+     "avtor": "Alex-Productions",
+     "avtor_url": "https://onsound.eu/",
+     "vir": "free-stock-music.com",
+     "vir_url": "https://www.free-stock-music.com",
+     "licenca": "CC BY 3.0",
+     "licenca_url": "https://creativecommons.org/licenses/by/3.0/deed.en_US"
+    }
+   ]
+  },
+  {
    "oznaka": "dunaj-2",
    "naslov": {
     "en": "Vienna — Day 2",

@@ -82,6 +82,17 @@ DUNAJ_2_GLASBA = [
          licenca_url="https://creativecommons.org/licenses/by/4.0/"),
 ]
 
+# Music of Vienna day 3: Deck the Halls B (incompetech.com, CC BY 4.0) and Christmas Mood
+# (free-stock-music.com, CC BY 3.0); LICENCA-IN-PRIPIS.md in ~/Video/_glasba.
+DUNAJ_3_GLASBA = [
+    dict(naslov="Deck the Halls B", avtor="Kevin MacLeod", avtor_url="https://incompetech.com",
+         vir="incompetech.com", vir_url="https://incompetech.com", licenca="CC BY 4.0",
+         licenca_url="https://creativecommons.org/licenses/by/4.0/"),
+    dict(naslov="Christmas Mood", avtor="Alex-Productions", avtor_url="https://onsound.eu/",
+         vir="free-stock-music.com", vir_url="https://www.free-stock-music.com", licenca="CC BY 3.0",
+         licenca_url="https://creativecommons.org/licenses/by/3.0/deed.en_US"),
+]
+
 VLOGI = [
     dict(oznaka="potovanja-recap", izvor="Potovanja recap/potovanja-recap-v4.mp4", projekt=None,
          naslov=dict(en="Every Trip So Far", sl="Vsa potovanja doslej"),
@@ -94,6 +105,14 @@ VLOGI = [
          glasba=dict(naslov="Fear", avtor="MAITTRE", avtor_url="https://www.youtube.com/c/maittreofficial",
                      vir="free-stock-music.com", vir_url="https://www.free-stock-music.com",
                      licenca="CC BY 3.0", licenca_url="https://creativecommons.org/licenses/by/3.0/deed.en_US")),
+    # Vienna day 3 (22 Nov 2026, last day of the trip): edited in Wayfare Studio, on the site
+    # from R2 only (no YouTube). Cover: thumbnail in the style of days 1 and 2 (Vid and Lara's
+    # selfie, photo 045, in front of Schönbrunn), made with Qwen Image 3 Edit.
+    dict(oznaka="dunaj-3", izvor="Dunaj day 3/_izris/Dunaj day 3.mp4", projekt="Dunaj day 3",
+         naslov=dict(en="Vienna — Day 3", sl="Dunaj — 3. dan"),
+         kraj=dict(en="Vienna, Austria", sl="Dunaj, Avstrija"),
+         datum=("2026-11-22", None), naslovna="~/Video/Dunaj day 3/naslovnica.jpg", objavljen=True,
+         glasba=DUNAJ_3_GLASBA),
     # Vienna day 2 (21 Nov 2026): edited in Wayfare Studio, on the site from R2 only (no YouTube).
     # Cover: thumbnail in the style of day 1 (Vid and Lara from the lift clip 002 in front of
     # the Karlskirche at night), made with Qwen Image 3 Edit.
