@@ -9,10 +9,10 @@ Teče v GitHub Actions (.github/workflows/obvesti.yml), lahko pa tudi doma:
 
 Okolje: OBVESTI_SECRET (skrivnost, ista kot v Cloudflare Pages), STRAN_URL
 (privzeto https://wayfarestudio.pages.dev). Nov vlog je tisti, ki ima v HEAD
-oznako youtube, v prejšnjem commitu pa je ni imel (ali ga ni bilo). Pred
-klicem počaka, da je film na objavljeni strani (Cloudflare objavi v minuti),
-največ pet minut. Zaledje vsak ključ pošlje največ enkrat, zato ponoven
-klic ne podvaja pošte.
+oznako youtube ali "objavljen": true, v prejšnjem commitu pa ni bil
+objavljen (ali ga ni bilo). Pred klicem počaka, da je film na objavljeni
+strani (Cloudflare objavi v minuti), največ pet minut. Zaledje vsak ključ
+pošlje največ enkrat, zato ponoven klic ne podvaja pošte.
 """
 
 import json
@@ -46,8 +46,14 @@ def novi_vlogi(prejsnji_commit):
     else:
         print("brez prejšnjega commita (nova veja): ne pošljem nič")
         return []
-    novi = [v for o, v in zdaj.items() if v.get("youtube") and not prej.get(o, {}).get("youtube")]
+    novi = [v for o, v in zdaj.items() if je_objavljen(v) and not je_objavljen(prej.get(o, {}))]
     return novi
+
+
+def je_objavljen(v):
+    """Isto pravilo kot vlogi_podatki() v stran/zgradi.py: vlog je na strani,
+    ko ima oznako youtube ali "objavljen": true (film iz R2, brez YouTuba)."""
+    return bool(v.get("youtube") or v.get("objavljen"))
 
 
 def trajanje(sekunde):

@@ -1,7 +1,8 @@
 # Samodejna obvestila članom strani (zaledje/obvesti.py → POST /api/obvesti).
-#  - push v main s spremembo stran/vlogi.json: novi vlogi (z oznako youtube)
+#  - push v main s spremembo stran/vlogi.json: novi vlogi (z oznako youtube ali "objavljen": true)
 #  - objava izdaje na GitHubu: nova različica aplikacije
 #  - vsak dan ob 8:00 UTC: pošlje, kar čaka v vrsti zaradi dnevne meje pošte
+#  - ročno (gh workflow run obvesti.yml -f od=<commit>): zamujeni vlogi od tistega commita
 # Skrivnost OBVESTI_SECRET (ista kot v Cloudflare Pages): gh secret set OBVESTI_SECRET
 # Naslov strani: spremenljivka repozitorija STRAN_URL (privzeto wayfarestudio.pages.dev).
 name: Obvesti člane
@@ -15,6 +16,11 @@ on:
   schedule:
     - cron: "0 8 * * *"
   workflow_dispatch:
+    inputs:
+      od:
+        description: "Commit, od katerega pošlje nove vloge (prazno: le vrsta)"
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -37,9 +43,14 @@ jobs:
       - name: Novi vlogi
         if: github.event_name == 'push'
         run: python3 zaledje/obvesti.py vlogi "${{ github.event.before }}"
+      - name: Novi vlogi od commita (ročno)
+        if: github.event_name == 'workflow_dispatch' && inputs.od != ''
+        env:
+          OD: ${{ inputs.od }}
+        run: python3 zaledje/obvesti.py vlogi "$OD"
       - name: Nova izdaja
         if: github.event_name == 'release'
         run: python3 zaledje/obvesti.py izdaja
       - name: Vrsta
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.od == '')
         run: python3 zaledje/obvesti.py vrsta
