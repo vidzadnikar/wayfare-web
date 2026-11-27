@@ -1,5 +1,5 @@
 import { zazeniDrsenje, prikaziNaslove, promoPredvajalnik, znak, besede, mirno, svet } from "./gibanje.js";
-import { sestavljanje } from "./sestavljanje.js";
+import { aplikacija } from "./aplikacija.js";
 import { prenos } from "./prenos.js";
 import { zankeKartic, nagibKartic } from "./kartice.js";
 import { zid } from "./zid.js";
@@ -46,23 +46,15 @@ if (!mirno) {
   gsap.fromTo(".hero-ozadje", { scale: 1.04 }, { scale: 1.22, ease: "none", immediateRender: false, scrollTrigger: izhod });
 
   trakMest();
-  sestavljanje({ gsap, ScrollTrigger });
 
-  // okno vmesnika je nagnjeno nazaj in se zravna, ko pride na zaslon (kot v
-  // predlogu Studio); kamera sestavljanja ima svoje transforme, zato se nagne okno
-  gsap.fromTo("[data-okno]", { rotationX: 26, transformOrigin: "50% 100%" }, {
-    rotationX: 0, ease: "none",
-    scrollTrigger: { trigger: "[data-sestavljanje]", start: "top bottom", end: "top 25%", scrub: 0.6 },
-  });
-
-  // kino: med prihodom na zaslon se platno dvigne iz nagiba in zraste —
-  // brez pripenjanja, stran ves čas teče naprej
+  // kino: med prihodom na zaslon platno zraste (brez nagiba, da se ne ponovi
+  // razkritje aplikacije tik nad njim), brez pripenjanja
   gsap.timeline({
     scrollTrigger: { trigger: "[data-kino]", start: "top bottom", end: "top top", scrub: true },
     defaults: { ease: "none" },
   })
-    .fromTo(".kino-okvir", { scale: 0.7, rotationX: 24, y: 60, transformPerspective: 1600 },
-      { scale: 1, rotationX: 0, y: 0, duration: 1, ease: "power2.inOut" }, 0)
+    .fromTo(".kino-okvir", { scale: 0.82, y: 50 },
+      { scale: 1, y: 0, duration: 1, ease: "power2.inOut" }, 0)
     .to(".kino-naslov", { autoAlpha: 0, y: -30, duration: 0.45 }, 0.25)
     .fromTo("[data-kino-gumb]", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.15 }, 0.85);
 
@@ -126,6 +118,7 @@ function trakMest() {
 }
 
 prikaziNaslove("[data-naslov]", { gsap });
+aplikacija({ gsap, ScrollTrigger, mirno });
 promoPredvajalnik(document.querySelector("[data-promo]"));
 
 // zid vseh filmov: vrsti tečeta v nasprotnih smereh, nad kartico teče predogled

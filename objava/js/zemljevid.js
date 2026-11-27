@@ -24,7 +24,7 @@ export function zemljevid(obmocje, { gsap, koren }) {
   // filmi izbranega kraja (kartice so vnaprej zgrajene v podatkih)
   function pokaziFilme(kraj) {
     const naslov = filmi.querySelector("[data-filmi-naslov]"), opis = filmi.querySelector("[data-filmi-opis]"), seznam = filmi.querySelector("[data-filmi-kartice]");
-    naslov.textContent = kraj.ime; opis.textContent = kraj.opis; seznam.innerHTML = kraj.kartice;
+    naslov.textContent = kraj.ime; naslov.hidden = false; opis.textContent = kraj.opis; seznam.innerHTML = kraj.kartice;
     zankeKartic(seznam.querySelectorAll("[data-vlog]"));
     nagibKartic(seznam.querySelectorAll(".kartica-povezava"));
     gsap.fromTo([naslov, opis, ...seznam.children], { autoAlpha: 0, y: 14 },

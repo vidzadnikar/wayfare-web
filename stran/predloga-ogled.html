@@ -81,6 +81,17 @@
           </a>
         </div>
         <ol class="poglavja ogled-poglavja" data-poglavja {{ogled_poglavja_skrito}}>{{ogled_poglavja}}</ol>
+        <aside class="povabilo" aria-labelledby="povabilo-naslov">
+          <img class="povabilo-znak" src="{{koren}}media/logo.svg?v=2" alt="" width="48" height="48">
+          <div class="povabilo-besedilo">
+            <h2 id="povabilo-naslov" class="serif">{{povabilo_naslov}}</h2>
+            <p>{{povabilo_opis}}</p>
+          </div>
+          <div class="povabilo-akcije">
+            <a class="gumb gumb-majhen" href="{{prenos_href}}" download data-prenos data-prenos-windows="{{prenos_windows_href}}" data-besedilo-windows="{{gumb_prenos_windows}}" data-prenos-android="{{prenos_android_href}}" data-besedilo-android="{{gumb_prenos_android}}" data-besedilo-mobilno="{{gumb_prenos_mobilno}}"><svg class="gumb-ikona" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m-4.5-4.5L12 15l4.5-4.5M5 19.5h14"/></svg><span data-prenos-besedilo>{{gumb_prenos}}</span></a>
+            <a class="gumb gumb-majhen gumb-tihi" href="{{dom}}#aplikacija">{{povabilo_vec}}</a>
+          </div>
+        </aside>
         <p class="ogled-sporocilo" role="status" aria-live="polite" data-ogled-sporocilo hidden></p>
       </div>
 

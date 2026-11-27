@@ -38,21 +38,25 @@ export function prenos() {
     const opomba = document.querySelector("[data-prenos-opomba]");
     const predloga = document.querySelector(`template[data-opomba="${n}"]`);
     if (opomba && predloga) opomba.replaceChildren(predloga.content.cloneNode(true));
-    // namestitev z enim ukazom: na Windows je ukaz za PowerShell prvi
+    // namestitev z enim ukazom (zložljiv razdelek): na Windows je ukaz za PowerShell prvi
     const namesti = document.querySelector(".namesti");
-    if (n === "windows" && namesti) {
-      const stanje = namesti.querySelector("[data-kopiraj-stanje]");
-      for (const e of namesti.querySelectorAll('[data-namesti="mac"]')) namesti.insertBefore(e, stanje);
+    const ukazi = namesti?.querySelector("[data-namesti-ukaz]");
+    if (n === "windows" && ukazi) {
+      for (const e of ukazi.querySelectorAll('[data-namesti="mac"]')) ukazi.appendChild(e);
     }
     // na telefonu kode ne skeniras; na Androidu je vrstica za Android prva
     if ((n === "android" || n === "mobilno") && namesti) {
       for (const e of namesti.querySelectorAll(".namesti-qr, .namesti-qr-opis")) e.remove();
     }
     // iPhone in iPad: Wayfare zanju ni, Obtainium je le za Android
-    if (n === "mobilno" && namesti) namesti.querySelector('[data-namesti="android"]')?.remove();
-    if (n === "android" && namesti) {
-      const android = namesti.querySelector('[data-namesti="android"]');
-      namesti.insertBefore(android, namesti.querySelector(".namesti-sistem"));
+    if (n === "mobilno" && namesti) namesti.hidden = true;
+    // na telefonu ukazov za Terminal in PowerShell ne rabiš
+    if ((n === "android" || n === "mobilno") && ukazi) ukazi.remove();
+    // iPhone: gumb za prenos pošlje povezavo do strani (obvestilo z Deli)
+    if (n === "mobilno") {
+      for (const gumb of document.querySelectorAll("[data-besedilo-mobilno]")) {
+        (gumb.querySelector("[data-prenos-besedilo]") || gumb).textContent = gumb.dataset.besediloMobilno;
+      }
     }
     // na Windows in Androidu gumbi za prenos kazejo na paket za ta sistem
     if (n !== "windows" && n !== "android") return;

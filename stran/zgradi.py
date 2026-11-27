@@ -105,19 +105,19 @@ def pripis_glasbe(v, jezik):
     return f'<p class="ogled-opis ogled-glasba">{"<br>".join(stavki)}</p>'
 
 
-# 24 sličic surovih posnetkov v časovnem zaporedju; poletijo v sled V1 časovnice
+# Sličice surovih posnetkov v časovnem zaporedju (media/posnetki/tNN.jpg).
+# Ploščica »Odloži posnetke«: kup se zloži v sled časovnice (aplikacija.js).
 _VSE = [f"t{n:02d}" for n in range(1, 45) if n != 36]  # t36 je pokončen
-SLICICE = [_VSE[round(i * (len(_VSE) - 1) / 23)] for i in range(24)]
-V1_LEVO, V1_DESNO, V1_ZGORAJ, V1_VISINA = 7.4, 98.9, 78.4, 4.7
+KUP = [_VSE[round(i * (len(_VSE) - 1) / 9)] for i in range(10)]
 
 # Ukaz za namestitev skilla vlog v Claude Code (skills CLI, npx skills).
 # Skill je javno na https://github.com/vidzadnikar/wayfare-skills (MIT).
 # Deli ukaza se prelomijo le med seboj, nikoli med zastavico in njeno vrednostjo.
 SKILL_UKAZ = ["npx skills add", "vidzadnikar/wayfare-skills", "--skill vlog", "-g", "-a claude-code"]
 
-# Mesta v traku med herojem in aplikacijo, v domačem jeziku (enako v obeh
-# različicah strani). Isti kraji so v videu v ozadju heroja.
-MESTA = ["Lisboa", "Paris", "Praha", "Venezia", "Ljubljana", "Amsterdam", "Roma", "Barcelona", "Wien", "Madrid", "Milano"]
+# Trak mest nad zidom vlogov in razglednice ob prenosu kažejo le kraje, od
+# koder so vlogi (kraji_vlogov), v jeziku strani. Prej so bila tu mesta iz
+# videa heroja (Lisboa, Paris …), kjer vlogov ni (popravek 27. 11. 2026).
 HERO_VIDEO = "hero-mesta"  # media/<ime>-1080.mp4, <ime>-720.mp4, <ime>-pokoncno.mp4 (telefon), <ime>.jpg
 
 # Naslov objavljene strani: iz njega so absolutne povezave za deljenje (og:image,
@@ -125,18 +125,41 @@ HERO_VIDEO = "hero-mesta"  # media/<ime>-1080.mp4, <ime>-720.mp4, <ime>-pokoncno
 STRAN_URL = os.environ.get("WAYFARE_STRAN_URL", "https://wayfarestudio.pages.dev").rstrip("/")
 
 
-# Razglednice ob cilju: sličice iz posnetkov v videu heroja (media/razglednice/)
-RAZGLEDNICE = ["lisboa", "roma", "praha", "venezia", "paris", "ljubljana", "malta"]
-IMENA = {"lisboa": "Lisboa", "roma": "Roma", "praha": "Praha", "venezia": "Venezia", "paris": "Paris", "ljubljana": "Ljubljana",
-         "malta": "Malta"}   # malta: slika iz Higgsfield (Soul Cinema), 13. 10. 2026
+def kraji_vlogov(jezik):
+    """Kraji z vlogi, najnovejše potovanje prvo: [(ime v jeziku strani, oznaka
+    vloga za razglednico)]. Za razglednico šteje 1. dan potovanja, sicer prvi
+    ležeči vlog od tam. Izpostavljeni film (vse=True) ni kraj."""
+    kraji = {}
+    for v in vlogi_podatki():
+        if v.get("vse"):
+            continue
+        ime = v["kraj"][jezik].split(",")[0].strip()
+        k = kraji.setdefault(ime, [])
+        k.append(v)
+    izid = []
+    for ime, vl in kraji.items():
+        lezeci = [v for v in vl if v["sirina"] >= v["visina"]] or vl
+        prvi = next((v for v in lezeci if v["oznaka"].endswith("-1")), lezeci[0])
+        izid.append((ime, prvi["oznaka"]))
+    return izid
 
 
-def razglednice():
+def mesta(jezik):
+    """Imena za trak mest: kraji z vlogi in kraji iz izpostavljenega filma (Valencija)."""
+    imena = [ime for ime, _ in kraji_vlogov(jezik)]
+    for k in json.load(open(Path(TU, "vlogi.json"), encoding="utf-8")).get("kraji", []):
+        if k.get("film") and k.get("ime"):
+            imena.append(k["ime"][jezik])
+    return imena
+
+
+def razglednice(jezik):
+    """Razglednice ob prenosu: naslovnica 1. dneva vsakega potovanja (največ 7)."""
     return "\n      ".join(
         f'<figure class="razglednica" data-razglednica><div class="razglednica-list">'
-        f'<img src="{{{{koren}}}}media/razglednice/{m}.webp" alt="" width="960" height="720" loading="lazy">'
-        f'<figcaption>{IMENA[m]}</figcaption></div></figure>'
-        for m in RAZGLEDNICE
+        f'<img src="{{{{koren}}}}media/vlogi/male/{oznaka}.webp" alt="" width="640" height="360" loading="lazy">'
+        f'<figcaption>{html.escape(ime)}</figcaption></div></figure>'
+        for ime, oznaka in kraji_vlogov(jezik)[:7]
     )
 
 
@@ -334,16 +357,41 @@ def preusmeritev(url_sl):
             f'if(j==="sl")location.replace("{url_sl}"+location.hash);}}catch(e){{}}')
 
 
-def oblak():
-    sirina = (V1_DESNO - V1_LEVO) / len(SLICICE)
+def kup():
+    """Ploščica »Odloži posnetke«: sličice v sledi V1 male časovnice (končno
+    stanje, tudi brez JS) in zamik do mesta na kupu (--dx, --dy v cqw glede na
+    sled, --r, --z). Na kupu so pomešane, v sledi po času snemanja."""
+    import random
+    n = len(KUP)
+    levo, desno = 4.0, 96.0
+    korak = (desno - levo) / n
+    sirina = korak - 0.5
+    visina = sirina * 9 / 16
+    rnd = random.Random(5)
+    vrstni = list(range(n))
+    rnd.shuffle(vrstni)
     vrstice = []
-    for i, ime in enumerate(SLICICE):
-        levo = V1_LEVO + i * sirina
+    for i, ime in enumerate(KUP):
+        x = levo + i * korak + sirina / 2           # središče v sledi (cqw)
+        cx = 12 + (i * 0.618 % 1) * 76                # središča na kupu, enakomerno razsuta
+        cy = -10 + rnd.random() * 22                  # glede na vrh sledi (cqw)
+        r = rnd.uniform(-14, 14)
         vrstice.append(
-            f'<span class="sl" style="left:{levo:.3f}%;top:{V1_ZGORAJ}%;width:{sirina:.4f}%;height:{V1_VISINA}%">'
-            f'<img src="{{{{koren}}}}media/posnetki/{ime}.jpg" alt="" loading="lazy"></span>'
+            f'<span class="sl" style="--i:{i};--x:{levo + i * korak:.2f}cqw;--w:{sirina:.2f}cqw;'
+            f'--dx:{cx - x:.2f}cqw;--dy:{cy - visina / 2:.2f}cqw;--r:{r:.1f}deg;--z:{vrstni[i]}">'
+            f'<img src="{{{{koren}}}}media/posnetki/{ime}.jpg" alt="" width="480" height="270" loading="lazy" decoding="async"></span>'
         )
-    return "\n            ".join(vrstice)
+    return "\n".join("          " + v for v in vrstice)
+
+
+def klipi():
+    """Ploščica »Povej, kaj spremeniti«: pet kadrov na sledi, srednji je posnetek 14."""
+    return "".join(
+        f'<span class="klip{" klip-cilj" if st == 14 else ""}"{" data-klip-cilj" if st == 14 else ""}>'
+        f'<img src="{{{{koren}}}}media/posnetki/{ime}.jpg" alt="" width="480" height="270" loading="lazy" decoding="async">'
+        f'<span class="klip-st">{st}</span></span>'
+        for st, ime in zip(range(12, 17), ("t18", "t20", "t22", "t25", "t27"))
+    )
 
 
 # ---------------------------------------------------------------- poti strani
@@ -410,9 +458,9 @@ def poti(stran, jezik):
 # ---------------------------------------------------------------- vlogi
 
 OBLIKE = {
-    "sl": {"film": ("film", "filma", "filmi", "filmov"),
+    "sl": {"film": ("film", "filma", "filmi", "filmov"), "vlog": ("vlog", "vloga", "vlogi", "vlogov"),
            "potovanje": ("potovanje", "potovanji", "potovanja", "potovanj")},
-    "en": {"film": ("film", "films"), "potovanje": ("trip", "trips")},
+    "en": {"film": ("film", "films"), "vlog": ("vlog", "vlogs"), "potovanje": ("trip", "trips")},
 }
 
 
@@ -481,7 +529,7 @@ def zemljevid_dom(jezik, b, p):
             od = min(v["datum"] for v in filmi)
             do = max(v.get("datum_do") or v["datum"] for v in filmi)
             ime = filmi[0]["kraj"][jezik].split(",")[0].strip()
-            opis = f"{mnozina(len(filmi), jezik, 'film')} · {obdobje(od, do, jezik)}"
+            opis = f"{mnozina(len(filmi), jezik, 'vlog')} · {obdobje(od, do, jezik)}"
         elif k.get("film"):
             # a place without its own vlog that appears in another film (Valencia in the
             # recap of all trips): the pin shows that film and the day of the trip
@@ -649,14 +697,18 @@ FFMPEG = [Path("~/Claude/claude/Wayfare/vendor/ffmpeg/bin/ffmpeg").expanduser(),
 
 
 def male_slike():
+    """male/<oznaka>.webp (640 px) za kartice in velike/<oznaka>.webp (1280 px) za
+    zaslone z gosto mrežo pik. JPG naslovnice (~300 kB) ostanejo le za deljenje
+    in plakat predvajalnika; webp v 1280 px ima okoli 80 kB (27. 11. 2026)."""
     ff = next((str(f) for f in FFMPEG if f and Path(f).is_file()), None)
     for jpg in Path(TU, "media", "vlogi").glob("*.jpg"):
-        cilj = Path(TU, "media", "vlogi", "male", jpg.stem + ".webp")
-        if cilj.is_file() or not ff:
-            continue
-        cilj.parent.mkdir(exist_ok=True)
-        subprocess.run([ff, "-v", "error", "-y", "-i", str(jpg), "-vf", "scale=640:-2", "-c:v", "libwebp",
-                        "-quality", "74", str(cilj)], check=False)
+        for mapa, sirina, kakovost in (("male", 640, "74"), ("velike", 1280, "72")):
+            cilj = Path(TU, "media", "vlogi", mapa, jpg.stem + ".webp")
+            if cilj.is_file() or not ff:
+                continue
+            cilj.parent.mkdir(exist_ok=True)
+            subprocess.run([ff, "-v", "error", "-y", "-i", str(jpg), "-vf", f"scale={sirina}:-2", "-c:v", "libwebp",
+                            "-quality", kakovost, str(cilj)], check=False)
 
 
 def slika_kartice(o, sirina, visina, velikosti):
@@ -664,7 +716,10 @@ def slika_kartice(o, sirina, visina, velikosti):
             + razlicica("media", "vlogi", "male", o["oznaka"] + ".webp"))
     if not Path(TU, "media", "vlogi", "male", o["oznaka"] + ".webp").is_file():
         return f'<img src="{o["slika"]}" alt="" width="{sirina}" height="{visina}" loading="lazy" decoding="async">', o["slika"]
-    return (f'<img src="{mala}" srcset="{mala} 640w, {o["slika"]} 1280w" sizes="{velikosti}" alt="" '
+    velika = mala.replace("/male/", "/velike/")
+    if not Path(TU, "media", "vlogi", "velike", o["oznaka"] + ".webp").is_file():
+        velika = o["slika"]
+    return (f'<img src="{mala}" srcset="{mala} 640w, {velika} 1280w" sizes="{velikosti}" alt="" '
             f'width="{sirina}" height="{visina}" loading="lazy" decoding="async">'), mala
 
 
@@ -697,11 +752,11 @@ def vlogi_dom(jezik, p):
     for smer, del_ in ((1, vlogi[:pol]), (-1, vlogi[pol:])):
         def niz(skrita):
             return "".join(kartica_html(v, opis_vloga(v, jezik, media), pot_ogleda(p, v["oznaka"], jezik), izberi=False,
-                                        velikosti="340px", skrita=skrita) for v in del_)
+                                        velikosti="300px", skrita=skrita) for v in del_)
         vrste.append(f'      <div class="zid-vrsta" data-smer="{smer}"><ul class="zid-niz">{niz(False)}</ul>'
                      f'<ul class="zid-niz" aria-hidden="true" inert>{niz(True)}</ul></div>')
     krajev = len({v["kraj"]["en"] for v in vlogi if not v.get("vse")})
-    return {"zid": "\n".join(vrste), "st_filmov": mnozina(len(vlogi), jezik, "film"),
+    return {"zid": "\n".join(vrste), "st_filmov": mnozina(len(vlogi), jezik, "vlog"),
             "st_potovanj": mnozina(krajev, jezik, "potovanje")}
 
 
@@ -750,7 +805,7 @@ def vlogi_stran(jezik, b, p):
         "vlogi_naslov_razbit": razbit,
         "vlogi_naslov_besedilo": golo,
         "skupine": "\n      ".join(deli),
-        "st_filmov": mnozina(len(vlogi), jezik, "film"),
+        "st_filmov": mnozina(len(vlogi), jezik, "vlog"),
         "st_potovanj": mnozina(len(skupine), jezik, "potovanje"),
         "og_slika": prvi["slika"],
         "prvi_naslov": html.escape(prvi["naslov"]),
@@ -1015,7 +1070,8 @@ def objavi(zgoscene, strani, okvirji):
     for t in besedila:
         uporabljeni |= set(re.findall(r"(media/[\w./-]+?\.(?:mp4|jpg|jpeg|png|webp|svg))", t))
     # majhne sličice kartic (tudi za kartice na globusu, ki so v JSON s poševnicami)
-    uporabljeni |= {str(p.relative_to(TU)) for p in Path(TU, "media", "vlogi", "male").glob("*.webp")
+    uporabljeni |= {str(p.relative_to(TU)) for mapa in ("male", "velike")
+                    for p in Path(TU, "media", "vlogi", mapa).glob("*.webp")
                     if any(v["oznaka"] == p.stem for v in vlogi_podatki())}
     uporabljeni = {u for u in uporabljeni if not SPLETNI_VIDEO.match(u)}
     uporabljeni.add("model/wayfare-znak-kosi.glb")
@@ -1137,11 +1193,13 @@ def main():
             html_ = predloga
             for ime, vsebina in deli.items():
                 html_ = html_.replace("{{" + ime + "}}", vsebina)
-            html_ = html_.replace("{{oblak}}", oblak())
+            html_ = html_.replace("{{kup}}", kup())
+            html_ = html_.replace("{{klipi}}", klipi())
             html_ = html_.replace("{{preusmeritev}}", preusmeritev(p["url_sl"]) if jezik == "en" else "")
-            html_ = html_.replace("{{razglednice}}", razglednice())
-            html_ = html_.replace("{{mesta}}", trak(MESTA))
-            html_ = html_.replace("{{mesta_obrnjeno}}", trak(MESTA[::-1][1:] + MESTA[-1:]))
+            html_ = html_.replace("{{razglednice}}", razglednice(jezik))
+            m = mesta(jezik)
+            html_ = html_.replace("{{mesta}}", trak(m))
+            html_ = html_.replace("{{mesta_obrnjeno}}", trak(m[::-1][1:] + m[-1:]))
             html_ = html_.replace("{{hero_video}}", HERO_VIDEO)
             html_ = html_.replace("{{skill_ukaz}}", deli_ukaza(SKILL_UKAZ))
             html_ = html_.replace("{{namesti_ukaz}}", html.escape(NAMESTI_UKAZ))

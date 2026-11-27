@@ -262,3 +262,24 @@ body:has(.ogled-stran) .glava { background: rgba(var(--papir), 0.85); backdrop-f
   .ogled-zaklep-cena { font-size: 17px; }
   .ogled-zaklep .gumb { height: 42px; font-size: 14px; }
 }
+
+/* -------------------------------------------------- vabilo k aplikaciji (27. 11. 2026)
+   Kdor pride na vlog prek povezave, izve, da tak vlog naredi tudi sam. */
+.povabilo {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s4) var(--s5); align-items: center;
+  margin-top: var(--s6); padding: var(--s5); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(100, 226, 214, 0.12), rgba(118, 107, 251, 0.10)), var(--surface);
+}
+.povabilo-znak { width: 48px; height: 48px; border-radius: 22%; }
+.povabilo-besedilo { display: grid; gap: var(--s2); }
+.povabilo h2 { font-size: clamp(24px, 2.2vw, 30px); }
+.povabilo p { margin: 0; color: var(--muted); max-width: 52ch; }
+.povabilo-akcije { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--s3); }
+@media (min-width: 760px) {
+  .povabilo { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .povabilo-akcije { grid-column: auto; flex-direction: column; align-items: stretch; }
+}
+/* stranski stolpec ostane ob vlogu, da desno ni prazne lise pod sorodnimi vlogi */
+@media (min-width: 1100px) {
+  .naprej { position: sticky; top: calc(var(--glava) + var(--s5)); }
+}

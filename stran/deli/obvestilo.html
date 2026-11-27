@@ -4,11 +4,19 @@
 </div>
 <template id="obvestilo-mac">
   <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">{{mac_naslov}}</p>
-  <ol class="obvestilo-koraki"><li>{{mac_korak1}}</li><li>{{mac_korak2}}</li><li>{{mac_korak3}}</li></ol>
-  <p>{{mac_ukaz}}</p>
-  <p class="ukaz-vrstica"><code id="ukaz-namesti-okno">{{namesti_ukaz}}</code>{{kopiraj:ukaz-namesti-okno}}</p>
+  <ol class="obvestilo-koraki"><li>{{mac_korak1}}</li><li><div>{{mac_korak2}}
+    <figure class="mac-slika" aria-label="{{mac_slika_oznaka}}">
+      <span class="mac-slika-ikona" aria-hidden="true"></span>
+      <span class="mac-slika-besedilo">{{mac_slika_besedilo}}</span>
+      <span class="mac-slika-gumb">{{mac_slika_gumb}}</span>
+    </figure></div></li><li>{{mac_korak3}}</li></ol>
+  <details class="namesti-ukaz">
+    <summary>{{namesti_povzetek}}</summary>
+    <p>{{mac_ukaz}}</p>
+    <p class="ukaz-vrstica"><code id="ukaz-namesti-okno">{{namesti_ukaz}}</code>{{kopiraj:ukaz-namesti-okno}}</p>
+    <p class="drobno">{{mac_opomba}} <code>xattr -dr com.apple.quarantine "/Applications/Wayfare Studio.app"</code></p>
+  </details>
   <p class="skrito" role="status" aria-live="polite" data-kopiraj-stanje></p>
-  <p class="drobno">{{mac_opomba}} <code>xattr -dr com.apple.quarantine "/Applications/Wayfare Studio.app"</code></p>
   <p class="drobno">{{prenos_ime}} · {{prenos_velikost}}</p>
 </template>
 <template id="obvestilo-intel">
@@ -19,8 +27,11 @@
 <template id="obvestilo-windows">
   <p class="obvestilo-naslov serif" id="obvestilo-naslov" tabindex="-1">{{windows_naslov}}</p>
   <ol class="obvestilo-koraki"><li>{{windows_korak1}}</li><li>{{windows_korak2}}</li><li>{{windows_korak3}}</li></ol>
-  <p>{{windows_ukaz}}</p>
-  <p class="ukaz-vrstica ukaz-ps"><code id="ukaz-namesti-windows-okno">{{namesti_ukaz_windows}}</code>{{kopiraj:ukaz-namesti-windows-okno}}</p>
+  <details class="namesti-ukaz">
+    <summary>{{namesti_povzetek}}</summary>
+    <p>{{windows_ukaz}}</p>
+    <p class="ukaz-vrstica ukaz-ps"><code id="ukaz-namesti-windows-okno">{{namesti_ukaz_windows}}</code>{{kopiraj:ukaz-namesti-windows-okno}}</p>
+  </details>
   <p class="skrito" role="status" aria-live="polite" data-kopiraj-stanje></p>
   <p class="drobno">{{prenos_windows_ime}}{{prenos_windows_velikost}}</p>
 </template>
