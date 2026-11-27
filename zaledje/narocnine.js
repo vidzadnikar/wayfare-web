@@ -1,10 +1,11 @@
 // Naročnine in dostop do plačljivih vlogov: Stripe (Checkout, Customer
 // Portal, webhook) in podarjen dostop iz nadzora.
 //
-// Dostop ima admin, član s podarjenim dostopom (do roka ali brez) in član z
-// veljavno naročnino: active ali trialing (tudi s preklicem ob koncu
-// obdobja: Stripe jo pusti active do konca), past_due še 7 dni po koncu
-// obdobja (Stripe plačilo ponavlja), canceled do konca plačanega obdobja.
+// Od 27. 11. 2026 gleda vloge vsak prijavljen član (gost ne). Admin mu ogled
+// v nadzoru izklopi (dostop_vrsta 'odvzet') ali ga omeji do dne (podarjen z
+// rokom; po roku ne gleda več). Naročnina (Stripe, izklopljena) velja ne
+// glede na to: active ali trialing (tudi s preklicem ob koncu obdobja),
+// past_due še 7 dni po koncu obdobja, canceled do konca plačanega obdobja.
 import { Napaka, zdaj, enakaSkrivnost, varnaPot, domacaPot, zahtevaj } from "./osnova.js";
 import { jeAdmin } from "./seja.js";
 
@@ -61,14 +62,19 @@ export function zadnjaNarocnina(db, clanId) {
 export const podarjenVelja = (clan, t = Date.now()) =>
   !!clan && clan.dostop_vrsta === "podarjen" && (!clan.dostop_do || Date.parse(clan.dostop_do) > t);
 
+// Ogled izklopljen: admin ga je odvzel ali pa je rok podarjenega ogleda mimo.
+export const ogledIzklopljen = (clan, t = Date.now()) =>
+  clan.dostop_vrsta === "odvzet" || (clan.dostop_vrsta === "podarjen" && !podarjenVelja(clan, t));
+
 export async function dostopClana(env, db, clan) {
   if (!clan) return { dostop: false, vrsta: null, do: null, narocnina: null };
   const n = await zadnjaNarocnina(db, clan.id);
   const narocnina = povzetekNarocnine(n);
   if (jeAdmin(env, clan)) return { dostop: true, vrsta: "admin", do: null, narocnina };
   if (narocninaVelja(n)) return { dostop: true, vrsta: "narocnina", do: n.obdobje_do, narocnina };
+  if (ogledIzklopljen(clan)) return { dostop: false, vrsta: "odvzet", do: clan.dostop_do || null, narocnina };
   if (podarjenVelja(clan)) return { dostop: true, vrsta: "podarjen", do: clan.dostop_do || null, narocnina };
-  return { dostop: false, vrsta: null, do: null, narocnina };
+  return { dostop: true, vrsta: "clan", do: null, narocnina };
 }
 
 // ---------------------------------------------------------------- Stripe Checkout in portal

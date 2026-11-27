@@ -250,10 +250,11 @@ body:has(.ogled-stran) .glava { background: rgba(var(--papir), 0.85); backdrop-f
 .ogled-zaklep-drobno { color: var(--subtle); }
 .ogled-zaklep [data-zaklep-za] { display: none; }
 .ogled-zaklep[data-za="gost"] [data-zaklep-za~="gost"], .ogled-zaklep[data-za="clan"] [data-zaklep-za~="clan"],
-.ogled-zaklep[data-za="povabilo"] [data-zaklep-za~="povabilo"], .ogled-zaklep[data-za="kmalu"] [data-zaklep-za~="kmalu"] { display: block; }
+.ogled-zaklep[data-za="odvzet"] [data-zaklep-za~="odvzet"], .ogled-zaklep[data-za="kmalu"] [data-zaklep-za~="kmalu"],
+.ogled-zaklep[data-za="napaka"] [data-zaklep-za~="napaka"] { display: block; }
 .ogled-zaklep[data-za="clan"] .ogled-zaklep-obrazec { display: grid; }
 /* gumbi so inline-flex le v svoji različici (splošno pravilo zgoraj jih skrije) */
-.ogled-zaklep[data-za="gost"] .gumb[data-zaklep-za~="gost"], .ogled-zaklep[data-za="povabilo"] .gumb[data-zaklep-za~="povabilo"] { display: inline-flex; }
+.ogled-zaklep[data-za="gost"] .gumb[data-zaklep-za~="gost"], .ogled-zaklep[data-za="odvzet"] .gumb[data-zaklep-za~="odvzet"] { display: inline-flex; }
 @media (max-width: 700px) {
   .ogled-zaklep { padding: var(--s3); }
   .ogled-zaklep-notri { gap: var(--s2); }

@@ -93,6 +93,8 @@ export function clan() {
       if (r.ok) { const j = await r.json(); c = j.prijavljen ? j : null; }
     } catch (e) { c = null; }
     if (c) prikaziClana(c); else prikaziGosta();
+    // gost vidi ključavnice na karticah in stavek »Za ogled se prijavi«
+    document.documentElement.toggleAttribute("data-gost", !c);
     if (!!c !== prijavljen) { prijavljen = !!c; javi(c); }
   }
   osvezi();

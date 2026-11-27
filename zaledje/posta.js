@@ -7,10 +7,10 @@ import { zdaj, nakljucno, podpisi, preveriPodpis, pobegni, zahtevaj } from "./os
 export const T = {
   sl: {
     pozdrav: (ime) => (ime ? `Živjo, ${ime}.` : "Živjo."),
-    potrditev_zadeva: "Potrdi prijavo na obvestila Wayfare Studia",
+    potrditev_zadeva: "Potrdi prijavo v Wayfare Studio",
     potrditev_naslov: "Še en korak.",
-    potrditev_uvod: "Potrdi e-naslov in obveščen boš o vsakem novem filmu in novi različici aplikacije.",
-    potrditev_besedilo: "Z gumbom spodaj potrdiš e-naslov. Potem ti pišemo, ko objavimo nov film ali novo različico aplikacije. Povezava velja eno uro.",
+    potrditev_uvod: "Potrdi e-naslov in glej vse vloge.",
+    potrditev_besedilo: "Z gumbom spodaj potrdiš e-naslov. Nato lahko gledaš vse vloge, ob novem vlogu ali novi različici aplikacije pa ti pišemo. Povezava velja eno uro.",
     potrditev_gumb: "Potrdi e-naslov",
     potrditev_opomba: "Če tega nisi zahteval ti, pošto prezri: brez potrditve se ne zgodi nič.",
     potrditev_noga: "To pošto si dobil, ker je bil ta e-naslov vpisan na strani Wayfare Studio.",
@@ -26,10 +26,10 @@ export const T = {
   },
   en: {
     pozdrav: (ime) => (ime ? `Hi ${ime},` : "Hi,"),
-    potrditev_zadeva: "Confirm your Wayfare Studio updates",
+    potrditev_zadeva: "Confirm your Wayfare Studio sign-in",
     potrditev_naslov: "One more step.",
-    potrditev_uvod: "Confirm your email to hear about every new film and app release.",
-    potrditev_besedilo: "Use the button below to confirm your email. We'll then write when a new film or a new version of the app is out. The link is valid for one hour.",
+    potrditev_uvod: "Confirm your email to watch every vlog.",
+    potrditev_besedilo: "Use the button below to confirm your email. Then you can watch every vlog, and we'll write when a new vlog or a new version of the app is out. The link is valid for one hour.",
     potrditev_gumb: "Confirm email",
     potrditev_opomba: "If this wasn't you, ignore this email: nothing happens unless you confirm.",
     potrditev_noga: "You're getting this because this address was entered on the Wayfare Studio site.",

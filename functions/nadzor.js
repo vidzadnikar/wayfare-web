@@ -50,7 +50,7 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
   </section>
   <section class="nadzor-odsek" id="dovoljenja" aria-labelledby="dostop-naslov">
     <h2 id="dostop-naslov" class="serif">Dovoljenja <em>za ogled</em></h2>
-    <p class="nadzor-opis">Kdo sme gledati filme. Stikalo vklopi ali izklopi ogled takoj; datum omeji dovoljenje do tistega dne (prazno = brez roka), opomba je le zate. Novo osebo dodaš po e-naslovu, tudi preden se prijavi: dovoljenje jo počaka. Prošnje za dostop pridejo med Odzive.</p>
+    <p class="nadzor-opis">Vsak prijavljen član gleda vloge, gost ne. Stikalo izklopi ali vklopi ogled takoj; datum omeji ogled do tistega dne (prazno = brez roka), opomba je le zate. Rok ali opombo lahko daš tudi osebi, ki se še ni prijavila: počakata jo. Kdor ima ogled izklopljen, ti lahko piše prek Odzivov.</p>
     <form class="novica dovoljenje-dodaj" data-dostop>
       <div class="novica-mreza">
         <label>E-naslov<input name="email" type="email" required autocomplete="off" placeholder="ime@naslov.si"></label>
@@ -58,7 +58,7 @@ export const onRequestGet = obravnavaj(async ({ request, env }) => {
         <label class="novica-cela">Opomba (le zate)<input name="opomba" maxlength="200" placeholder="prijatelj, družina …"></label>
       </div>
       <div class="nadzor-akcije">
-        <button class="gumb gumb-majhen" type="submit">Dodaj in dovoli ogled</button>
+        <button class="gumb gumb-majhen" type="submit">Dodaj</button>
       </div>
     </form>
     <div class="dovoljenja-filter">

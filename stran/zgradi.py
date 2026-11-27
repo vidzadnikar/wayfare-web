@@ -723,6 +723,11 @@ def slika_kartice(o, sirina, visina, velikosti):
             f'width="{sirina}" height="{visina}" loading="lazy" decoding="async">'), mala
 
 
+# Ključavnica pred dolžino: vidi jo le gost (html[data-gost]), vlogi so za prijavljene.
+KLJUCAVNICA = ('<svg class="kartica-kljucavnica" viewBox="0 0 24 24" aria-hidden="true">'
+               '<rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>')
+
+
 def kartica_html(v, o, href, izberi=True, vrsta=False, velikosti="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw", skrita=False):
     """Kartica filma: naslovnica, nem predogled za kazalec, trajanje, naslov.
     Ime povezave je naslov in trajanje (trajanje za bralnike za naslovom, vidna
@@ -737,7 +742,7 @@ def kartica_html(v, o, href, izberi=True, vrsta=False, velikosti="(min-width: 10
         + (f'<img class="kartica-ozadje" src="{mala}" alt="" aria-hidden="true" loading="lazy" decoding="async">' if o["pokoncno"] else "") +
         img
         + (f'<video class="kartica-zanka" muted playsinline loop preload="none" tabindex="-1" aria-hidden="true" data-zanka-src="{o["zanka"]}"></video>' if o["zanka"] else "") +
-        f'<span class="kartica-cas" aria-hidden="true">{o["trajanje"]}</span></span>'
+        f'<span class="kartica-cas" aria-hidden="true">{"" if je_brezplacen(v) else KLJUCAVNICA}{o["trajanje"]}</span></span>'
         f'<span class="kartica-naslov serif">{html.escape(o["naslov"])}<span class="skrito">, {o["trajanje"]}</span></span></a></li>'
     )
 

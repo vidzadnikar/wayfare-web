@@ -695,6 +695,13 @@ p { text-wrap: pretty; }
   background: rgba(16, 16, 17, 0.62); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   color: var(--na-temnem); font: 500 13px/1 var(--sans); font-variant-numeric: tabular-nums;
 }
+/* vlogi so za prijavljene: gost vidi ključavnico pred dolžino (clan.js nastavi html[data-gost]) */
+.kartica-kljucavnica {
+  display: none; width: 12px; height: 12px; margin: -2px 5px 0 -1px; vertical-align: middle;
+  fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round;
+}
+html[data-gost] .kartica-kljucavnica { display: inline-block; }
+html:not([data-gost]) .samo-gost { display: none; }
 .kartica-naslov { font-size: clamp(20px, 1.8vw, 24px); line-height: 1.1; letter-spacing: -0.03em; }
 @media (hover: hover) and (pointer: fine) {
   .kartica-povezava:hover .kartica-slika { border-color: var(--border-strong); transform: translateY(-3px); }

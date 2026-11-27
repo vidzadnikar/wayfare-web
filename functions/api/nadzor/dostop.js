@@ -1,7 +1,8 @@
-// Nadzor: podari članu dostop do vlogov (brez roka ali do dne) ali mu ga
-// odvzemi. Po id ali po e-naslovu; e-naslov, ki še ni član, dobi vrstico
-// vnaprej (potrjen ob prvi prijavi, dostop ostane). Naročnine pri Stripu to
-// ne spremeni.
+// Nadzor: ogled vlogov za enega člana. Vsak prijavljen član gleda sam od sebe;
+// »odvzemi« mu ogled izklopi (dostop_vrsta 'odvzet'), »podari« ga vklopi
+// (brez roka ali do dne; po roku ga ne gleda več). Po id ali po e-naslovu;
+// e-naslov, ki še ni član, dobi vrstico vnaprej (potrjen ob prvi prijavi,
+// dovoljenje ostane). Naročnine pri Stripu to ne spremeni.
 import { Napaka, json, telo, istiIzvor } from "../../../zaledje/osnova.js";
 import { zahtevajAdmina } from "../../../zaledje/seja.js";
 import { VELJAVEN_EMAIL, normalizirajEmail } from "../../../zaledje/clani.js";
@@ -31,7 +32,7 @@ export const onRequestPost = obravnavaj(async ({ request, env }) => {
     const opomba = String(podatki.opomba || "").trim().slice(0, 200) || null;
     r = await db.prepare("UPDATE clani SET dostop_vrsta = 'podarjen', dostop_do = ?1, dostop_opomba = ?2 WHERE id = ?3").bind(do_, opomba, id).run();
   } else if (podatki.dejanje === "odvzemi") {
-    r = await db.prepare("UPDATE clani SET dostop_vrsta = NULL, dostop_do = NULL, dostop_opomba = NULL WHERE id = ?1").bind(id).run();
+    r = await db.prepare("UPDATE clani SET dostop_vrsta = 'odvzet', dostop_do = NULL WHERE id = ?1").bind(id).run();
   } else {
     throw new Napaka(400, "dejanje", "Dejanje je podari ali odvzemi.");
   }

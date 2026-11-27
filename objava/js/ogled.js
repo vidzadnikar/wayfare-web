@@ -52,24 +52,33 @@ function skrijZaklep() {
   gumb.hidden = false;
 }
 
-async function preveriDostop() {
+// Vloge gleda vsak prijavljen član (zaledje: /api/vlog). Zaklep pove, kaj manjka:
+//   gost    prijava (Google ali e-pošta, zastonj)
+//   odvzet  admin je temu računu ogled izklopil (ali je rok mimo)
+//   kmalu   dostop je, filma v R2 še ni
+//   napaka  preverjanje ni uspelo
+let preverjanje = null;
+function preveriDostop() {
+  preverjanje = preveri();
+  return preverjanje;
+}
+async function preveri() {
   if (!placljiv) return;
   let odg = null;
   try {
     const r = await fetch(`/api/vlog/${encodeURIComponent(oznaka)}`, { headers: { Accept: "application/json" } });
     if (r.ok) odg = await r.json();
   } catch (e) { odg = null; }
-  if (!odg) { pokaziZaklep("povabilo"); return; }
+  if (!odg) { pokaziZaklep("napaka"); return; }
   if (odg.dostop && !odg.kmalu) {
     viri = odg.viri;
     skrijZaklep();
     return;
   }
   viri = null;
-  // brez Stripa (brez ključev) dostop daje le admin: prijavljen brez dostopa zaprosi zanj
   if (odg.dostop) pokaziZaklep("kmalu");
   else if (!odg.prijavljen) pokaziZaklep("gost");
-  else if (!odg.na_voljo) pokaziZaklep("povabilo");
+  else if (odg.vrsta === "odvzet" || !odg.na_voljo) pokaziZaklep("odvzet");
   else pokaziZaklep("clan");
 }
 
@@ -110,7 +119,12 @@ function predvajajVideo(zacetek) {
 
 function predvajaj(zacetek = 0) {
   if (placljiv) {
-    if (!viri) { if (zaklep.hidden) pokaziZaklep("povabilo"); zaklep.querySelector(".gumb, input")?.focus({ preventScroll: true }); return; }
+    if (!viri) {
+      // klik pred koncem preverjanja: počakaj nanj, nato predvajaj ali pokaži zaklep
+      if (zaklep.hidden && preverjanje) { preverjanje.then(() => { if (viri) predvajajVideo(zacetek); else zaklep.querySelector(".gumb, input")?.focus({ preventScroll: true }); }); return; }
+      zaklep.querySelector(".gumb, input")?.focus({ preventScroll: true });
+      return;
+    }
     predvajajVideo(zacetek);
     return;
   }
